@@ -3396,6 +3396,20 @@
         const list = Object.values(orders).filter(o => o && o.adminHidden !== true).sort((a, b) => (b.id || 0) - (a.id || 0));
         let html = '';
 
+        if (isHistory) {
+          const historyCount = list.filter(o => o.status !== 'pending').length;
+          html += `
+            <div class="settings-card" style="margin-bottom:10px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                <div>
+                  <h4 style="margin:0;font-size:15px;">Order History</h4>
+                  <div class="small-note" style="margin-top:3px;">${historyCount} saved record${historyCount === 1 ? '' : 's'} in admin history</div>
+                </div>
+                <button class="danger-btn" style="padding:10px 12px;border-radius:14px;font-size:11px;white-space:nowrap;" onclick="clearAdminHistory()">Clear History</button>
+              </div>
+            </div>`;
+        }
+
         list.forEach(o => {
           const shouldShow = isHistory ? o.status !== 'pending' : o.status === 'pending';
           if (!shouldShow) return;
@@ -3713,6 +3727,33 @@
           notifyApp(status === 'completed' ? 'Order Approved' : 'Order Rejected', 'Order marked as ' + status + '.', status === 'completed' ? 'success' : 'error', { native: true });
           renderAdminData();
         });
+      }).catch(err => showToast(err.message));
+    }
+
+    function clearAdminHistory() {
+      if (!confirm('Clear admin history only? User order history will stay safe.')) return;
+      db.ref('orders').once('value').then(snap => {
+        const orders = snap.val() || {};
+        const updates = {};
+        Object.values(orders).forEach(o => {
+          if (o && o.id && o.status !== 'pending' && o.adminHidden !== true) {
+            updates[o.id + '/adminHidden'] = true;
+            updates[o.id + '/adminHiddenAt'] = firebase.database.ServerValue.TIMESTAMP;
+            updates[o.id + '/adminHiddenBy'] = currentTelegramUser || 'admin';
+          }
+        });
+
+        if (!Object.keys(updates).length) {
+          notifyApp('No History Found', 'There is no admin history to clear.', 'info', { native: true });
+          return null;
+        }
+
+        return db.ref('orders').update(updates);
+      }).then(result => {
+        if (result === null) return;
+        notifyApp('History Cleared', 'Admin history cleared only. User history is kept.', 'warning', { native: true });
+        renderAdminData();
+        updateAdminCounters();
       }).catch(err => showToast(err.message));
     }
 
