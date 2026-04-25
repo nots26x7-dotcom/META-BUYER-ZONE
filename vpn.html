@@ -1790,6 +1790,82 @@
             }
         }
 
+
+        /* === Admin panel tabs as select dropdown === */
+        .admin-select-topbar{
+            padding:8px 13px 10px !important;
+        }
+        .admin-select-nav{
+            display:grid;
+            grid-template-columns:1fr;
+            gap:8px;
+            padding:11px;
+            border-radius:20px;
+            background:#ffffff;
+            border:1px solid rgba(15,23,42,.11);
+            box-shadow:0 8px 20px rgba(15,23,42,.07);
+        }
+        .admin-select-label{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+            font-size:9px;
+            font-weight:900;
+            color:#64748b;
+            text-transform:uppercase;
+            letter-spacing:.09em;
+        }
+        .admin-select-label b{
+            color:#2563eb;
+            font-size:10px;
+            letter-spacing:.05em;
+        }
+        .admin-tab-select{
+            width:100%;
+            height:42px;
+            border:none;
+            outline:none;
+            border-radius:15px;
+            padding:0 42px 0 13px;
+            background:linear-gradient(135deg,#eff6ff,#ffffff);
+            border:1px solid rgba(37,99,235,.18);
+            color:#0f172a;
+            font-size:12px;
+            font-weight:900;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 6px 14px rgba(37,99,235,.07);
+            appearance:auto;
+        }
+        .admin-pending-pill{
+            justify-self:start;
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:6px 10px;
+            border-radius:999px;
+            background:rgba(37,99,235,.08);
+            border:1px solid rgba(37,99,235,.14);
+            color:#1d4ed8;
+            font-size:9px;
+            font-weight:900;
+            letter-spacing:.06em;
+            text-transform:uppercase;
+        }
+        .admin-pending-pill span{
+            min-width:18px;
+            height:18px;
+            padding:0 5px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:999px;
+            background:#2563eb;
+            color:#fff;
+            font-size:9px;
+            line-height:1;
+        }
+        .adm-nav{ display:none !important; }
+
 </style>
 </head>
 <body>
@@ -1889,12 +1965,19 @@
             <h2 class="font-black text-xl">Admin Control</h2>
             <button onclick="closeAdmin()" class="mini-icon-btn font-bold">&times;</button>
         </div>
-        <div class="p-4 admin-topbar">
-            <div class="adm-nav">
-                <button onclick="admTab('pending', this)" class="adm-tab adm-tab-active">PENDING (<span id="p-count">0</span>)</button>
-                <button onclick="admTab('history', this)" class="adm-tab">HISTORY</button>
-                <button onclick="admTab('stock', this)" class="adm-tab">STOCK MGMT</button>
-                <button onclick="admTab('settings', this)" class="adm-tab">VPN MGMT</button>
+        <div class="p-4 admin-topbar admin-select-topbar">
+            <div class="admin-select-nav">
+                <div class="admin-select-label">
+                    <span>Admin Section</span>
+                    <b>Choose Panel</b>
+                </div>
+                <select id="admin-tab-select" class="admin-tab-select" onchange="admTab(this.value)">
+                    <option value="pending">Pending Orders</option>
+                    <option value="history">Order History</option>
+                    <option value="stock">Stock Management</option>
+                    <option value="settings">VPN Management</option>
+                </select>
+                <div class="admin-pending-pill">Pending <span id="p-count">0</span></div>
             </div>
         </div>
         <div class="p-5 overflow-y-auto flex-1 pb-24">
@@ -2721,12 +2804,19 @@
         window.delStockItem = (vid, skey) => remove(ref(db, `vpns/${vid}/stock/${skey}`))
             .then(() => appNotify('Stock Removed', 'Selected stock item deleted.', 'warning'));
 
-        window.admTab = (t, btn) => {
+        window.admTab = (t, btn = null) => {
             document.querySelectorAll('.adm-tab').forEach(b => b.classList.remove('adm-tab-active'));
-            btn.classList.add('adm-tab-active');
+            if (btn) btn.classList.add('adm-tab-active');
+
+            const select = document.getElementById('admin-tab-select');
+            if (select && select.value !== t) select.value = t;
+
             document.querySelectorAll('.adm-content').forEach(c => c.classList.add('hidden'));
-            document.getElementById('adm-' + t).classList.remove('hidden');
-            appNotify('Admin Tab Opened', `${t.charAt(0).toUpperCase() + t.slice(1)} section opened.`, 'info', { native:false, sound:false, duration:1800 });
+            const target = document.getElementById('adm-' + t);
+            if (target) target.classList.remove('hidden');
+
+            const labels = { pending: 'Pending Orders', history: 'Order History', stock: 'Stock Management', settings: 'VPN Management' };
+            appNotify('Admin Section Opened', (labels[t] || t) + ' opened.', 'info', { native:false, sound:false, duration:1800 });
         };
 
         window.openAdmin = () => {
