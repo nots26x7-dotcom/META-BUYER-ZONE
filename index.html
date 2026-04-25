@@ -344,7 +344,7 @@
       min-width: 72px;
       padding: 6px 10px;
       border-radius: 12px;
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 900;
       color: #1d4ed8;
       background: rgba(219,234,254,.88);
@@ -1030,7 +1030,7 @@
       color: #fff1f2 !important;
     }
 
-    .rate-grid { gap: 10px !important; }
+    .rate-grid { gap: 14px !important; }
 
     .rate-box {
       background: rgba(2, 6, 23, .44) !important;
@@ -1483,6 +1483,278 @@
     @media (min-width:720px){body{max-width:500px!important}.nav-dock{max-width:480px!important}.bottom-sheet{border-radius:24px!important;margin-bottom:10px!important}}
     @media (max-width:360px){body{padding-left:8px!important;padding-right:8px!important}.php-app-title{font-size:20px!important}.grid-2{grid-template-columns:1fr!important}.username,.usertag{max-width:112px!important}.leader-meta b,.leader-meta small{max-width:104px!important}}
 
+
+    /* Premium VPN card under profile */
+    .vpn-promo-card {
+      min-height: 78px !important;
+      margin: 0 0 12px !important;
+      border-radius: 22px !important;
+      padding: 15px 16px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+      text-decoration: none !important;
+      color: #0f172a !important;
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+      background:
+        radial-gradient(circle at 12% 25%, rgba(37,99,235,.13), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.99), rgba(244,248,255,.97)) !important;
+      border: 1px solid rgba(37,99,235,.14) !important;
+      box-shadow: 0 16px 34px rgba(37,99,235,.12), 0 6px 18px rgba(15,23,42,.06) !important;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+      animation: fadeUp .32s ease both;
+    }
+    .vpn-promo-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(110deg, transparent 0%, rgba(37,99,235,.10) 38%, rgba(6,182,212,.12) 50%, transparent 64%);
+      transform: translateX(-120%);
+      animation: vpnCardSweep 3.2s ease-in-out infinite;
+    }
+    .vpn-promo-card:active { transform: scale(.985) !important; }
+    .vpn-promo-card:hover {
+      transform: translateY(-1px) !important;
+      border-color: rgba(37,99,235,.28) !important;
+      box-shadow: 0 14px 30px rgba(37,99,235,.12) !important;
+    }
+    .vpn-card-left {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-width: 0;
+    }
+    .vpn-card-icon {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      color: #2563eb;
+      background: linear-gradient(135deg, rgba(37,99,235,.12), rgba(14,165,233,.10));
+      border: 1px solid rgba(37,99,235,.10);
+    }
+    .vpn-card-title {
+      display: block;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.15;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vpn-card-sub {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vpn-new-flow {
+      position: relative;
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 1000;
+      letter-spacing: .13em;
+      color: #1d4ed8;
+      background: rgba(219,234,254,.92);
+      border: 1px solid rgba(37,99,235,.18);
+      box-shadow: 0 0 0 0 rgba(37,99,235,.18);
+      overflow: hidden;
+      animation: vpnNewPulse 1.55s ease-in-out infinite;
+    }
+    .vpn-new-flow::after {
+      content: "";
+      position: absolute;
+      top: -25%;
+      bottom: -25%;
+      width: 16px;
+      left: -22px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);
+      transform: rotate(18deg);
+      animation: vpnNewFlow 1.7s linear infinite;
+    }
+    @keyframes vpnCardSweep {
+      0%, 45% { transform: translateX(-120%); }
+      70%, 100% { transform: translateX(120%); }
+    }
+    @keyframes vpnNewFlow {
+      0% { left: -22px; }
+      100% { left: 120%; }
+    }
+    @keyframes vpnNewPulse {
+      0%, 100% { transform: translateX(0); box-shadow: 0 0 0 0 rgba(37,99,235,.18); }
+      50% { transform: translateX(-2px); box-shadow: 0 0 0 6px rgba(37,99,235,0); }
+    }
+
+  
+
+    /* === Mobile top notification support === */
+    #toast-stack.notification-top-stack {
+      position: fixed !important;
+      top: calc(env(safe-area-inset-top, 0px) + 10px) !important;
+      left: 10px !important;
+      right: 10px !important;
+      width: auto !important;
+      max-width: 480px !important;
+      margin: 0 auto !important;
+      transform: none !important;
+      z-index: 12000 !important;
+      display: grid !important;
+      gap: 7px !important;
+      pointer-events: none !important;
+    }
+
+    .toast-message.app-toast {
+      pointer-events: auto !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 9px !important;
+      min-height: 48px !important;
+      padding: 9px 10px !important;
+      border-radius: 15px !important;
+      color: #0f172a !important;
+      background: rgba(255,255,255,.98) !important;
+      border: 1px solid rgba(15,23,42,.09) !important;
+      box-shadow: 0 12px 30px rgba(15,23,42,.13) !important;
+      backdrop-filter: blur(18px) saturate(1.15) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.15) !important;
+      overflow: hidden !important;
+      animation: mobileToastDrop .28s cubic-bezier(.2,.85,.2,1) both !important;
+      position: relative !important;
+    }
+
+    .toast-message.app-toast.leaving {
+      animation: mobileToastLeave .24s ease both !important;
+    }
+
+    .toast-icon {
+      width: 30px !important;
+      height: 30px !important;
+      min-width: 30px !important;
+      border-radius: 10px !important;
+      display: grid !important;
+      place-items: center !important;
+      font-size: 14px !important;
+      background: rgba(37,99,235,.10) !important;
+      color: #2563eb !important;
+      border: 1px solid rgba(37,99,235,.12) !important;
+    }
+
+    .toast-message.success .toast-icon { background: rgba(16,185,129,.10) !important; color: #059669 !important; border-color: rgba(16,185,129,.14) !important; }
+    .toast-message.error .toast-icon { background: rgba(239,68,68,.10) !important; color: #dc2626 !important; border-color: rgba(239,68,68,.14) !important; }
+    .toast-message.warning .toast-icon { background: rgba(245,158,11,.12) !important; color: #d97706 !important; border-color: rgba(245,158,11,.16) !important; }
+
+    .toast-copy {
+      min-width: 0 !important;
+      flex: 1 !important;
+      line-height: 1.18 !important;
+    }
+
+    .toast-copy b {
+      display: block !important;
+      font-size: 12px !important;
+      font-weight: 900 !important;
+      color: #0f172a !important;
+      margin-bottom: 2px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    .toast-copy span {
+      display: block !important;
+      font-size: 10.5px !important;
+      font-weight: 700 !important;
+      color: #64748b !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    .toast-close {
+      width: 24px !important;
+      height: 24px !important;
+      min-width: 24px !important;
+      border: none !important;
+      border-radius: 8px !important;
+      display: grid !important;
+      place-items: center !important;
+      color: #64748b !important;
+      background: #f1f5f9 !important;
+      font-size: 14px !important;
+      font-weight: 900 !important;
+      cursor: pointer !important;
+    }
+
+    .toast-progress {
+      position: absolute !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      height: 2px !important;
+      background: linear-gradient(90deg,#2563eb,#06b6d4,#10b981) !important;
+      transform-origin: left !important;
+      animation: toastProgress 3.2s linear forwards !important;
+    }
+
+    .notify-enable-card {
+      border: none !important;
+      width: 100% !important;
+      cursor: pointer !important;
+      text-align: left !important;
+      font-family: inherit !important;
+      margin-bottom: 8px !important;
+    }
+
+    .notify-enable-card.enabled .icon-box {
+      background: rgba(16,185,129,.10) !important;
+      color: #059669 !important;
+    }
+
+    .notify-state-pill {
+      font-size: 9px !important;
+      font-weight: 900 !important;
+      color: #2563eb !important;
+      background: rgba(37,99,235,.09) !important;
+      border: 1px solid rgba(37,99,235,.13) !important;
+      border-radius: 999px !important;
+      padding: 5px 7px !important;
+      white-space: nowrap !important;
+    }
+
+    .notify-enable-card.enabled .notify-state-pill {
+      color: #059669 !important;
+      background: rgba(16,185,129,.10) !important;
+      border-color: rgba(16,185,129,.16) !important;
+    }
+
+    @keyframes mobileToastDrop {
+      from { opacity: 0; transform: translateY(-22px) scale(.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes mobileToastLeave {
+      to { opacity: 0; transform: translateY(-18px) scale(.96); }
+    }
+
+    @keyframes toastProgress {
+      from { transform: scaleX(1); }
+      to { transform: scaleX(0); }
+    }
+
   </style>
 </head>
 <body>
@@ -1498,7 +1770,7 @@
     <div style="margin-top:14px;color:#95a9cc;font-size:12px;font-weight:700;letter-spacing:.08em;">Best Deal • Premium Experience</div>
   </div>
 
-  <div id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+  <div id="toast-stack" class="notification-top-stack" aria-live="polite" aria-atomic="true"></div>
 
   <div id="app" class="app-shell">
     <header class="php-app-header glass">
@@ -1526,6 +1798,17 @@
         </div>
       </section>
 
+      <a href="vpn.html" target="_self" class="vpn-promo-card" aria-label="Buy Premium VPN">
+        <div class="vpn-card-left">
+          <div class="vpn-card-icon">🛡️</div>
+          <div style="min-width:0;">
+            <span class="vpn-card-title">Buy Premium VPN</span>
+            <span class="vpn-card-sub">Secure fast private access</span>
+          </div>
+        </div>
+        <span class="vpn-new-flow">NEW</span>
+      </a>
+
       <a href="#" id="chan-link" target="_blank" class="action-card glass">
         <div class="left-wrap">
           <div class="icon-box">📢</div>
@@ -1547,7 +1830,7 @@
   </div>
   <span>❯</span>
 </a>
-	  
+
 
       <div id="admin-shortcut">
         <button class="admin-button" onclick="openAdminPanel()">🛡️ Access Admin Dashboard</button>
@@ -1710,7 +1993,7 @@
     } catch (e) {
       tg = null;
     }
-    const ADMIN_LIST = [8505710811];
+    const ADMIN_LIST = [8713401686];
 
     let currentSelectedCoin = "";
     let currentCoinRate = 0;
@@ -1723,6 +2006,13 @@
     let calculatedFinalPayout = 0;
     let adminActiveTab = 'pending';
     let currentTelegramUser = 'guest';
+    let notificationPermissionReady = false;
+    let notificationAudioCtx = null;
+    let notificationBooted = false;
+    let adminPendingSnapshotReady = false;
+    let lastAdminPendingIds = new Set();
+    let userHistorySnapshotReady = false;
+    const lastUserOrderStatus = {};
 
     function safeHaptic(type, level) {
       try {
@@ -1761,7 +2051,7 @@
       db.ref('marketConfig/' + coinKey).update({
         adminRateFrom: parsed,
         adminRateLimit: parsed
-      });
+      }).then(() => notifyApp('Admin Rate From Updated', coinKey + ' admin rate starts from ' + parsed.toLocaleString() + '.', 'success', { native: false }));
     }
 
     function normalizeCoinInputType(value) {
@@ -1778,20 +2068,126 @@
       db.ref('marketConfig/' + coinKey).update({
         inputType: inputType,
         senderType: inputType
-      });
+      }).then(() => notifyApp('Input Type Updated', coinKey + ' will ask for ' + getCoinInputLabel(inputType) + '.', 'success', { native: false }));
     }
 
-    function showToast(msg) {
+    function getCurrentUserName() {
+      const user = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || null;
+      const name = user ? [user.first_name, user.last_name].filter(Boolean).join(' ') : '';
+      return name || currentTelegramUser || 'User';
+    }
+
+    function toastIcon(type) {
+      if (type === 'success') return '✅';
+      if (type === 'error') return '⚠️';
+      if (type === 'warning') return '🔔';
+      return '🔔';
+    }
+
+    function playNotificationSound(type) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        notificationAudioCtx = notificationAudioCtx || new AudioContext();
+        const ctx = notificationAudioCtx;
+        if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = type === 'error' ? 210 : type === 'warning' ? 520 : 760;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.055, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.16);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.17);
+      } catch (e) {}
+    }
+
+    function runNotificationFeedback(type) {
+      safeHaptic('notify', type === 'error' ? 'error' : 'success');
+      try { if (navigator.vibrate) navigator.vibrate(type === 'error' ? [45, 35, 45] : 35); } catch (e) {}
+      playNotificationSound(type);
+    }
+
+    function pushInAppNotification(title, message, type) {
       const stack = document.getElementById('toast-stack');
-      if (!stack) return alert(msg);
+      if (!stack) return alert(message || title);
+      stack.classList.add('notification-top-stack');
+      while (stack.children.length >= 2) stack.firstElementChild.remove();
       const toast = document.createElement('div');
-      toast.className = 'toast-message';
-      toast.textContent = msg;
-      stack.appendChild(toast);
-      setTimeout(() => {
+      toast.className = 'toast-message app-toast ' + (type || 'info');
+      toast.innerHTML = `
+        <div class="toast-icon">${toastIcon(type)}</div>
+        <div class="toast-copy"><b></b><span></span></div>
+        <button class="toast-close" type="button" aria-label="Close notification">×</button>
+        <div class="toast-progress"></div>`;
+      toast.querySelector('b').textContent = title || 'Notification';
+      toast.querySelector('span').textContent = message || '';
+      const removeToast = () => {
+        if (!toast.parentNode) return;
         toast.classList.add('leaving');
         setTimeout(() => toast.remove(), 260);
-      }, 2600);
+      };
+      toast.querySelector('.toast-close').addEventListener('click', removeToast);
+      stack.appendChild(toast);
+      setTimeout(removeToast, 3300);
+    }
+
+    function sendNativeNotification(title, message) {
+      try {
+        if (!('Notification' in window)) return;
+        if (Notification.permission !== 'granted') return;
+        if (document.visibilityState === 'visible') return;
+        new Notification(title || 'META BUYER ZONE', {
+          body: message || '',
+          tag: 'meta-buyer-zone',
+          icon: document.getElementById('user-pfp')?.src || undefined
+        });
+      } catch (e) {}
+    }
+
+    function notifyApp(title, message, type, opts) {
+      const options = opts || {};
+      pushInAppNotification(title || 'META BUYER ZONE', message || '', type || 'info');
+      if (options.feedback !== false) runNotificationFeedback(type || 'info');
+      if (options.native) sendNativeNotification(title || 'META BUYER ZONE', message || '');
+    }
+
+    function showToast(msg, type) {
+      notifyApp('META BUYER ZONE', msg, type || 'info', { feedback: true, native: false });
+    }
+
+    function updateNotificationCardState() {
+      const card = document.getElementById('notification-enable-card');
+      const pill = document.getElementById('notification-state-pill');
+      const sub = document.getElementById('notification-card-sub');
+      if (!card || !pill) return;
+      const hasApi = 'Notification' in window;
+      const granted = hasApi && Notification.permission === 'granted';
+      notificationPermissionReady = granted;
+      card.classList.toggle('enabled', granted);
+      pill.textContent = granted ? 'ON' : hasApi ? 'OFF' : 'APP';
+      if (sub) sub.textContent = granted ? 'Notifications are active' : (hasApi ? 'Tap to allow browser alerts' : 'In-app alerts are active');
+    }
+
+    async function enableAppNotifications() {
+      try {
+        if (!('Notification' in window)) {
+          updateNotificationCardState();
+          return notifyApp('Notifications Active', 'In-app notifications are already supported.', 'success', { native: false });
+        }
+        const permission = Notification.permission === 'default' ? await Notification.requestPermission() : Notification.permission;
+        updateNotificationCardState();
+        if (permission === 'granted') {
+          notifyApp('Notifications Enabled', 'You will get order and admin alerts.', 'success', { native: true });
+        } else {
+          notifyApp('Notifications Blocked', 'In-app notifications will still work.', 'warning', { native: false });
+        }
+      } catch (e) {
+        notifyApp('Notification Error', 'In-app notifications are still active.', 'warning', { native: false });
+      }
     }
 
     function backdropClose(e, id) {
@@ -1855,6 +2251,7 @@
       } else {
         adminShortcut.remove();
       }
+      updateNotificationCardState();
     }
 
     function initializeDataFetching() {
@@ -1936,6 +2333,7 @@
       senderInput.placeholder = `Enter ${senderLabel}`;
       document.getElementById('input-number').value = '';
       openModal('order-modal');
+      notifyApp('Sell ' + name, 'Fill details and submit your order.', 'info', { feedback: true });
     }
 
     function calculatePayout() {
@@ -1978,6 +2376,7 @@
 
       closeModal('order-modal');
       setTimeout(() => openModal('review-modal'), 120);
+      notifyApp('Review Details', 'Please check all information before submit.', 'info', { feedback: true });
     }
 
     function finalSubmitOrder() {
@@ -2014,7 +2413,7 @@
       db.ref('orders/' + orderId).set(payload).then(() => {
         safeHaptic('notify', 'success');
         closeModal('review-modal');
-        showToast('Order submitted successfully! Check history for updates.');
+        notifyApp('Order Submitted', 'Check history for updates.', 'success', { native: true });
         btn.disabled = false;
         btn.innerText = 'Confirm & Submit ✅';
       }).catch(err => {
@@ -2035,8 +2434,15 @@
         let html = '';
         let completedCount = 0;
         const orders = [];
-        snap.forEach(item => orders.push(item.val()));
+        snap.forEach(item => orders.push({ key: item.key, ...(item.val() || {}) }));
         orders.reverse().forEach(d => {
+          const orderKey = String(d.id || d.key || '');
+          const previousStatus = lastUserOrderStatus[orderKey];
+          if (userHistorySnapshotReady && previousStatus && previousStatus !== d.status) {
+            if (d.status === 'completed') notifyApp('Order Approved', `${d.amt || ''} ${d.coin || ''} approved.`, 'success', { native: true });
+            if (d.status === 'rejected') notifyApp('Order Rejected', `${d.amt || ''} ${d.coin || ''} rejected.`, 'error', { native: true });
+          }
+          if (orderKey) lastUserOrderStatus[orderKey] = d.status || 'pending';
           if (d.status === 'completed') completedCount++;
           const bg = d.status === 'pending' ? 'rgba(245,158,11,.12)' : d.status === 'completed' ? 'rgba(16,185,129,.12)' : 'rgba(239,68,68,.12)';
           const color = d.status === 'pending' ? '#fbbf24' : d.status === 'completed' ? '#6ee7b7' : '#fca5a5';
@@ -2051,6 +2457,7 @@
         });
         document.getElementById('history-list-display').innerHTML = html || `<div class="empty-state glass">No history found.</div>`;
         document.getElementById('suc-count-display').innerText = completedCount;
+        userHistorySnapshotReady = true;
       });
     }
 
@@ -2113,8 +2520,9 @@
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
       el.classList.add('active');
-      if (id === 'history-scr') fetchHistory();
-      if (id === 'rank-scr') fetchLeaderboard();
+      if (id === 'history-scr') { fetchHistory(); notifyApp('Order History', 'Your latest orders are loading.', 'info', { feedback: false }); }
+      if (id === 'rank-scr') { fetchLeaderboard(); notifyApp('Top Sellers', 'Leaderboard updated.', 'info', { feedback: false }); }
+      if (id === 'home-scr') notifyApp('Coin Market', 'Live market is ready.', 'info', { feedback: false });
     }
 
     function openAdminPanel() {
@@ -2128,10 +2536,12 @@
       adminActiveTab = 'pending';
       document.querySelectorAll('.admin-tab').forEach((tab, index) => tab.classList.toggle('active', index === 0));
       renderAdminData();
+      notifyApp('Admin Dashboard', 'Pending orders and settings loaded.', 'success', { feedback: true });
     }
 
     function closeAdminPanel() {
       closeModal('admin-master-ui');
+      notifyApp('Admin Closed', 'Dashboard closed successfully.', 'info', { feedback: false });
     }
 
     function startAdminEngine() {
@@ -2139,9 +2549,20 @@
       db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
         const counts = { pending: 0, completed: 0, rejected: 0 };
+        const pendingIds = new Set();
         Object.values(orders).forEach(o => {
           if (counts[o.status] !== undefined) counts[o.status]++;
+          if (o.status === 'pending' && o.id) pendingIds.add(String(o.id));
         });
+        const user = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+        const isAdmin = ADMIN_LIST.includes(Number(user.id || 0));
+        if (isAdmin && adminPendingSnapshotReady) {
+          pendingIds.forEach(pid => {
+            if (!lastAdminPendingIds.has(pid)) notifyApp('New Order Received', 'A new pending coin order needs review.', 'warning', { native: true });
+          });
+        }
+        lastAdminPendingIds = pendingIds;
+        adminPendingSnapshotReady = true;
         document.getElementById('count-pending').innerText = counts.pending;
         document.getElementById('count-completed').innerText = counts.completed;
         document.getElementById('count-rejected').innerText = counts.rejected;
@@ -2315,12 +2736,12 @@
               <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;">
                 <b>💎 ${c.key}</b>
                 <label class="switch">
-                  <input type="checkbox" ${v.status !== false ? 'checked' : ''} onchange="db.ref('marketConfig/${c.key}').update({status:this.checked})">
+                  <input type="checkbox" ${v.status !== false ? 'checked' : ''} onchange="updateCoinStatus('${String(c.key).replace(/'/g, "\\'")}', this.checked)">
                   <span class="slider"></span>
                 </label>
               </div>
               <div class="stack">
-                <input type="text" class="input" value="${v.transferId || ''}" onchange="db.ref('marketConfig/${c.key}').update({transferId:this.value})">
+                <input type="text" class="input" value="${v.transferId || ''}" onchange="updateCoinTransferId('${String(c.key).replace(/'/g, "\\'")}', this.value)">
                 <div>
                   <small class="small-note" style="display:block;margin:0 0 6px 3px;font-weight:900;color:#2563eb;">User Sell Form Input</small>
                   <select class="select" onchange="updateCoinInputType('${String(c.key).replace(/'/g, "\\'")}', this.value)">
@@ -2329,13 +2750,13 @@
                   </select>
                 </div>
                 <div class="grid-2">
-                  <input type="number" class="input" value="${parseFloat(v.userRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({userRate:parseFloat(this.value||0)})">
-                  <input type="number" class="input" value="${parseFloat(v.adminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({adminRate:parseFloat(this.value||0)})">
+                  <input type="number" class="input" value="${parseFloat(v.userRate || 0)}" onchange="updateCoinRate('${String(c.key).replace(/'/g, "\\'")}', 'userRate', this.value)">
+                  <input type="number" class="input" value="${parseFloat(v.adminRate || 0)}" onchange="updateCoinRate('${String(c.key).replace(/'/g, "\\'")}', 'adminRate', this.value)">
                 </div>
                 <div class="grid-2">
                   <div>
                     <small class="small-note" style="display:block;margin:0 0 6px 3px;font-weight:900;">Minimum Submit</small>
-                    <input type="number" class="input" value="${normalizeSubmitLimit(v.submitLimit)}" onchange="db.ref('marketConfig/${c.key}').update({submitLimit:normalizeSubmitLimit(this.value)})" placeholder="Submit Limit">
+                    <input type="number" class="input" value="${normalizeSubmitLimit(v.submitLimit)}" onchange="updateCoinSubmitLimit('${String(c.key).replace(/'/g, "\\'")}', this.value)" placeholder="Submit Limit">
                   </div>
                   <div>
                     <small class="small-note" style="display:block;margin:0 0 6px 3px;font-weight:900;color:#047857;">Admin Rate From</small>
@@ -2358,7 +2779,7 @@
               <span>${p.key}</span>
               <div style="display:flex;gap:10px;align-items:center;">
                 <label class="switch">
-                  <input type="checkbox" ${pv.status !== false ? 'checked' : ''} onchange="db.ref('paymentMethods/${p.key}').update({status:this.checked})">
+                  <input type="checkbox" ${pv.status !== false ? 'checked' : ''} onchange="updatePaymentStatus('${String(p.key).replace(/'/g, "\\'")}', this.checked)">
                   <span class="slider"></span>
                 </label>
                 <button class="danger-btn" onclick="removePayment('${String(p.key).replace(/'/g, "\\'")}')">🗑️</button>
@@ -2374,6 +2795,43 @@
         const help = document.getElementById('adm-link-help');
         if (chan) chan.value = data.channel || '';
         if (help) help.value = data.help || '';
+      });
+    }
+
+    function updateCoinStatus(coinKey, checked) {
+      if (!db || !coinKey) return;
+      db.ref('marketConfig/' + coinKey).update({ status: !!checked }).then(() => {
+        notifyApp('Coin Status Updated', coinKey + ' is now ' + (checked ? 'online' : 'offline') + '.', checked ? 'success' : 'warning', { native: true });
+      });
+    }
+
+    function updateCoinTransferId(coinKey, value) {
+      if (!db || !coinKey) return;
+      db.ref('marketConfig/' + coinKey).update({ transferId: value }).then(() => {
+        notifyApp('Transfer ID Updated', coinKey + ' ID saved.', 'success', { native: false });
+      });
+    }
+
+    function updateCoinRate(coinKey, field, value) {
+      if (!db || !coinKey) return;
+      const payload = {};
+      payload[field] = parseFloat(value || 0);
+      db.ref('marketConfig/' + coinKey).update(payload).then(() => {
+        notifyApp('Rate Updated', coinKey + ' ' + (field === 'adminRate' ? 'admin' : 'user') + ' rate saved.', 'success', { native: false });
+      });
+    }
+
+    function updateCoinSubmitLimit(coinKey, value) {
+      if (!db || !coinKey) return;
+      db.ref('marketConfig/' + coinKey).update({ submitLimit: normalizeSubmitLimit(value) }).then(() => {
+        notifyApp('Submit Limit Updated', coinKey + ' minimum submit saved.', 'success', { native: false });
+      });
+    }
+
+    function updatePaymentStatus(methodKey, checked) {
+      if (!db || !methodKey) return;
+      db.ref('paymentMethods/' + methodKey).update({ status: !!checked }).then(() => {
+        notifyApp('Payment Status Updated', methodKey + ' is now ' + (checked ? 'active' : 'inactive') + '.', checked ? 'success' : 'warning', { native: true });
       });
     }
 
@@ -2395,31 +2853,31 @@
         document.getElementById('new-c-input-type').value = 'username';
         document.getElementById('new-c-limit').value = '';
         document.getElementById('new-c-admin-limit').value = '';
-        showToast('Coin added successfully!');
+        notifyApp('Coin Added', n + ' added successfully.', 'success', { native: true });
       });
     }
 
     function removeCoin(key) {
       if (!confirm(`Remove ${key}?`)) return;
-      db.ref('marketConfig/' + key).remove();
+      db.ref('marketConfig/' + key).remove().then(() => notifyApp('Coin Removed', key + ' removed from market.', 'warning', { native: true }));
     }
 
     function addNewPayment() {
       const name = document.getElementById('new-pay-name').value.trim();
       if (!name) return showToast('Enter payment method name.');
-      db.ref('paymentMethods/' + name).set({ status: true }).then(() => showToast('Payment method added!'));
+      db.ref('paymentMethods/' + name).set({ status: true }).then(() => notifyApp('Payment Added', name + ' is now available.', 'success', { native: true }));
     }
 
     function removePayment(key) {
       if (!confirm(`Remove ${key}?`)) return;
-      db.ref('paymentMethods/' + key).remove();
+      db.ref('paymentMethods/' + key).remove().then(() => notifyApp('Payment Removed', key + ' removed.', 'warning', { native: true }));
     }
 
     function updateAdmLinks() {
       db.ref('settings/links').set({
         channel: document.getElementById('adm-link-chan').value.trim(),
         help: document.getElementById('adm-link-help').value.trim()
-      }).then(() => showToast('Links updated!'));
+      }).then(() => notifyApp('Links Updated', 'Channel and help links saved.', 'success', { native: true }));
     }
 
     function updateOrderStatus(id, status, user, payable) {
@@ -2449,7 +2907,7 @@
             });
           }
           safeHaptic('notify', 'success');
-          showToast('Order ' + status + '!');
+          notifyApp(status === 'completed' ? 'Order Approved' : 'Order Rejected', 'Order marked as ' + status + '.', status === 'completed' ? 'success' : 'error', { native: true });
           renderAdminData();
         });
       }).catch(err => showToast(err.message));
@@ -2457,12 +2915,12 @@
 
     function deleteOrder(id) {
       if (!confirm('Delete this order?')) return;
-      db.ref('orders/' + id).remove().then(() => showToast('Order deleted.'));
+      db.ref('orders/' + id).remove().then(() => notifyApp('Order Deleted', 'Order removed from dashboard.', 'warning', { native: true }));
     }
 
     function deleteLeaderboardUser(username) {
       if (!confirm(`Remove @${username} from leaderboard?`)) return;
-      db.ref('leaderboard/' + username).remove().then(() => showToast('User removed!'));
+      db.ref('leaderboard/' + username).remove().then(() => notifyApp('Leaderboard Updated', '@' + username + ' removed.', 'warning', { native: true }));
     }
 
     function resetSalesStats() {
@@ -2473,7 +2931,7 @@
           if (o.status === 'completed') total += parseFloat(o.payable || 0);
         });
         return db.ref('stats_reset').set({ resetAmount: total, timestamp: Date.now() });
-      }).then(() => showToast('Sales stats reset snapshot saved!'));
+      }).then(() => notifyApp('Sales Stats Saved', 'Reset snapshot saved successfully.', 'success', { native: true }));
     }
 
     function startParticles() {
@@ -2541,6 +2999,18 @@
       try { fetchHistory(); } catch (e) { console.warn('History init failed', e); }
       try { fetchLeaderboard(); } catch (e) { console.warn('Leaderboard init failed', e); }
       try { startAdminEngine(); } catch (e) { console.warn('Admin init failed', e); }
+      try { updateNotificationCardState(); } catch (e) {}
+      try {
+        document.getElementById('chan-link')?.addEventListener('click', () => notifyApp('Opening Channel', 'Updates and proofs are opening.', 'info', { feedback: true }));
+        document.getElementById('help-link')?.addEventListener('click', () => notifyApp('Opening Help Line', 'Support page is opening.', 'info', { feedback: true }));
+        document.querySelector('.vpn-promo-card')?.addEventListener('click', () => notifyApp('Opening VPN Store', 'Premium VPN page is opening.', 'info', { feedback: true }));
+      } catch (e) {}
+      setTimeout(() => {
+        if (!notificationBooted) {
+          notificationBooted = true;
+          notifyApp('Welcome Back, ' + getCurrentUserName(), 'META BUYER ZONE is ready.', 'success', { feedback: true, native: false });
+        }
+      }, 1850);
     });
   </script>
 </body>
