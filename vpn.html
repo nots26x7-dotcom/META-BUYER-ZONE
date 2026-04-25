@@ -1866,6 +1866,25 @@
         }
         .adm-nav{ display:none !important; }
 
+
+
+        /* === Admin choose panel should scroll away, not sticky === */
+        .scroll-normal-panel,
+        .admin-select-topbar,
+        .admin-select-nav{
+            position:relative !important;
+            top:auto !important;
+            bottom:auto !important;
+            z-index:auto !important;
+        }
+        .scroll-normal-panel{
+            padding:0 0 12px !important;
+            margin:0 0 4px !important;
+        }
+        #admin-panel > .p-4.admin-select-topbar{
+            display:none !important;
+        }
+
 </style>
 </head>
 <body>
@@ -1965,22 +1984,22 @@
             <h2 class="font-black text-xl">Admin Control</h2>
             <button onclick="closeAdmin()" class="mini-icon-btn font-bold">&times;</button>
         </div>
-        <div class="p-4 admin-topbar admin-select-topbar">
-            <div class="admin-select-nav">
-                <div class="admin-select-label">
-                    <span>Admin Section</span>
-                    <b>Choose Panel</b>
-                </div>
-                <select id="admin-tab-select" class="admin-tab-select" onchange="admTab(this.value)">
-                    <option value="pending">Pending Orders</option>
-                    <option value="history">Order History</option>
-                    <option value="stock">Stock Management</option>
-                    <option value="settings">VPN Management</option>
-                </select>
-                <div class="admin-pending-pill">Pending <span id="p-count">0</span></div>
-            </div>
-        </div>
         <div class="p-5 overflow-y-auto flex-1 pb-24">
+            <div class="admin-select-topbar scroll-normal-panel">
+                <div class="admin-select-nav">
+                    <div class="admin-select-label">
+                        <span>Admin Section</span>
+                        <b>Choose Panel</b>
+                    </div>
+                    <select id="admin-tab-select" class="admin-tab-select" onchange="admTab(this.value)">
+                        <option value="pending">Pending Orders</option>
+                        <option value="history">Order History</option>
+                        <option value="stock">Stock Management</option>
+                        <option value="settings">VPN Management</option>
+                    </select>
+                    <div class="admin-pending-pill">Pending <span id="p-count">0</span></div>
+                </div>
+            </div>
             <div id="adm-pending" class="adm-content space-y-4"></div>
 
             <div id="adm-history" class="adm-content hidden space-y-4">
