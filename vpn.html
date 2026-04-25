@@ -1,0 +1,2567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>VPN ZONE</title>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
+    <style>
+        :root{
+            --bg:#eef2f6;
+            --bg-2:#e8edf3;
+            --card:rgba(255,255,255,.94);
+            --card-2:rgba(248,250,252,.96);
+            --line:rgba(97,113,132,.13);
+            --line-2:rgba(97,113,132,.20);
+            --text:#233142;
+            --muted:#6f7d90;
+            --blue:#5f7ea6;
+            --blue-2:#46627f;
+            --blue-soft:#eaf2ff;
+            --green:#10a779;
+            --green-soft:#e8fff5;
+            --red:#cc6f6f;
+            --red-soft:#fff0f0;
+            --orange:#d3a66c;
+            --shadow:0 12px 28px rgba(35,49,66,.08);
+            --shadow-soft:0 8px 18px rgba(35,49,66,.06);
+            --radius-xl:28px;
+            --radius-lg:22px;
+            --radius-md:16px;
+            --grad-main:linear-gradient(135deg,#5f7ea6,#7fa0c2);
+        }
+
+        *{
+            font-family:'Plus Jakarta Sans','Inter',system-ui,sans-serif;
+            -webkit-tap-highlight-color:transparent;
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        html{ scroll-behavior:smooth; }
+
+        body{
+            min-height:100vh;
+            color:var(--text);
+            padding-bottom:106px;
+            overflow-x:hidden;
+            background:linear-gradient(180deg,#f7f9fc 0%,#eef2f6 45%,#e7ecf2 100%);
+            position:relative;
+        }
+
+        body::before,
+        body::after{
+            content:"";
+            position:fixed;
+            width:230px;
+            height:230px;
+            border-radius:999px;
+            filter:blur(64px);
+            opacity:.28;
+            z-index:-2;
+            pointer-events:none;
+            animation:floatBlob 10s ease-in-out infinite;
+        }
+
+        body::before{ top:-54px; left:-56px; background:rgba(143,161,183,.38); }
+        body::after{ right:-54px; bottom:90px; background:rgba(178,187,197,.42); animation-delay:-4s; }
+
+        @keyframes floatBlob{
+            0%,100%{ transform:translate(0,0) scale(1); }
+            50%{ transform:translate(12px,18px) scale(1.08); }
+        }
+        @keyframes spin{ to{ transform:rotate(360deg); } }
+        @keyframes fadeUp{
+            from{ opacity:0; transform:translateY(14px); }
+            to{ opacity:1; transform:translateY(0); }
+        }
+        @keyframes slideUp{
+            from{ transform:translateY(100%); opacity:0; }
+            to{ transform:translateY(0); opacity:1; }
+        }
+        @keyframes shimmer{
+            0%{ background-position:-200% 0; }
+            100%{ background-position:200% 0; }
+        }
+        @keyframes pulseGlow{
+            0%,100%{ box-shadow:0 0 0 0 rgba(95,126,166,.22),0 15px 35px rgba(35,49,66,.10); }
+            50%{ box-shadow:0 0 0 12px rgba(95,126,166,0),0 18px 44px rgba(35,49,66,.14); }
+        }
+        @keyframes badgeFlow{
+            0%{ transform:translateX(-8px); opacity:.72; }
+            50%{ transform:translateX(0); opacity:1; }
+            100%{ transform:translateX(-8px); opacity:.72; }
+        }
+
+        .hidden{ display:none !important; }
+        .bg-grid{ display:none; }
+
+        .max-w-md{
+            max-width:580px !important;
+            margin:0 auto;
+            position:relative;
+        }
+
+        header{
+            padding:14px 13px 8px !important;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+        }
+
+        .header-brand{
+            position:relative;
+            display:flex;
+            align-items:center;
+            gap:4px;
+            margin:0;
+            color:var(--text);
+            font-size:19px !important;
+            line-height:1.05;
+            font-weight:900 !important;
+            letter-spacing:-.05em !important;
+            font-style:normal !important;
+        }
+
+        .brand-accent{
+            color:var(--blue);
+            background:none;
+            -webkit-background-clip:initial;
+            background-clip:initial;
+        }
+
+        main{
+            padding:8px 13px 0 !important;
+            display:grid;
+            gap:12px;
+        }
+
+        #loading-screen{
+            position:fixed;
+            inset:0;
+            background:radial-gradient(circle at center,#ffffff 0%,#f4f7fb 52%,#e7ecf2 100%);
+            z-index:9999;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            transition:opacity .45s ease;
+        }
+
+        #loading-screen::before,
+        #loading-screen::after{
+            content:"";
+            position:absolute;
+            border-radius:999px;
+            filter:blur(58px);
+            pointer-events:none;
+        }
+
+        #loading-screen::before{
+            width:230px;
+            height:230px;
+            top:13%;
+            left:9%;
+            background:rgba(143,161,183,.24);
+            animation:floatBlob 9s ease-in-out infinite;
+        }
+
+        #loading-screen::after{
+            width:220px;
+            height:220px;
+            right:8%;
+            bottom:16%;
+            background:rgba(95,126,166,.18);
+            animation:floatBlob 11s ease-in-out infinite reverse;
+        }
+
+        .loader-ring{
+            width:126px;
+            height:126px;
+            border:0 !important;
+            border-radius:32px;
+            position:relative;
+            display:grid;
+            place-items:center;
+            background:linear-gradient(180deg,#ffffff,#f2f5f8);
+            border:1px solid var(--line) !important;
+            box-shadow:var(--shadow);
+            animation:pulseGlow 2s ease-in-out infinite;
+            z-index:1;
+        }
+
+        .loader-ring::before,
+        .loader-ring::after{
+            content:"";
+            position:absolute;
+            inset:-10px;
+            border-radius:38px;
+            border:2px solid transparent;
+        }
+
+        .loader-ring::before{
+            border-top-color:#8fa1b7;
+            border-right-color:#8fa1b7;
+            animation:spin 1.35s linear infinite;
+        }
+
+        .loader-ring::after{
+            inset:-19px;
+            border-bottom-color:#c4ceda;
+            border-left-color:#c4ceda;
+            animation:spin 1.8s linear infinite reverse;
+        }
+
+        .loader-ring + p{
+            margin-top:30px !important;
+            color:var(--text) !important;
+            font-size:20px !important;
+            font-weight:900 !important;
+            letter-spacing:.09em !important;
+            text-align:center;
+            position:relative;
+            z-index:1;
+        }
+
+        .loader-ring + p::after{
+            content:"";
+            display:block;
+            width:220px;
+            height:6px;
+            margin:17px auto 0;
+            border-radius:999px;
+            background:linear-gradient(90deg,#8fa1b7,#c4ceda,#8fa1b7);
+            background-size:200% 100%;
+            animation:shimmer 1.5s linear infinite;
+        }
+
+        .glass,
+        .card{
+            background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,250,252,.92));
+            border:1px solid var(--line);
+            box-shadow:var(--shadow);
+            backdrop-filter:blur(12px);
+            -webkit-backdrop-filter:blur(12px);
+            border-radius:20px;
+            position:relative;
+            overflow:hidden;
+            color:var(--text);
+        }
+
+        .card{
+            padding:13px;
+            animation:fadeUp .32s ease both;
+        }
+
+        .card::before,
+        .sheet::before,
+        #user-profile-card::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:linear-gradient(135deg,rgba(255,255,255,.80),transparent 48%);
+            pointer-events:none;
+        }
+
+        .glow-border::after{
+            content:"";
+            position:absolute;
+            inset:0;
+            border-radius:inherit;
+            border:1px solid rgba(95,126,166,.10);
+            pointer-events:none;
+        }
+
+        #user-profile-card{
+            border:none;
+            padding:15px !important;
+            margin:0;
+            background:linear-gradient(135deg,#ffffff,#f2f5f8,#e7edf4);
+            color:var(--text) !important;
+            box-shadow:0 14px 28px rgba(35,49,66,.08);
+        }
+
+        #user-profile-card *,
+        #user-profile-card.text-white{ color:var(--text) !important; }
+
+        #user-profile-card::after{
+            content:"";
+            position:absolute;
+            width:128px;
+            height:128px;
+            top:-36px;
+            right:-30px;
+            border-radius:999px;
+            background:rgba(130,145,162,.10);
+            filter:blur(2px);
+            animation:none;
+        }
+
+        .soft-badge,
+        .price-chip{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:7px 10px;
+            border-radius:14px;
+            background:rgba(255,255,255,.80);
+            border:1px solid rgba(97,113,132,.12);
+            color:var(--muted) !important;
+            font-size:9px;
+            font-weight:900;
+            letter-spacing:.08em;
+            box-shadow:0 6px 14px rgba(35,49,66,.05);
+        }
+
+        .status-dot{
+            width:7px;
+            height:7px;
+            border-radius:999px;
+            background:var(--green);
+            box-shadow:0 0 0 4px rgba(16,167,121,.10);
+        }
+
+        #u-pic{
+            width:52px !important;
+            height:52px !important;
+            border-radius:16px !important;
+            object-fit:cover;
+            border:1px solid rgba(97,113,132,.12) !important;
+            box-shadow:0 8px 16px rgba(35,49,66,.08) !important;
+        }
+
+        #u-nickname{
+            font-size:16px !important;
+            font-weight:900 !important;
+            line-height:1.2;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            max-width:190px;
+        }
+
+        #display-uid{
+            color:var(--muted) !important;
+            font-size:10px !important;
+            font-weight:800 !important;
+            letter-spacing:.08em !important;
+        }
+
+        #store-page,
+        #history-page{ display:grid; gap:10px; }
+        #store-page.hidden,
+        #history-page.hidden{ display:none !important; }
+
+        .store-card{
+            min-height:76px;
+            cursor:pointer;
+            transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
+        }
+
+        .store-card:hover,
+        .store-card:active{
+            transform:translateY(-1px) scale(.995);
+            border-color:rgba(95,126,166,.24);
+            box-shadow:0 14px 30px rgba(35,49,66,.10);
+        }
+
+        .vpn-img{
+            width:46px;
+            height:46px;
+            border-radius:15px;
+            object-fit:cover;
+            background:#fff;
+            border:1px solid rgba(97,113,132,.12);
+            box-shadow:0 8px 16px rgba(35,49,66,.07);
+        }
+
+        .store-card b{ font-size:15px; font-weight:900; color:var(--text); }
+        .store-card span.text-\[10px\],
+        .text-slate-400,
+        .text-slate-500{ color:var(--muted) !important; }
+
+        .online-badge,
+        .offline-badge{
+            min-width:72px;
+            text-align:center;
+            border-radius:999px !important;
+            padding:7px 10px !important;
+            font-size:9px !important;
+            font-weight:900 !important;
+            letter-spacing:.07em;
+        }
+
+        .online-badge{
+            color:#047857 !important;
+            background:rgba(220,252,231,.92) !important;
+            border:1px solid rgba(52,211,153,.25);
+        }
+
+        .offline-badge{
+            color:#b91c1c !important;
+            background:rgba(254,226,226,.92) !important;
+            border:1px solid rgba(248,113,113,.25);
+        }
+
+        .disabled-card{
+            opacity:.46;
+            pointer-events:none;
+            filter:saturate(.4);
+            box-shadow:none;
+        }
+
+        .section-title{
+            font-size:11px;
+            text-transform:uppercase;
+            letter-spacing:.12em;
+            color:var(--muted);
+            font-weight:900;
+        }
+
+        .btn-p{
+            width:100%;
+            padding:14px 15px;
+            border:none;
+            border-radius:16px;
+            font-weight:900;
+            font-size:13px;
+            color:#fff !important;
+            background:linear-gradient(135deg,#5f7ea6,#46627f);
+            background-size:200% 100%;
+            box-shadow:0 14px 28px rgba(95,126,166,.22);
+            transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+            position:relative;
+            overflow:hidden;
+            cursor:pointer;
+            animation:shimmer 5.5s linear infinite;
+        }
+
+        .btn-p:hover,
+        .btn-p:active{ transform:translateY(-1px); filter:brightness(1.02); }
+
+        .btn-p::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.26) 50%,transparent 78%);
+            transform:translateX(-130%);
+            animation:btnShine 3.8s ease-in-out infinite;
+        }
+
+        @keyframes btnShine{
+            0%,70%,100%{ transform:translateX(-130%); }
+            85%{ transform:translateX(130%); }
+        }
+
+        .btn-reject{
+            width:100%;
+            padding:12px;
+            border-radius:14px;
+            font-weight:900;
+            font-size:12px;
+            border:1px solid rgba(204,111,111,.22);
+            background:var(--red-soft);
+            color:#b91c1c !important;
+            transition:transform .18s ease,background .18s ease;
+        }
+
+        .btn-reject:hover{ transform:translateY(-1px); background:#ffe6e6; }
+
+        .mini-icon-btn{
+            width:42px;
+            height:42px;
+            min-width:42px;
+            display:grid;
+            place-items:center;
+            background:linear-gradient(180deg,#ffffff,#f2f5f8);
+            border:1px solid var(--line);
+            border-radius:14px;
+            color:var(--blue-2) !important;
+            box-shadow:var(--shadow-soft);
+            cursor:pointer;
+        }
+
+        #p-count-badge{
+            background:#cc6f6f !important;
+            color:#fff !important;
+            box-shadow:0 8px 16px rgba(204,111,111,.22);
+        }
+
+        .nav-shell{
+            position:fixed;
+            left:50%;
+            transform:translateX(-50%);
+            bottom:14px;
+            width:calc(100% - 24px);
+            max-width:552px;
+            height:70px !important;
+            display:flex;
+            align-items:center;
+            justify-content:space-around;
+            padding:7px;
+            border-radius:30px;
+            background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(247,249,251,.90));
+            backdrop-filter:blur(18px);
+            -webkit-backdrop-filter:blur(18px);
+            border:1px solid var(--line);
+            box-shadow:0 12px 28px rgba(35,49,66,.10);
+            z-index:1000;
+            overflow:hidden;
+        }
+
+        .nav-shell::before{ display:none; }
+
+        .nav-btn{
+            flex:1;
+            height:56px;
+            border:none;
+            background:transparent;
+            color:#8fa1b7 !important;
+            border-radius:18px;
+            font-weight:900 !important;
+            font-size:10px !important;
+            transition:all .2s ease;
+        }
+
+        .nav-btn i{
+            font-size:20px !important;
+            color:inherit !important;
+            background:none !important;
+            -webkit-background-clip:initial !important;
+            background-clip:initial !important;
+        }
+
+        .nav-btn.active,
+        .nav-btn.text-indigo-600{
+            color:#fff !important;
+            background:linear-gradient(135deg,#5f7ea6,#46627f);
+            box-shadow:0 12px 24px rgba(95,126,166,.22);
+        }
+
+        .modal{
+            position:fixed;
+            inset:0;
+            background:rgba(245,248,252,.72);
+            backdrop-filter:blur(12px);
+            -webkit-backdrop-filter:blur(12px);
+            z-index:6000;
+            display:none;
+            align-items:flex-end;
+            justify-content:center;
+            padding:0 10px;
+        }
+
+        .sheet{
+            width:100%;
+            max-width:560px;
+            max-height:90vh;
+            overflow-y:auto;
+            overflow-x:hidden;
+            padding:22px 17px 22px;
+            border-radius:30px 30px 0 0;
+            background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(246,248,251,.98));
+            border:1px solid var(--line);
+            box-shadow:0 -18px 40px rgba(35,49,66,.10);
+            animation:slideUp .26s ease;
+            color:var(--text);
+            position:relative;
+        }
+
+        .sheet h3,
+        .sheet h4{ color:var(--text); }
+
+        .pay-choice{
+            background:rgba(255,255,255,.96);
+            border:1px solid var(--line);
+            border-radius:16px;
+            color:var(--text) !important;
+            box-shadow:var(--shadow-soft);
+            transition:transform .18s ease,border-color .18s ease,background .18s ease;
+            cursor:pointer;
+        }
+
+        .pay-choice:hover,
+        .pay-choice:active{
+            transform:translateY(-1px);
+            border-color:rgba(95,126,166,.28);
+            background:#fff;
+        }
+
+        .adm-mini-input,
+        #trx-id{
+            width:100%;
+            background:rgba(255,255,255,.98);
+            border:1px solid var(--line);
+            border-radius:15px;
+            padding:13px 13px;
+            font-size:12px;
+            font-weight:800;
+            outline:none;
+            color:var(--text);
+            transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.65);
+        }
+
+        .adm-mini-input::placeholder,
+        #trx-id::placeholder{ color:#8c9aac; }
+
+        .adm-mini-input:focus,
+        #trx-id:focus{
+            border-color:rgba(95,126,166,.42);
+            box-shadow:0 0 0 4px rgba(95,126,166,.10);
+            background:#fff;
+        }
+
+        select.adm-mini-input{ appearance:none; }
+
+        .acc-box{
+            background:rgba(255,255,255,.98);
+            border:1px dashed rgba(95,126,166,.24);
+            border-radius:15px;
+            padding:11px 13px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:10px;
+            margin-top:8px;
+            transition:background .18s ease,border-color .18s ease,transform .18s ease;
+        }
+
+        .acc-box:hover{ background:#fff; border-color:rgba(95,126,166,.38); transform:translateY(-1px); }
+
+        .acc-label{
+            font-size:9px;
+            font-weight:900;
+            color:var(--muted);
+            text-transform:uppercase;
+            letter-spacing:.08em;
+        }
+
+        .acc-value{
+            font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+            font-size:11px;
+            font-weight:800;
+            color:var(--text);
+            word-break:break-word;
+        }
+
+        #help-page{
+            text-align:center;
+            padding:32px 18px !important;
+        }
+
+        #help-page .w-20{
+            background:var(--blue-soft) !important;
+            border:1px solid rgba(95,126,166,.14) !important;
+        }
+
+        #help-page i{ color:var(--blue) !important; }
+
+        #admin-panel{
+            background:linear-gradient(180deg,#f7f9fc 0%,#eef2f6 58%,#e7ecf2 100%);
+            color:var(--text);
+        }
+
+        .admin-topbar{
+            background:rgba(247,249,252,.88);
+            backdrop-filter:blur(18px);
+            -webkit-backdrop-filter:blur(18px);
+            border-bottom:1px solid var(--line);
+            box-shadow:0 6px 18px rgba(35,49,66,.04);
+        }
+
+        #admin-panel > .p-6{ padding:14px 14px 10px !important; }
+        #admin-panel > .p-4{ padding:8px 13px 12px !important; }
+        #admin-panel > .p-5{ padding:13px 13px 106px !important; }
+
+        #admin-panel h2{
+            color:var(--text);
+            font-size:21px !important;
+            font-weight:900 !important;
+        }
+
+        .adm-nav{
+            display:grid;
+            grid-template-columns:repeat(4,minmax(94px,1fr));
+            gap:7px;
+            overflow-x:auto;
+            padding:6px;
+            border-radius:21px;
+            background:rgba(255,255,255,.92);
+            border:1px solid var(--line);
+            box-shadow:0 8px 20px rgba(35,49,66,.05);
+            margin:0;
+        }
+
+        .adm-tab{
+            min-width:94px;
+            padding:11px 8px;
+            border:none;
+            border-radius:16px;
+            text-align:center;
+            white-space:nowrap;
+            font-size:10px;
+            font-weight:900;
+            color:var(--muted);
+            background:transparent;
+            transition:all .18s ease;
+        }
+
+        .adm-tab-active{
+            background:linear-gradient(135deg,#6f8bad,#8ea4bc);
+            color:#fff !important;
+            box-shadow:0 10px 20px rgba(95,126,166,.20);
+        }
+
+        .adm-content{ display:grid; gap:12px; }
+        .adm-content.hidden{ display:none !important; }
+
+        .switch{
+            position:relative;
+            display:inline-block;
+            width:44px;
+            height:26px;
+            flex-shrink:0;
+        }
+
+        .switch input{ opacity:0; width:0; height:0; }
+
+        .slider{
+            position:absolute;
+            cursor:pointer;
+            inset:0;
+            background:#d5dde7;
+            transition:.28s;
+            border-radius:999px;
+            border:1px solid rgba(97,113,132,.12);
+        }
+
+        .slider:before{
+            position:absolute;
+            content:"";
+            height:20px;
+            width:20px;
+            left:2px;
+            bottom:2px;
+            background:#fff;
+            transition:.28s;
+            border-radius:50%;
+            box-shadow:0 4px 12px rgba(35,49,66,.18);
+        }
+
+        input:checked + .slider{ background:linear-gradient(135deg,#5f7ea6,#10a779); }
+        input:checked + .slider:before{ transform:translateX(18px); }
+
+        .bg-slate-50,
+        .bg-indigo-50,
+        .bg-white,
+        .bg-white\/80{
+            background:rgba(255,255,255,.96) !important;
+        }
+
+        .border,
+        .border-t,
+        .border-b{ border-color:var(--line) !important; }
+
+        .text-indigo-400,
+        .text-indigo-500,
+        .text-indigo-600,
+        .text-indigo-700{ color:var(--blue) !important; }
+        .text-rose-300,
+        .text-rose-400,
+        .text-rose-500{ color:var(--red) !important; }
+
+        hr{
+            border:none;
+            border-top:1px solid var(--line);
+        }
+
+        #target-price,
+        #active-num{ color:var(--blue-2) !important; }
+
+        @media (min-width:720px){
+            .sheet{ border-radius:32px; margin-bottom:14px; }
+        }
+
+        @media (max-width:420px){
+            .card{ border-radius:19px; }
+            .sheet{ padding:21px 16px 20px; }
+            header{ padding-top:12px !important; }
+            .header-brand{ font-size:17px !important; }
+            .nav-shell{ bottom:9px; width:calc(100% - 16px); }
+            .adm-nav{ grid-template-columns:repeat(4,96px); }
+        }
+    
+
+        /* === CLEAR CARD VISIBILITY FIX - WHITE THEME === */
+        :root{
+            --bg:#f1f5f9;
+            --bg-2:#e8eef6;
+            --card:#ffffff;
+            --card-2:#f8fafc;
+            --line:rgba(15,23,42,.11);
+            --line-2:rgba(15,23,42,.18);
+            --text:#0f172a;
+            --muted:#64748b;
+            --blue:#2563eb;
+            --blue-2:#1d4ed8;
+            --green:#059669;
+            --red:#dc2626;
+            --shadow:0 10px 24px rgba(15,23,42,.10);
+            --shadow-soft:0 6px 16px rgba(15,23,42,.08);
+        }
+
+        body{
+            background:
+                radial-gradient(circle at 0% 0%, rgba(37,99,235,.09), transparent 24%),
+                radial-gradient(circle at 100% 22%, rgba(14,165,233,.08), transparent 26%),
+                linear-gradient(180deg,#f8fafc 0%,#f1f5f9 52%,#e8eef6 100%) !important;
+            color:var(--text) !important;
+        }
+
+        body::before, body::after{
+            opacity:.14 !important;
+            filter:blur(54px) !important;
+        }
+
+        header{ padding:13px 13px 7px !important; }
+
+        .header-brand{
+            color:#0f172a !important;
+            font-size:18px !important;
+            letter-spacing:-.04em !important;
+        }
+
+        .brand-accent{ color:#2563eb !important; }
+
+        main{ gap:13px !important; }
+
+        .glass,
+        .card{
+            background:#ffffff !important;
+            border:1px solid rgba(15,23,42,.12) !important;
+            box-shadow:0 10px 24px rgba(15,23,42,.10) !important;
+            color:#0f172a !important;
+            backdrop-filter:none !important;
+            -webkit-backdrop-filter:none !important;
+        }
+
+        .card{
+            padding:15px !important;
+            border-radius:20px !important;
+        }
+
+        .card::before,
+        .sheet::before,
+        #user-profile-card::before,
+        .glow-border::after{
+            display:none !important;
+        }
+
+        .card > *,
+        .glass > *,
+        .sheet > *,
+        #user-profile-card > *{
+            position:relative;
+            z-index:1;
+        }
+
+        #user-profile-card{
+            background:linear-gradient(135deg,#ffffff 0%,#f8fbff 48%,#eef6ff 100%) !important;
+            border:1px solid rgba(37,99,235,.14) !important;
+            box-shadow:0 12px 28px rgba(37,99,235,.10), 0 8px 18px rgba(15,23,42,.07) !important;
+            padding:17px !important;
+        }
+
+        #user-profile-card::after{
+            display:block !important;
+            opacity:.65 !important;
+            background:rgba(37,99,235,.08) !important;
+        }
+
+        .soft-badge,
+        .price-chip{
+            background:#ffffff !important;
+            border:1px solid rgba(37,99,235,.16) !important;
+            color:#475569 !important;
+            box-shadow:0 5px 12px rgba(15,23,42,.06) !important;
+        }
+
+        #u-nickname,
+        .card b,
+        .store-card b,
+        .sheet h3,
+        .sheet h4,
+        #admin-panel h2{
+            color:#0f172a !important;
+        }
+
+        #display-uid,
+        .text-slate-400,
+        .text-slate-500,
+        .store-card span.text-\[10px\]{
+            color:#64748b !important;
+        }
+
+        .store-card{
+            min-height:82px !important;
+            background:#ffffff !important;
+            border:1.5px solid rgba(15,23,42,.14) !important;
+            box-shadow:0 10px 22px rgba(15,23,42,.10) !important;
+            padding:15px !important;
+        }
+
+        .store-card:hover,
+        .store-card:active{
+            transform:translateY(-2px) !important;
+            border-color:rgba(37,99,235,.32) !important;
+            box-shadow:0 16px 32px rgba(37,99,235,.13), 0 10px 20px rgba(15,23,42,.08) !important;
+        }
+
+        .vpn-img{
+            width:50px !important;
+            height:50px !important;
+            border-radius:16px !important;
+            background:#f8fafc !important;
+            border:1px solid rgba(15,23,42,.12) !important;
+            box-shadow:0 6px 14px rgba(15,23,42,.09) !important;
+        }
+
+        .online-badge,
+        .offline-badge{
+            box-shadow:0 4px 10px rgba(15,23,42,.06) !important;
+            border-width:1px !important;
+        }
+
+        .online-badge{
+            background:#ecfdf5 !important;
+            color:#047857 !important;
+            border-color:rgba(5,150,105,.22) !important;
+        }
+
+        .offline-badge{
+            background:#fef2f2 !important;
+            color:#b91c1c !important;
+            border-color:rgba(220,38,38,.22) !important;
+        }
+
+        .nav-shell{
+            background:#ffffff !important;
+            border:1px solid rgba(15,23,42,.12) !important;
+            box-shadow:0 12px 28px rgba(15,23,42,.13) !important;
+        }
+
+        .nav-btn{ color:#64748b !important; }
+
+        .nav-btn.active,
+        .nav-btn.text-indigo-600{
+            background:linear-gradient(135deg,#2563eb,#1d4ed8) !important;
+            color:#ffffff !important;
+            box-shadow:0 10px 22px rgba(37,99,235,.24) !important;
+        }
+
+        .mini-icon-btn{
+            background:#ffffff !important;
+            border:1px solid rgba(15,23,42,.12) !important;
+            box-shadow:0 6px 14px rgba(15,23,42,.09) !important;
+            color:#1d4ed8 !important;
+        }
+
+        .btn-p{
+            background:linear-gradient(135deg,#2563eb,#1d4ed8) !important;
+            box-shadow:0 12px 24px rgba(37,99,235,.22) !important;
+            color:#ffffff !important;
+        }
+
+        .btn-reject{
+            background:#fef2f2 !important;
+            border:1px solid rgba(220,38,38,.18) !important;
+            color:#b91c1c !important;
+        }
+
+        .modal{ background:rgba(241,245,249,.82) !important; }
+
+        .sheet{
+            background:#ffffff !important;
+            border:1px solid rgba(15,23,42,.12) !important;
+            box-shadow:0 -16px 42px rgba(15,23,42,.16) !important;
+            color:#0f172a !important;
+        }
+
+        .pay-choice,
+        .acc-box,
+        .adm-mini-input,
+        #trx-id,
+        .bg-slate-50,
+        .bg-indigo-50,
+        .bg-white,
+        .bg-white\/80{
+            background:#ffffff !important;
+            border-color:rgba(15,23,42,.13) !important;
+            color:#0f172a !important;
+            box-shadow:0 5px 13px rgba(15,23,42,.06) !important;
+        }
+
+        .pay-choice:hover,
+        .pay-choice:active{
+            border-color:rgba(37,99,235,.30) !important;
+            box-shadow:0 10px 20px rgba(37,99,235,.10) !important;
+        }
+
+        .acc-box{ border-style:solid !important; }
+        .acc-label{ color:#64748b !important; }
+        .acc-value{ color:#0f172a !important; }
+
+        #admin-panel{
+            background:linear-gradient(180deg,#f8fafc 0%,#f1f5f9 100%) !important;
+            color:#0f172a !important;
+        }
+
+        .admin-topbar{
+            background:rgba(255,255,255,.94) !important;
+            border-bottom:1px solid rgba(15,23,42,.10) !important;
+            box-shadow:0 6px 16px rgba(15,23,42,.05) !important;
+        }
+
+        .adm-nav{
+            background:#ffffff !important;
+            border:1px solid rgba(15,23,42,.12) !important;
+            box-shadow:0 7px 16px rgba(15,23,42,.07) !important;
+        }
+
+        .adm-tab{ color:#64748b !important; }
+
+        .adm-tab-active{
+            background:linear-gradient(135deg,#2563eb,#1d4ed8) !important;
+            color:#ffffff !important;
+            box-shadow:0 8px 18px rgba(37,99,235,.22) !important;
+        }
+
+        .section-title{ color:#475569 !important; }
+
+        #loading-screen{
+            background:radial-gradient(circle at center,#ffffff 0%,#f7fbff 50%,#eef4fb 100%) !important;
+        }
+
+        .loader-ring{
+            background:#ffffff !important;
+            border:1px solid rgba(37,99,235,.14) !important;
+            box-shadow:0 14px 34px rgba(37,99,235,.12), 0 8px 18px rgba(15,23,42,.08) !important;
+        }
+
+        .loader-ring::before{
+            border-top-color:#2563eb !important;
+            border-right-color:#2563eb !important;
+        }
+
+        .loader-ring::after{
+            border-bottom-color:#93c5fd !important;
+            border-left-color:#93c5fd !important;
+        }
+
+        .loader-ring + p{ color:#0f172a !important; }
+
+        .loader-ring + p::after{
+            background:linear-gradient(90deg,#2563eb,#93c5fd,#2563eb) !important;
+            background-size:200% 100% !important;
+        }
+
+        @media (max-width:420px){
+            .store-card{ min-height:80px !important; padding:14px !important; }
+            .card{ padding:14px !important; }
+            #user-profile-card{ padding:16px !important; }
+        }
+
+
+        /* ===== Compact Coin-Card Style Override ===== */
+        :root{
+            --compact-radius:20px;
+            --compact-border:rgba(79,97,124,.16);
+            --compact-shadow:0 9px 22px rgba(31,45,61,.08);
+            --compact-blue:#2563eb;
+        }
+
+        body{
+            padding-bottom:86px !important;
+            background:linear-gradient(180deg,#f8fafc 0%,#eef3f8 55%,#e8eef5 100%) !important;
+        }
+
+        .max-w-md{
+            max-width:430px !important;
+        }
+
+        header.p-6{
+            padding:14px 13px 8px !important;
+        }
+
+        .header-brand{
+            font-size:19px !important;
+            line-height:1.05 !important;
+            letter-spacing:-.045em !important;
+            gap:1px !important;
+        }
+
+        .mini-icon-btn{
+            width:36px !important;
+            height:36px !important;
+            border-radius:14px !important;
+            font-size:13px !important;
+            background:#ffffff !important;
+            border:1px solid var(--compact-border) !important;
+            box-shadow:0 7px 16px rgba(31,45,61,.08) !important;
+        }
+
+        main.p-5{
+            padding:10px 13px 0 !important;
+        }
+
+        main.space-y-5 > :not([hidden]) ~ :not([hidden]){
+            margin-top:11px !important;
+        }
+
+        #store-page.space-y-4 > :not([hidden]) ~ :not([hidden]),
+        #history-page.space-y-3 > :not([hidden]) ~ :not([hidden]),
+        #vpn-list.space-y-3 > :not([hidden]) ~ :not([hidden]),
+        #user-orders.space-y-3 > :not([hidden]) ~ :not([hidden]){
+            margin-top:9px !important;
+        }
+
+        #user-profile-card{
+            padding:13px !important;
+            border-radius:20px !important;
+            min-height:78px !important;
+            box-shadow:var(--compact-shadow) !important;
+        }
+
+        #user-profile-card .mb-5{
+            margin-bottom:8px !important;
+        }
+
+        #user-profile-card .gap-5{
+            gap:10px !important;
+        }
+
+        #user-profile-card img#u-pic{
+            width:46px !important;
+            height:46px !important;
+            border-radius:15px !important;
+        }
+
+        #u-nickname{
+            font-size:15px !important;
+            line-height:1.15 !important;
+        }
+
+        #display-uid{
+            font-size:9px !important;
+            margin-top:2px !important;
+            letter-spacing:.08em !important;
+        }
+
+        .soft-badge,
+        .price-chip{
+            padding:5px 8px !important;
+            font-size:8px !important;
+            line-height:1 !important;
+            border-radius:999px !important;
+        }
+
+        .status-dot{
+            width:6px !important;
+            height:6px !important;
+        }
+
+        .card{
+            padding:12px !important;
+            border-radius:var(--compact-radius) !important;
+            border:1px solid var(--compact-border) !important;
+            box-shadow:var(--compact-shadow) !important;
+        }
+
+        /* VPN cards now match the small coin-card feel */
+        #vpn-list .store-card,
+        .store-card{
+            min-height:66px !important;
+            padding:11px 12px !important;
+            border-radius:18px !important;
+            background:#ffffff !important;
+            border:1px solid rgba(87,103,126,.17) !important;
+            box-shadow:0 8px 18px rgba(31,45,61,.075) !important;
+            gap:10px !important;
+            transform:none !important;
+        }
+
+        .store-card:hover,
+        .store-card:active{
+            transform:translateY(-1px) !important;
+            box-shadow:0 12px 24px rgba(31,45,61,.10) !important;
+            border-color:rgba(37,99,235,.24) !important;
+        }
+
+        .store-card .flex.items-center.gap-4{
+            gap:10px !important;
+            min-width:0 !important;
+        }
+
+        .vpn-img{
+            width:42px !important;
+            height:42px !important;
+            border-radius:14px !important;
+            padding:4px !important;
+            object-fit:contain !important;
+            background:linear-gradient(180deg,#f8fafc,#eef4ff) !important;
+            border:1px solid rgba(37,99,235,.12) !important;
+            box-shadow:0 6px 14px rgba(31,45,61,.08) !important;
+            flex-shrink:0 !important;
+        }
+
+        .store-card b{
+            font-size:14px !important;
+            line-height:1.15 !important;
+            max-width:190px !important;
+            overflow:hidden !important;
+            text-overflow:ellipsis !important;
+            white-space:nowrap !important;
+        }
+
+        .store-card span.text-\[10px\]{
+            font-size:9px !important;
+            line-height:1.1 !important;
+            color:#6b7280 !important;
+        }
+
+        .store-card > span:last-child,
+        .online-badge,
+        .offline-badge{
+            font-size:8px !important;
+            padding:5px 8px !important;
+            border-radius:10px !important;
+            min-width:58px !important;
+            text-align:center !important;
+            flex-shrink:0 !important;
+        }
+
+        .online-badge{
+            background:rgba(16,185,129,.10) !important;
+            color:#059669 !important;
+            border:1px solid rgba(16,185,129,.15) !important;
+        }
+
+        .offline-badge{
+            background:rgba(239,68,68,.09) !important;
+            color:#dc2626 !important;
+            border:1px solid rgba(239,68,68,.14) !important;
+        }
+
+        .nav-shell{
+            height:66px !important;
+            bottom:10px !important;
+            width:calc(100% - 24px) !important;
+            max-width:404px !important;
+            border-radius:25px !important;
+            padding:6px !important;
+            box-shadow:0 12px 28px rgba(31,45,61,.12) !important;
+        }
+
+        .nav-btn{
+            font-size:9px !important;
+            gap:2px !important;
+            border-radius:16px !important;
+            padding:7px 4px !important;
+        }
+
+        .nav-btn i{
+            font-size:18px !important;
+        }
+
+        .nav-btn.active{
+            background:linear-gradient(135deg,#2563eb,#10b981) !important;
+            color:#fff !important;
+            box-shadow:0 8px 17px rgba(37,99,235,.18) !important;
+        }
+
+        .section-title{
+            font-size:10px !important;
+            letter-spacing:.08em !important;
+        }
+
+        /* History/help/payment cards smaller too */
+        #history-page h3{
+            font-size:16px !important;
+            margin:2px 0 8px !important;
+        }
+
+        #user-orders .card{
+            padding:11px 12px !important;
+            border-radius:18px !important;
+        }
+
+        #help-page.card{
+            padding-top:30px !important;
+            padding-bottom:30px !important;
+        }
+
+        #help-page .w-20.h-20{
+            width:58px !important;
+            height:58px !important;
+            margin-bottom:12px !important;
+        }
+
+        #help-page h4{
+            font-size:17px !important;
+        }
+
+        .btn-p{
+            padding:12px 14px !important;
+            border-radius:16px !important;
+            font-size:12px !important;
+            box-shadow:0 10px 22px rgba(37,99,235,.16) !important;
+        }
+
+        .btn-reject{
+            padding:10px 12px !important;
+            border-radius:14px !important;
+            font-size:10px !important;
+        }
+
+        .sheet{
+            max-width:430px !important;
+            padding:20px 15px 18px !important;
+            border-radius:28px 28px 0 0 !important;
+        }
+
+        .sheet .card{
+            padding:12px !important;
+            border-radius:18px !important;
+        }
+
+        .adm-mini-input,
+        #trx-id{
+            padding:11px 12px !important;
+            border-radius:14px !important;
+            font-size:11px !important;
+        }
+
+        .admin-topbar{
+            padding:12px 14px !important;
+        }
+
+        #admin-panel h2{
+            font-size:18px !important;
+        }
+
+        .adm-nav{
+            padding:5px !important;
+            border-radius:18px !important;
+            gap:5px !important;
+            margin-bottom:8px !important;
+        }
+
+        .adm-tab{
+            min-width:82px !important;
+            padding:10px 7px !important;
+            font-size:9px !important;
+            border-radius:14px !important;
+        }
+
+        #admin-panel .p-5.overflow-y-auto{
+            padding:12px 13px 88px !important;
+        }
+
+        .adm-content.space-y-4 > :not([hidden]) ~ :not([hidden]),
+        .adm-content.space-y-6 > :not([hidden]) ~ :not([hidden]),
+        #adm-vpn-list.space-y-4 > :not([hidden]) ~ :not([hidden]),
+        #stock-inventory-list.space-y-3 > :not([hidden]) ~ :not([hidden]){
+            margin-top:10px !important;
+        }
+
+        @media (max-width:420px){
+            header.p-6{ padding:12px 12px 7px !important; }
+            .header-brand{ font-size:17px !important; }
+            main.p-5{ padding:9px 12px 0 !important; }
+            #vpn-list .store-card,.store-card{ min-height:62px !important; padding:10px 11px !important; }
+            .vpn-img{ width:39px !important; height:39px !important; border-radius:13px !important; }
+            .store-card b{ font-size:13px !important; max-width:160px !important; }
+            .nav-shell{ height:63px !important; bottom:8px !important; width:calc(100% - 18px) !important; }
+        }
+
+    
+
+
+
+        /* === MOBILE-FIRST TOP NOTIFICATION SYSTEM === */
+        .notify-stack{
+            position:fixed;
+            left:50%;
+            right:auto;
+            top:calc(10px + env(safe-area-inset-top, 0px));
+            bottom:auto;
+            transform:translateX(-50%);
+            z-index:10000;
+            display:grid;
+            gap:6px;
+            pointer-events:none;
+            width:calc(100vw - 18px);
+            max-width:390px;
+            margin:0;
+        }
+        .app-toast{
+            pointer-events:auto;
+            display:flex;
+            align-items:center;
+            gap:7px;
+            width:100%;
+            min-height:42px;
+            padding:7px 8px 7px 9px;
+            border-radius:14px;
+            background:rgba(255,255,255,.99);
+            border:1px solid rgba(97,113,132,.16);
+            box-shadow:0 8px 22px rgba(35,49,66,.16);
+            backdrop-filter:blur(14px);
+            -webkit-backdrop-filter:blur(14px);
+            transform:translateY(-120%) scale(.98);
+            opacity:0;
+            overflow:hidden;
+            animation:toastIn .26s cubic-bezier(.2,.85,.2,1) forwards;
+        }
+        .app-toast.toast-hide{ animation:toastOut .22s ease forwards; }
+        .app-toast::before{
+            content:"";
+            position:absolute;
+            inset:0 auto 0 0;
+            width:3px;
+            background:linear-gradient(180deg,#5f7ea6,#2563eb);
+        }
+        .app-toast::after{
+            content:"";
+            position:absolute;
+            left:0;
+            right:0;
+            bottom:0;
+            height:2px;
+            background:linear-gradient(90deg,rgba(37,99,235,.55),rgba(95,126,166,.20));
+            transform-origin:left;
+            animation:toastTimer 2.6s linear forwards;
+        }
+        .app-toast-icon{
+            width:27px;
+            height:27px;
+            min-width:27px;
+            border-radius:9px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-size:11px;
+            background:linear-gradient(135deg,#5f7ea6,#46627f);
+            box-shadow:0 6px 12px rgba(95,126,166,.18);
+        }
+        .app-toast-content{
+            min-width:0;
+            flex:1;
+            padding-right:0;
+        }
+        .app-toast-title{
+            display:block;
+            font-size:10.5px;
+            line-height:1.12;
+            font-weight:900;
+            color:#233142;
+            margin:0;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .app-toast-text{
+            display:block;
+            font-size:8.8px;
+            line-height:1.22;
+            color:#6f7d90;
+            font-weight:700;
+            margin-top:2px;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .app-toast-close{
+            width:18px;
+            height:18px;
+            min-width:18px;
+            border:none;
+            border-radius:7px;
+            background:#f1f5f9;
+            color:#64748b;
+            font-size:10px;
+            font-weight:900;
+            display:grid;
+            place-items:center;
+            cursor:pointer;
+            line-height:1;
+        }
+        .app-toast.success::before{ background:linear-gradient(180deg,#10a779,#34d399); }
+        .app-toast.success .app-toast-icon{ background:linear-gradient(135deg,#10a779,#34d399); }
+        .app-toast.error::before{ background:linear-gradient(180deg,#cc6f6f,#ef4444); }
+        .app-toast.error .app-toast-icon{ background:linear-gradient(135deg,#cc6f6f,#ef4444); }
+        .app-toast.warning::before{ background:linear-gradient(180deg,#d3a66c,#f59e0b); }
+        .app-toast.warning .app-toast-icon{ background:linear-gradient(135deg,#d3a66c,#f59e0b); }
+        .app-toast.info::before{ background:linear-gradient(180deg,#5f7ea6,#2563eb); }
+        .app-toast.info .app-toast-icon{ background:linear-gradient(135deg,#5f7ea6,#2563eb); }
+        .app-toast.welcome::before{ background:linear-gradient(180deg,#2563eb,#10a779); }
+        .app-toast.welcome .app-toast-icon{ background:linear-gradient(135deg,#2563eb,#10a779); }
+        @keyframes toastIn{
+            from{ transform:translateY(-120%) scale(.98); opacity:0; }
+            to{ transform:translateY(0) scale(1); opacity:1; }
+        }
+        @keyframes toastOut{
+            from{ transform:translateY(0) scale(1); opacity:1; }
+            to{ transform:translateY(-120%) scale(.98); opacity:0; }
+        }
+        @keyframes toastTimer{
+            from{ transform:scaleX(1); }
+            to{ transform:scaleX(0); }
+        }
+        @media (max-width:360px){
+            .notify-stack{ width:calc(100vw - 14px); top:calc(8px + env(safe-area-inset-top, 0px)); }
+            .app-toast{ min-height:40px; padding:6px 7px 6px 8px; gap:6px; }
+            .app-toast-icon{ width:25px; height:25px; min-width:25px; font-size:10px; }
+            .app-toast-title{ font-size:10px; }
+            .app-toast-text{ font-size:8.4px; }
+        }
+
+        /* === PAYMENT NUMBER COPY BUTTON UPDATE === */
+        .payment-number-row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+            padding:12px 12px 12px 15px !important;
+            border-radius:18px !important;
+            background:#ffffff !important;
+            border:1px solid rgba(37,99,235,.18) !important;
+            box-shadow:0 10px 24px rgba(15,23,42,.08) !important;
+            cursor:default !important;
+            margin-bottom:12px !important;
+        }
+        .payment-number-info{
+            min-width:0;
+            text-align:left;
+            flex:1;
+        }
+        .payment-number-label{
+            display:block;
+            font-size:9px;
+            line-height:1;
+            font-weight:900;
+            letter-spacing:.12em;
+            text-transform:uppercase;
+            color:#64748b;
+            margin-bottom:6px;
+        }
+        .payment-number-row #active-num{
+            display:block;
+            font-size:18px !important;
+            line-height:1.15;
+            font-weight:900;
+            color:#1d4ed8 !important;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .pay-copy-btn{
+            border:none;
+            min-width:76px;
+            height:40px;
+            padding:0 13px;
+            border-radius:14px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:6px;
+            background:linear-gradient(135deg,#2563eb,#60a5fa);
+            color:#fff;
+            font-size:11px;
+            font-weight:900;
+            cursor:pointer;
+            box-shadow:0 10px 22px rgba(37,99,235,.22);
+            transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+        }
+        .pay-copy-btn:active{
+            transform:scale(.96);
+            filter:brightness(.98);
+            box-shadow:0 6px 14px rgba(37,99,235,.18);
+        }
+        @media(max-width:420px){
+            .payment-number-row{ padding:10px 10px 10px 13px !important; }
+            .payment-number-row #active-num{ font-size:16px !important; }
+            .pay-copy-btn{ min-width:68px; height:38px; font-size:10px; }
+        }
+</style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div id="notify-stack" class="notify-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <div id="loading-screen">
+        <div class="loader-ring"></div>
+        <p class="mt-4 font-bold text-slate-400 text-sm tracking-widest animate-pulse uppercase">VPN ZONE</p>
+    </div>
+
+    <div class="max-w-md mx-auto relative">
+        <header class="p-6 flex justify-between items-center">
+            <h1 class="font-black text-2xl tracking-tighter italic header-brand">
+                --<span class="brand-accent">VPN-ZONE</span>
+            </h1>
+            <div class="flex items-center gap-2">
+                <button onclick="goBack()" class="mini-icon-btn" aria-label="Go back to home page">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div id="p-count-badge" class="hidden text-white text-[10px] font-black px-2 py-1 rounded-full animate-bounce">0</div>
+            </div>
+        </header>
+
+        <main class="p-5 space-y-5">
+            <div id="user-profile-card" class="glass p-7 text-white">
+                <div class="flex items-center justify-between gap-3 mb-5">
+                    <div class="soft-badge">
+                        <span class="status-dot"></span>
+                        LIVE DASHBOARD
+                    </div>
+                    <div class="price-chip">---</div>
+                </div>
+                <div class="flex items-center gap-5">
+                    <img id="u-pic" class="w-16 h-16 rounded-[22px] border border-white/20 shadow-lg" src="" alt="User photo">
+                    <div>
+                        <h2 id="u-nickname" class="text-xl font-black tracking-tight">...</h2>
+                        <p id="display-uid" class="text-[10px] font-bold opacity-80 tracking-widest mt-1 uppercase"></p>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="notification-card" class="notification-card card">
+                <div class="notification-left">
+                    <div class="notification-icon"><i class="fa-regular fa-bell"></i></div>
+                    <div style="min-width:0;">
+                        <b class="notification-title">ORDER NOW</b>
+                        <span id="notification-status" class="notification-status">-</span>
+                    </div>
+                </div>
+                <button id="notification-btn" type="button" class="notification-btn" onclick="requestNotificationPermission()">💕</button>
+            </div>
+
+            <div id="store-page" class="page-content space-y-4">
+                <div id="vpn-list" class="space-y-3"></div>
+            </div>
+
+            <div id="history-page" class="page-content hidden space-y-3">
+                <h3 class="font-black text-lg mb-2">My Orders</h3>
+                <div id="user-orders" class="space-y-3"></div>
+            </div>
+
+            <div id="help-page" class="page-content hidden text-center card py-12 glow-border">
+                <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5" style="background:rgba(37,99,255,.10); border:1px solid rgba(255,255,255,.08);">
+                    <i class="fa-brands fa-telegram text-5xl text-indigo-500"></i>
+                </div>
+                <h4 class="font-black text-xl">Contact Support</h4>
+                <p class="text-[12px] text-slate-400 mt-2">Need help with account delivery, payment, or stock issues?</p>
+                <a id="support-link" href="#" target="_blank" class="btn-p block mt-8">Message Admin</a>
+            </div>
+        </main>
+
+        <nav class="nav-shell h-20 flex justify-around items-center">
+            <button onclick="nav('store', this)" class="nav-btn active flex flex-col items-center gap-1 font-bold text-[10px]">
+                <i class="fa-solid fa-store text-xl"></i>Store
+            </button>
+            <button onclick="nav('history', this)" class="nav-btn flex flex-col items-center gap-1 font-bold text-[10px]">
+                <i class="fa-solid fa-box text-xl"></i>Orders
+            </button>
+            <button onclick="nav('help', this)" class="nav-btn flex flex-col items-center gap-1 font-bold text-[10px]">
+                <i class="fa-solid fa-headset text-xl"></i>Help
+            </button>
+            <button id="admin-btn-nav" onclick="openAdmin()" class="hidden nav-btn flex flex-col items-center gap-1 font-bold text-[10px]">
+                <i class="fa-solid fa-user-shield text-xl"></i>Admin
+            </button>
+        </nav>
+    </div>
+
+    <div id="admin-panel" class="fixed inset-0 z-[5000] hidden flex flex-col">
+        <div class="p-6 flex justify-between items-center admin-topbar">
+            <h2 class="font-black text-xl">Admin Control</h2>
+            <button onclick="closeAdmin()" class="mini-icon-btn font-bold">&times;</button>
+        </div>
+        <div class="p-4 admin-topbar">
+            <div class="adm-nav">
+                <button onclick="admTab('pending', this)" class="adm-tab adm-tab-active">PENDING (<span id="p-count">0</span>)</button>
+                <button onclick="admTab('history', this)" class="adm-tab">HISTORY</button>
+                <button onclick="admTab('stock', this)" class="adm-tab">STOCK MGMT</button>
+                <button onclick="admTab('settings', this)" class="adm-tab">VPN MGMT</button>
+            </div>
+        </div>
+        <div class="p-5 overflow-y-auto flex-1 pb-24">
+            <div id="adm-pending" class="adm-content space-y-4"></div>
+
+            <div id="adm-history" class="adm-content hidden space-y-4">
+                <div class="flex justify-end">
+                    <button onclick="clearHistory()" class="btn-reject py-3 text-[10px]">Clear Admin History</button>
+                </div>
+                <div id="adm-history-list" class="space-y-4"></div>
+            </div>
+
+            <div id="adm-stock" class="adm-content hidden space-y-6">
+                <div class="card glow-border space-y-3">
+                    <b class="section-title">Add to Stock</b>
+                    <input type="text" id="stock-email" placeholder="Email / ID" class="adm-mini-input">
+                    <input type="text" id="stock-pass" placeholder="Password" class="adm-mini-input">
+                    <select id="stock-vpn-id" class="adm-mini-input"></select>
+                    <button onclick="addStock()" class="btn-p py-3 text-xs">Save Stock</button>
+                </div>
+                <div id="stock-inventory-list" class="space-y-3"></div>
+            </div>
+
+            <div id="adm-settings" class="adm-content hidden space-y-6">
+                <div class="card glow-border space-y-3">
+                    <b class="section-title">General Settings</b>
+                    <input type="text" id="set-support-url" placeholder="Support Telegram Link" class="adm-mini-input">
+                    <button onclick="saveSupport()" class="btn-p py-2 text-xs">Save Link</button>
+                    <hr>
+                    <div class="flex gap-2">
+                        <input type="text" id="pay-name" placeholder="Bkash" class="w-1/2 adm-mini-input">
+                        <input type="text" id="pay-num-in" placeholder="Number" class="w-1/2 adm-mini-input">
+                    </div>
+                    <button onclick="addPay()" class="btn-p py-2 text-xs">Add Method</button>
+                    <div id="pay-list" class="space-y-2 mt-2"></div>
+                </div>
+
+                <div class="card glow-border space-y-3">
+                    <input type="text" id="v-name" placeholder="VPN Brand Name" class="adm-mini-input">
+                    <button onclick="addVpn()" class="btn-p py-3 text-xs">Create VPN Brand</button>
+                </div>
+
+                <div id="adm-vpn-list" class="space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="plan-modal" class="modal"><div class="sheet" id="plan-content"></div></div>
+    <div id="stock-select-modal" class="modal"><div class="sheet" id="stock-select-content"></div></div>
+
+    <div id="pay-modal" class="modal">
+        <div class="sheet text-center">
+            <h3 class="font-black text-xl mb-6">Payment</h3>
+            <div id="user-pay-options" class="grid grid-cols-2 gap-3 mb-6"></div>
+            <div id="pay-details" class="hidden">
+                <div class="payment-number-row pay-choice">
+                    <div class="payment-number-info">
+                        <span class="payment-number-label">Payment Number</span>
+                        <b id="active-num" class="text-2xl text-indigo-700"></b>
+                    </div>
+                    <button type="button" class="pay-copy-btn" onclick="copyText(document.getElementById('active-num').innerText)">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                </div>
+                <b id="target-price" class="text-xl block mb-6 text-indigo-600"></b>
+                <input type="text" id="trx-id" placeholder="Transaction ID" class="text-center uppercase mb-4">
+                <button onclick="orderNow()" class="btn-p">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, push, remove, update, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+             apiKey: "AIzaSyDSrCs17N213vY9iYjE3sPXUhHbfMv9dFs",
+  authDomain: "niva-exchange-vpn.firebaseapp.com",
+  databaseURL: "https://niva-exchange-vpn-default-rtdb.firebaseio.com",
+  projectId: "niva-exchange-vpn",
+  storageBucket: "niva-exchange-vpn.firebasestorage.app",
+  messagingSenderId: "703189182461",
+  appId: "1:703189182461:web:c13668acc40db5e09d5b94",
+  measurementId: "G-HR09BNDTED"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const tg = window.Telegram?.WebApp || null;
+        if (tg && tg.expand) tg.expand();
+
+        const UID = tg?.initDataUnsafe?.user?.id || "0000";
+        const UNAME = tg?.initDataUnsafe?.user?.first_name || "Guest";
+        const ADMINS = ["8505710811"];
+
+        const NOTIFICATION_ICON = "https://ui-avatars.com/api/?name=VPN&background=2563eb&color=ffffff&bold=true";
+        let ordersReadyForNotification = false;
+        let welcomeNotificationShown = false;
+        const orderStatusCache = new Map();
+
+        function isNativeNotificationSupported() {
+            return typeof window !== 'undefined' && 'Notification' in window;
+        }
+
+        function safeHaptic(kind = 'success') {
+            try {
+                if (!tg || !tg.HapticFeedback) return;
+                if (kind === 'error') tg.HapticFeedback.notificationOccurred('error');
+                else if (kind === 'warning') tg.HapticFeedback.notificationOccurred('warning');
+                else tg.HapticFeedback.notificationOccurred('success');
+            } catch (e) {}
+        }
+
+        function playNotificationTone(kind = 'info') {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const oscillator = ctx.createOscillator();
+                const gain = ctx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.value = kind === 'error' ? 360 : 760;
+                gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.015);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.22);
+                oscillator.connect(gain);
+                gain.connect(ctx.destination);
+                oscillator.start();
+                oscillator.stop(ctx.currentTime + 0.24);
+                setTimeout(() => ctx.close().catch(() => {}), 360);
+            } catch (e) {}
+        }
+
+        function updateNotificationUI() {
+            const statusEl = document.getElementById('notification-status');
+            const btn = document.getElementById('notification-btn');
+            if (!statusEl || !btn) return;
+
+            btn.classList.remove('enabled', 'blocked');
+
+            if (!isNativeNotificationSupported()) {
+                statusEl.innerText = 'Browser notification unavailable. In-app alerts active.';
+                btn.innerText = 'In-App';
+                btn.classList.add('blocked');
+                return;
+            }
+
+            if (Notification.permission === 'granted') {
+                statusEl.innerText = 'Active: order, approval, rejection and admin alerts';
+                btn.innerText = 'Active';
+                btn.classList.add('enabled');
+            } else if (Notification.permission === 'denied') {
+                statusEl.innerText = 'Blocked by browser. Allow it from site settings.';
+                btn.innerText = 'Blocked';
+                btn.classList.add('blocked');
+            } else {
+                statusEl.innerText = '---';
+                btn.innerText = '💕💕';
+            }
+        }
+
+        function showNativeNotification(title, body) {
+            try {
+                if (!isNativeNotificationSupported()) return;
+                if (Notification.permission !== 'granted') return;
+                const n = new Notification(title, {
+                    body,
+                    icon: NOTIFICATION_ICON,
+                    badge: NOTIFICATION_ICON,
+                    tag: 'niva-vpn-' + Date.now(),
+                    requireInteraction: false
+                });
+                n.onclick = () => {
+                    try { window.focus(); } catch (e) {}
+                    n.close();
+                };
+            } catch (e) {}
+        }
+
+        function getNotifyIcon(icon = 'info') {
+            if (icon === 'success') return '<i class="fa-solid fa-check"></i>';
+            if (icon === 'error') return '<i class="fa-solid fa-xmark"></i>';
+            if (icon === 'warning') return '<i class="fa-solid fa-triangle-exclamation"></i>';
+            if (icon === 'welcome') return '<i class="fa-solid fa-hand-sparkles"></i>';
+            return '<i class="fa-solid fa-bell"></i>';
+        }
+
+        function escapeNotifyText(value = '') {
+            return String(value).replace(/[&<>"']/g, (ch) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[ch]));
+        }
+
+        function showToastNotification(title, text, icon = 'info', options = {}) {
+            const stack = document.getElementById('notify-stack');
+            if (!stack) {
+                if (window.Swal) {
+                    Swal.fire({ title, text, icon: icon === 'welcome' ? 'success' : icon, timer:2400, showConfirmButton:false, background:'#ffffff', color:'#233142' });
+                    return;
+                }
+                alert(title + (text ? '\n' + text : ''));
+                return;
+            }
+
+            const toast = document.createElement('div');
+            const cleanIcon = ['success','error','warning','info','welcome'].includes(icon) ? icon : 'info';
+            toast.className = `app-toast ${cleanIcon}`;
+            const safeTitle = escapeNotifyText(title || 'Notification');
+            const safeText = escapeNotifyText(text || '');
+            toast.innerHTML = `
+                <div class="app-toast-icon">${getNotifyIcon(cleanIcon)}</div>
+                <div class="app-toast-content">
+                    <b class="app-toast-title">${safeTitle}</b>
+                    ${safeText ? `<span class="app-toast-text">${safeText}</span>` : ''}
+                </div>
+                <button class="app-toast-close" type="button" aria-label="Close notification">×</button>
+            `;
+
+            stack.prepend(toast);
+            const limit = 2;
+            while (stack.children.length > limit) stack.lastElementChild?.remove();
+
+            const closeToast = () => {
+                if (!toast || toast.classList.contains('toast-hide')) return;
+                toast.classList.add('toast-hide');
+                setTimeout(() => toast.remove(), 320);
+            };
+            toast.querySelector('.app-toast-close')?.addEventListener('click', closeToast);
+            setTimeout(closeToast, options.duration || 2600);
+        }
+
+        function appNotify(title, text = '', icon = 'info', options = {}) {
+            const vibe = icon === 'error' ? [80, 40, 80] : icon === 'warning' ? [70, 35] : [45];
+            safeHaptic(icon === 'error' ? 'error' : icon === 'warning' ? 'warning' : 'success');
+            try { if (navigator.vibrate) navigator.vibrate(vibe); } catch (e) {}
+            if (options.sound !== false) playNotificationTone(icon);
+            if (options.native !== false) showNativeNotification(title, text);
+            showToastNotification(title, text, icon, options);
+        }
+
+        window.requestNotificationPermission = async () => {
+            try {
+                if (!isNativeNotificationSupported()) {
+                    appNotify('In-app notifications active', 'This browser does not support native notifications.', 'info', { sound:false });
+                    updateNotificationUI();
+                    return;
+                }
+                if (Notification.permission === 'default') {
+                    await Notification.requestPermission();
+                }
+                updateNotificationUI();
+                if (Notification.permission === 'granted') {
+                    appNotify('Notifications Enabled', 'You will get VPN order and delivery alerts.', 'success');
+                } else if (Notification.permission === 'denied') {
+                    showToastNotification('Notifications Blocked', 'Please allow notifications from browser site settings.', 'warning');
+                }
+            } catch (e) {
+                showToastNotification('Notification Error', 'In-app alerts will still work.', 'warning');
+            }
+        };
+
+
+        window.onload = () => {
+            document.getElementById('u-nickname').innerText = UNAME;
+            document.getElementById('display-uid').innerText = "ID: " + UID;
+            document.getElementById('u-pic').src =
+                tg?.initDataUnsafe?.user?.photo_url ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(UNAME)}&background=5f7ea6&color=ffffff`;
+
+            if (ADMINS.includes(UID.toString())) {
+                document.getElementById('admin-btn-nav').classList.remove('hidden');
+            }
+
+            updateNotificationUI();
+            sync();
+
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    if (!welcomeNotificationShown) {
+                        welcomeNotificationShown = true;
+                        appNotify(`Welcome Back, ${UNAME}`, 'Your VPN dashboard is ready.', 'welcome', { native:false, sound:false, duration:4200 });
+                    }
+                }, 450);
+            }, 1100);
+        };
+
+        window.clearHistory = async () => {
+            const clearBtn = document.querySelector('[onclick="clearHistory()"]');
+            const ok = confirm("Are you sure you want to clear admin history? User order history will remain visible to users.");
+            if (!ok) return;
+
+            try {
+                if (clearBtn) {
+                    clearBtn.disabled = true;
+                    clearBtn.dataset.originalText = clearBtn.innerHTML;
+                    clearBtn.innerHTML = 'Clearing...';
+                }
+
+                const snap = await get(ref(db, 'orders'));
+                const data = snap.val();
+
+                if (!data) {
+                    appNotify('No History Found', 'There is no admin history to clear.', 'info', { native:false });
+                    return;
+                }
+
+                const idsToHide = Object.keys(data).filter(id => {
+                    const order = data[id] || {};
+                    const status = order.st;
+                    return (status === 'Approved' || status === 'Rejected') && !order.adminHidden;
+                });
+
+                if (!idsToHide.length) {
+                    appNotify('No History Found', 'There is no admin history to clear.', 'info', { native:false });
+                    return;
+                }
+
+                await Promise.all(
+                    idsToHide.map(id => update(ref(db, `orders/${id}`), {
+                        adminHidden: true,
+                        adminHiddenAt: new Date().toISOString(),
+                        adminHiddenBy: `Admin ${UNAME} (${UID})`
+                    }))
+                );
+
+                appNotify('History Cleared', 'Admin history cleared. User order history is unchanged.', 'success');
+            } catch (error) {
+                console.error('Failed to clear admin history:', error);
+                appNotify('Clear Failed', 'Failed to clear admin history. Please try again.', 'error');
+            } finally {
+                if (clearBtn) {
+                    clearBtn.disabled = false;
+                    clearBtn.innerHTML = clearBtn.dataset.originalText || 'Clear History';
+                }
+            }
+        };
+
+        function getVpnLogo(vName) {
+            const domain = vName.toLowerCase().replace(/\s/g, '') + ".com";
+            return `https://www.google.com/s2/favicons?sz=128&domain=${domain}`;
+        }
+
+        function sync() {
+            onValue(ref(db, 'supportUrl'), (s) => {
+                document.getElementById('support-link').href = s.val() || "#";
+            });
+
+            onValue(ref(db, 'vpns'), (s) => {
+                const uBox = document.getElementById('vpn-list');
+                const aBox = document.getElementById('adm-vpn-list');
+                const sSelect = document.getElementById('stock-vpn-id');
+                const sInv = document.getElementById('stock-inventory-list');
+
+                uBox.innerHTML = '';
+                aBox.innerHTML = '';
+                sSelect.innerHTML = '';
+                sInv.innerHTML = '';
+
+                const d = s.val();
+                if (d) Object.keys(d).forEach(id => {
+                    const v = d[id];
+                    const count = v.stock ? Object.keys(v.stock).length : 0;
+                    const isOff = v.status === "OFF";
+                    const logo = getVpnLogo(v.name);
+
+                    uBox.innerHTML += `
+                        <div onclick="${!isOff ? `openPlans('${id}')` : ''}" class="card glow-border store-card flex justify-between items-center ${isOff ? 'disabled-card' : ''}">
+                            <div class="flex items-center gap-4">
+                                <img src="${logo}" class="vpn-img" alt="${v.name} logo">
+                                <div>
+                                    <b class="block">${v.name}</b>
+                                    <span class="text-[10px] text-slate-400">Stock: ${count}</span>
+                                </div>
+                            </div>
+                            <span class="text-[9px] font-black px-3 py-1.5 rounded-lg ${!isOff ? 'online-badge' : 'offline-badge'}">
+                                ${isOff ? 'OFFLINE' : 'ONLINE'}
+                            </span>
+                        </div>`;
+
+                    aBox.innerHTML += `
+                        <div class="card glow-border space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <img src="${logo}" class="w-8 h-8 rounded-lg" alt="${v.name} icon">
+                                    <b>${v.name}</b>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <label class="switch">
+                                        <input type="checkbox" ${!isOff ? 'checked' : ''} onchange="toggleV('${id}', this.checked)">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <i onclick="delV('${id}')" class="fa-solid fa-trash text-rose-300 cursor-pointer"></i>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" id="p1n-${id}" value="${v.p1n || ''}" placeholder="Plan 1" class="adm-mini-input">
+                                <input type="number" id="p1p-${id}" value="${v.p1p || ''}" placeholder="Price" class="adm-mini-input">
+                                <input type="text" id="p2n-${id}" value="${v.p2n || ''}" placeholder="Plan 2" class="adm-mini-input">
+                                <input type="number" id="p2p-${id}" value="${v.p2p || ''}" placeholder="Price" class="adm-mini-input">
+                            </div>
+                            <button onclick="saveV('${id}')" class="btn-p py-2.5 text-[10px]">Update Configuration</button>
+                        </div>`;
+
+                    sSelect.innerHTML += `<option value="${id}">${v.name}</option>`;
+
+                    if (v.stock) {
+                        let inv = `<div class="card space-y-2"><b class="section-title">${v.name} Stock</b>`;
+                        Object.keys(v.stock).forEach(sk => {
+                            inv += `
+                                <div class="flex justify-between items-center text-[10px] p-3 rounded-xl bg-slate-50">
+                                    <span>${v.stock[sk].email}</span>
+                                    <i onclick="delStockItem('${id}','${sk}')" class="fa-solid fa-times text-rose-400 cursor-pointer"></i>
+                                </div>`;
+                        });
+                        inv += `</div>`;
+                        sInv.innerHTML += inv;
+                    }
+                });
+            });
+
+            onValue(ref(db, 'orders'), (s) => {
+                const aP = document.getElementById('adm-pending');
+                const aH = document.getElementById('adm-history-list');
+                const uBox = document.getElementById('user-orders');
+
+                aP.innerHTML = '';
+                aH.innerHTML = '';
+                uBox.innerHTML = '';
+
+                let pCount = 0;
+                const d = s.val();
+
+                if (d) {
+                    const orderEntries = Object.entries(d).sort((a, b) => {
+                        const aTime = new Date(a[1].actionDate || a[1].date || 0).getTime();
+                        const bTime = new Date(b[1].actionDate || b[1].date || 0).getTime();
+                        return bTime - aTime;
+                    });
+
+                    orderEntries.forEach(([id, o]) => {
+                        const currentStatus = o.st || "Pending";
+                        const previousStatus = orderStatusCache.get(id);
+                        const belongsToCurrentUser = String(o.uid || '') === String(UID);
+                        const currentUserIsAdmin = ADMINS.includes(UID.toString());
+
+                        if (ordersReadyForNotification) {
+                            if (currentUserIsAdmin && currentStatus === "Pending" && previousStatus !== "Pending") {
+                                appNotify('New VPN Order', `${o.user || 'User'} ordered ${o.vpn || 'VPN'}${o.plan ? ' (' + o.plan + ')' : ''}.`, 'info');
+                            }
+
+                            if (belongsToCurrentUser && previousStatus && previousStatus !== currentStatus && (currentStatus === "Approved" || currentStatus === "Rejected")) {
+                                appNotify(
+                                    currentStatus === "Approved" ? 'VPN Order Approved' : 'VPN Order Rejected',
+                                    `${o.vpn || 'VPN'}${o.plan ? ' (' + o.plan + ')' : ''} is now ${currentStatus}.`,
+                                    currentStatus === "Approved" ? 'success' : 'error'
+                                );
+                            }
+                        }
+                        orderStatusCache.set(id, currentStatus);
+
+                        if (o.st === "Pending") {
+                            pCount++;
+                            aP.innerHTML += `
+                                <div class="card glow-border space-y-3">
+                                    <div class="flex justify-between gap-3">
+                                        <b>${o.user}</b>
+                                        <span class="text-[10px] font-bold text-indigo-600">${o.method}: ${o.trx}</span>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400">${o.vpn} (${o.plan}) - ${o.date || ''}</p>
+                                    <div class="flex gap-2">
+                                        <button onclick="showStockList('${id}','${o.vpn_id}')" class="btn-p py-3 text-[10px]">Deliver</button>
+                                        <button onclick="rejectOrder('${id}')" class="btn-reject">Reject</button>
+                                    </div>
+                                </div>`;
+                        }
+
+                        if ((o.st === "Approved" || o.st === "Rejected") && !o.adminHidden) {
+                            const historyColor = o.st === "Approved"
+                                ? "background:rgba(19,212,143,.12); color:#4bf3bb;"
+                                : "background:rgba(255,93,115,.12); color:#ff98a7;";
+
+                            aH.innerHTML += `
+                                <div class="card glow-border space-y-3">
+                                    <div class="flex justify-between items-start gap-3">
+                                        <div>
+                                            <b class="text-sm">${o.user}</b>
+                                            <p class="text-[9px] text-slate-400 mt-1">UID: ${o.uid || '-'} • ${o.vpn} (${o.plan})</p>
+                                        </div>
+                                        <span class="text-[10px] font-bold px-2 py-1 rounded" style="${historyColor}">${o.st}</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 gap-2 text-[10px]">
+                                        <div class="acc-box"><div class="flex flex-col"><span class="acc-label">Order Time</span><span class="acc-value">${o.date || '-'}</span></div></div>
+                                        <div class="acc-box"><div class="flex flex-col"><span class="acc-label">Payment</span><span class="acc-value">${o.method || '-'} / ${o.trx || '-'}</span></div></div>
+                                        <div class="acc-box"><div class="flex flex-col"><span class="acc-label">Action Time</span><span class="acc-value">${o.actionDate || o.date || '-'}</span></div></div>
+                                        ${o.email ? `<div class="acc-box"><div class="flex flex-col"><span class="acc-label">Delivered Email / ID</span><span class="acc-value">${o.email}</span></div></div>` : ''}
+                                        ${o.pass ? `<div class="acc-box"><div class="flex flex-col"><span class="acc-label">Delivered Password</span><span class="acc-value">${o.pass}</span></div></div>` : ''}
+                                        ${o.actionBy ? `<div class="acc-box"><div class="flex flex-col"><span class="acc-label">Handled By</span><span class="acc-value">${o.actionBy}</span></div></div>` : ''}
+                                    </div>
+                                </div>`;
+                        }
+
+                        if (o.uid == UID) {
+                            let stColor = o.st === "Approved"
+                                ? "background:rgba(19,212,143,.12); color:#4bf3bb;"
+                                : (o.st === "Rejected"
+                                    ? "background:rgba(255,93,115,.12); color:#ff98a7;"
+                                    : "background:rgba(37,99,255,.14); color:#8cb8ff;");
+
+                            uBox.innerHTML += `
+                                <div class="card glow-border space-y-2">
+                                    <div class="flex justify-between items-start gap-3">
+                                        <div>
+                                            <b class="text-sm">${o.vpn}</b>
+                                            <p class="text-[9px] text-slate-400 mt-1">${o.date || ''}</p>
+                                        </div>
+                                        <span class="text-[10px] font-bold px-2 py-1 rounded" style="${stColor}">${o.st}</span>
+                                    </div>
+
+                                    ${o.email ? `
+                                    <div class="mt-3 space-y-2">
+                                        <div class="acc-box" onclick="copyText('${o.email}')">
+                                            <div class="flex flex-col">
+                                                <span class="acc-label">Email / ID</span>
+                                                <span class="acc-value">${o.email}</span>
+                                            </div>
+                                            <i class="fa-regular fa-copy text-indigo-400 text-xs"></i>
+                                        </div>
+                                        <div class="acc-box" onclick="copyText('${o.pass}')">
+                                            <div class="flex flex-col">
+                                                <span class="acc-label">Password</span>
+                                                <span class="acc-value">${o.pass}</span>
+                                            </div>
+                                            <i class="fa-regular fa-copy text-indigo-400 text-xs"></i>
+                                        </div>
+                                    </div>` : ''}
+
+                                    ${o.st === "Rejected" ? `<p class="text-[9px] text-rose-500 font-bold italic mt-2">Order was rejected by admin.</p>` : ''}
+                                </div>`;
+                        }
+                    });
+                }
+
+                ordersReadyForNotification = true;
+
+                if (!aH.innerHTML) {
+                    aH.innerHTML = `<div class="card text-center py-8 text-slate-400">No admin history found yet.</div>`;
+                }
+
+                document.getElementById('p-count').innerText = pCount;
+
+                const badge = document.getElementById('p-count-badge');
+                badge.innerText = pCount;
+                badge.className = pCount > 0
+                    ? 'text-white text-[10px] font-black px-2 py-1 rounded-full animate-bounce'
+                    : 'hidden';
+            });
+
+            onValue(ref(db, 'payments'), (s) => {
+                const uP = document.getElementById('user-pay-options');
+                const pL = document.getElementById('pay-list');
+
+                uP.innerHTML = '';
+                pL.innerHTML = '';
+
+                const d = s.val();
+                if (d) Object.keys(d).forEach(id => {
+                    uP.innerHTML += `
+                        <div onclick="setPay('${d[id].name}','${d[id].num}')" class="pay-choice p-4 text-[10px] font-black text-center uppercase cursor-pointer">
+                            ${d[id].name}
+                        </div>`;
+
+                    pL.innerHTML += `
+                        <div class="flex justify-between text-[10px] p-3 bg-slate-50 rounded-xl">
+                            <span>${d[id].name} (${d[id].num})</span>
+                            <i onclick="delPay('${id}')" class="fa-solid fa-times cursor-pointer"></i>
+                        </div>`;
+                });
+            });
+        }
+
+        window.goBack = () => {
+            appNotify('Going Back', 'Opening previous page.', 'info', { native:false, sound:false, duration:1800 });
+            setTimeout(() => {
+                if (window.history.length > 1) {
+                    window.history.back();
+                    return;
+                }
+                window.location.assign('./index.html');
+            }, 180);
+        };
+
+        window.nav = (pageId, btn) => {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            document.getElementById(pageId + '-page').classList.remove('hidden');
+            const labelMap = { store:'Store', history:'Orders', help:'Help' };
+            appNotify(labelMap[pageId] || 'Page Opened', `${labelMap[pageId] || pageId} section opened.`, 'info', { native:false, sound:false, duration:1800 });
+        };
+
+        window.rejectOrder = (id) => {
+            Swal.fire({
+                title: 'Reject Order?',
+                text: 'User will see this order as rejected.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor:'#5f7ea6',
+                background:'#ffffff',
+                color:'#233142',
+                confirmButtonText: 'Yes, Reject'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const now = new Date();
+                    const actionDate = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    update(ref(db, `orders/${id}`), {
+                        st: "Rejected",
+                        actionDate,
+                        actionBy: `Admin ${UNAME} (${UID})`,
+                        adminHidden: false,
+                        adminHiddenAt: null,
+                        adminHiddenBy: null
+                    }).then(() => appNotify('Order Rejected', 'The user will see this order as rejected.', 'error'));
+                }
+            });
+        };
+
+        window.saveV = (id) => update(ref(db, `vpns/${id}`), {
+            p1n: document.getElementById(`p1n-${id}`).value,
+            p1p: document.getElementById(`p1p-${id}`).value,
+            p2n: document.getElementById(`p2n-${id}`).value,
+            p2p: document.getElementById(`p2p-${id}`).value
+        }).then(() => appNotify('VPN Updated', 'Plan and price configuration saved.', 'success'));
+
+        window.addStock = () => {
+            const e = document.getElementById('stock-email').value;
+            const p = document.getElementById('stock-pass').value;
+            const vid = document.getElementById('stock-vpn-id').value;
+
+            if (e && p) {
+                push(ref(db, `vpns/${vid}/stock`), { email: e, pass: p }).then(() => {
+                    document.getElementById('stock-email').value = '';
+                    document.getElementById('stock-pass').value = '';
+                    appNotify('Stock Added', 'VPN account stock saved successfully.', 'success');
+                });
+            } else {
+                appNotify('Missing Stock Info', 'Please enter email/ID and password.', 'warning', { native:false });
+            }
+        };
+
+        let curV, curPl, curPr, curVid, curMethod;
+
+        window.openPlans = (id) => {
+            get(ref(db, `vpns/${id}`)).then(s => {
+                const v = s.val();
+                curV = v.name;
+                curVid = id;
+
+                let h = `
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center gap-3">
+                            <img src="${getVpnLogo(v.name)}" class="w-10 h-10 rounded-lg" alt="${v.name}">
+                            <h3 class="font-black text-xl">${v.name}</h3>
+                        </div>
+                        <button onclick="this.closest('.modal').style.display='none'" class="mini-icon-btn">&times;</button>
+                    </div>`;
+
+                if (v.p1n) {
+                    h += `
+                        <div onclick="goPay('${v.p1n}','${v.p1p}')" class="card glow-border mb-3 p-5 flex justify-between items-center cursor-pointer">
+                            <span>${v.p1n}</span>
+                            <b class="text-indigo-600">৳${v.p1p}</b>
+                        </div>`;
+                }
+
+                if (v.p2n) {
+                    h += `
+                        <div onclick="goPay('${v.p2n}','${v.p2p}')" class="card glow-border mb-3 p-5 flex justify-between items-center cursor-pointer">
+                            <span>${v.p2n}</span>
+                            <b class="text-indigo-600">৳${v.p2p}</b>
+                        </div>`;
+                }
+
+                document.getElementById('plan-content').innerHTML = h;
+                document.getElementById('plan-modal').style.display = 'flex';
+                appNotify(`${v.name} Plans`, 'Choose a VPN package to continue.', 'info', { native:false, sound:false });
+            });
+        };
+
+        window.goPay = (n, p) => {
+            curPl = n;
+            curPr = p;
+            document.getElementById('plan-modal').style.display = 'none';
+            document.getElementById('pay-modal').style.display = 'flex';
+            document.getElementById('target-price').innerText = "Price: ৳" + p;
+            appNotify('Plan Selected', `${n} selected. Price: ৳${p}.`, 'success', { native:false, sound:false });
+        };
+
+        window.setPay = (n, m) => {
+            curMethod = n;
+            document.getElementById('active-num').innerText = m;
+            document.getElementById('pay-details').classList.remove('hidden');
+            appNotify('Payment Method Selected', `${n} payment number is ready to copy.`, 'info', { native:false, sound:false });
+        };
+
+        window.orderNow = () => {
+            const trx = document.getElementById('trx-id').value;
+            if (!trx) {
+                appNotify('Transaction ID Required', 'Please enter your transaction ID before confirming.', 'warning', { native:false });
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            push(ref(db, 'orders'), {
+                vpn: curV,
+                vpn_id: curVid,
+                plan: curPl,
+                price: curPr,
+                trx: trx.toUpperCase(),
+                method: curMethod,
+                uid: UID,
+                user: UNAME,
+                st: "Pending",
+                date: dateStr
+            }).then(() => {
+                appNotify('Order Sent', 'Your VPN order has been submitted successfully.', 'success');
+                document.getElementById('pay-modal').style.display = 'none';
+                document.getElementById('trx-id').value = '';
+                document.getElementById('pay-details').classList.add('hidden');
+            });
+        };
+
+        window.showStockList = async (orderId, vpnId) => {
+            const snap = await get(ref(db, `vpns/${vpnId}/stock`));
+            const content = document.getElementById('stock-select-content');
+
+            let h = `
+                <div class="mb-4 font-bold flex justify-between items-center">
+                    <span>Select Account</span>
+                    <button onclick="this.closest('.modal').style.display='none'" class="mini-icon-btn">&times;</button>
+                </div>`;
+
+            if (snap.exists()) {
+                Object.keys(snap.val()).forEach(sk => {
+                    h += `
+                        <button class="w-full text-left p-4 bg-slate-50 mb-2 rounded-xl font-bold text-xs" onclick="approveSelected('${orderId}','${vpnId}','${sk}')">
+                            ${snap.val()[sk].email}
+                        </button>`;
+                });
+            } else {
+                h += `<p class="text-rose-500">Stock empty!</p>`;
+            }
+
+            content.innerHTML = h;
+            document.getElementById('stock-select-modal').style.display = 'flex';
+            appNotify(snap.exists() ? 'Select Delivery Account' : 'Stock Empty', snap.exists() ? 'Choose an account to deliver this order.' : 'No stock is available for this VPN.', snap.exists() ? 'info' : 'warning', { native:false });
+        };
+
+        window.approveSelected = async (orderId, vpnId, stockKey) => {
+            const snap = await get(ref(db, `vpns/${vpnId}/stock/${stockKey}`));
+            const now = new Date();
+            const actionDate = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            update(ref(db, `orders/${orderId}`), {
+                st: "Approved",
+                email: snap.val().email,
+                pass: snap.val().pass,
+                actionDate,
+                actionBy: `Admin ${UNAME} (${UID})`,
+                adminHidden: false,
+                adminHiddenAt: null,
+                adminHiddenBy: null
+            }).then(() => {
+                remove(ref(db, `vpns/${vpnId}/stock/${stockKey}`));
+                document.getElementById('stock-select-modal').style.display = 'none';
+                appNotify('Account Delivered', 'VPN account delivery completed successfully.', 'success');
+            });
+        };
+
+        window.toggleV = (id, val) => update(ref(db, `vpns/${id}`), { status: val ? "ON" : "OFF" })
+            .then(() => appNotify(val ? 'VPN Online' : 'VPN Offline', val ? 'VPN is now visible to users.' : 'VPN is now hidden from users.', val ? 'success' : 'warning'));
+
+        window.saveSupport = () => {
+            const url = document.getElementById('set-support-url').value;
+            if (!url) return appNotify('Support Link Missing', 'Please enter the Telegram support link.', 'warning', { native:false });
+            set(ref(db, 'supportUrl'), url).then(() => appNotify('Support Link Saved', 'Help section support link updated.', 'success'));
+        };
+
+        window.addPay = () => {
+            const n = document.getElementById('pay-name').value.trim();
+            const m = document.getElementById('pay-num-in').value.trim();
+            if (n && m) {
+                push(ref(db, 'payments'), { name: n, num: m }).then(() => {
+                    document.getElementById('pay-name').value = '';
+                    document.getElementById('pay-num-in').value = '';
+                    appNotify('Payment Added', `${n} payment method added.`, 'success');
+                });
+            } else {
+                appNotify('Payment Info Missing', 'Enter payment method name and number.', 'warning', { native:false });
+            }
+        };
+
+        window.delPay = (id) => remove(ref(db, `payments/${id}`))
+            .then(() => appNotify('Payment Removed', 'Payment method deleted successfully.', 'warning'));
+
+        window.addVpn = () => {
+            const n = document.getElementById('v-name').value.trim();
+            if (n) {
+                push(ref(db, 'vpns'), { name: n, status: "ON" }).then(() => appNotify('VPN Brand Added', `${n} has been added to store.`, 'success'));
+                document.getElementById('v-name').value = '';
+            } else {
+                appNotify('VPN Name Required', 'Please enter VPN brand name.', 'warning', { native:false });
+            }
+        };
+
+        window.delV = (id) => remove(ref(db, `vpns/${id}`))
+            .then(() => appNotify('VPN Removed', 'VPN brand deleted from store.', 'warning'));
+
+        window.delStockItem = (vid, skey) => remove(ref(db, `vpns/${vid}/stock/${skey}`))
+            .then(() => appNotify('Stock Removed', 'Selected stock item deleted.', 'warning'));
+
+        window.admTab = (t, btn) => {
+            document.querySelectorAll('.adm-tab').forEach(b => b.classList.remove('adm-tab-active'));
+            btn.classList.add('adm-tab-active');
+            document.querySelectorAll('.adm-content').forEach(c => c.classList.add('hidden'));
+            document.getElementById('adm-' + t).classList.remove('hidden');
+            appNotify('Admin Tab Opened', `${t.charAt(0).toUpperCase() + t.slice(1)} section opened.`, 'info', { native:false, sound:false, duration:1800 });
+        };
+
+        window.openAdmin = () => {
+            document.getElementById('admin-panel').classList.remove('hidden');
+            appNotify('Admin Panel Opened', 'You can manage orders, stock and VPN settings.', 'info', { native:false, sound:false });
+        };
+        window.closeAdmin = () => {
+            document.getElementById('admin-panel').classList.add('hidden');
+            appNotify('Admin Panel Closed', 'Back to user dashboard.', 'info', { native:false, sound:false, duration:1800 });
+        };
+
+        window.copyText = (t) => {
+            navigator.clipboard.writeText(t);
+            safeHaptic('success');
+            showToastNotification('Copied Successfully', String(t || ''), 'success', { duration:2200 });
+        };
+
+        window.onclick = (e) => {
+            ['plan-modal', 'stock-select-modal', 'pay-modal'].forEach(id => {
+                const modal = document.getElementById(id);
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    appNotify('Closed', 'Popup closed.', 'info', { native:false, sound:false, duration:1500 });
+                }
+            });
+        };
+    </script>
+</body>
+</html>
