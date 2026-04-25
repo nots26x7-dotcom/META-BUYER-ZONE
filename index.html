@@ -1940,7 +1940,215 @@
       to { transform: scaleX(0); }
     }
 
-  </style>
+
+    /* ===== Right Side Banner Status Upgrade ===== */
+    .coin-card {
+      position: relative !important;
+      padding-top: 46px !important;
+    }
+
+    .status-badge {
+      position: absolute !important;
+      top: 8px !important;
+      right: 8px !important;
+      left: auto !important;
+      height: 26px !important;
+      min-width: 92px !important;
+      width: auto !important;
+      padding: 0 12px !important;
+      border-radius: 999px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 6px !important;
+      font-size: 9px !important;
+      line-height: 1 !important;
+      font-weight: 900 !important;
+      letter-spacing: .10em !important;
+      text-transform: uppercase !important;
+      border: 1px solid transparent !important;
+      z-index: 8 !important;
+      overflow: hidden !important;
+      backdrop-filter: blur(10px) saturate(1.2) !important;
+      -webkit-backdrop-filter: blur(10px) saturate(1.2) !important;
+    }
+
+    .status-badge::before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 0 !important;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.58) 45%, transparent 70%) !important;
+      transform: translateX(-130%) !important;
+      animation: statusBannerFlow 3.4s ease-in-out infinite !important;
+      pointer-events: none !important;
+      z-index: -1 !important;
+    }
+
+    @keyframes statusBannerFlow {
+      0%, 72%, 100% { transform: translateX(-130%); }
+      86% { transform: translateX(130%); }
+    }
+
+    .status-badge.online {
+      color: #047857 !important;
+      background: linear-gradient(135deg, rgba(220,252,231,.98), rgba(187,247,208,.96)) !important;
+      border-color: rgba(16,185,129,.30) !important;
+      box-shadow: 0 8px 20px rgba(16,185,129,.18), 0 0 16px rgba(16,185,129,.18) !important;
+    }
+
+    .status-badge.offline {
+      color: #be123c !important;
+      background: linear-gradient(135deg, rgba(255,241,242,.98), rgba(254,205,211,.96)) !important;
+      border-color: rgba(244,63,94,.28) !important;
+      box-shadow: 0 8px 20px rgba(244,63,94,.16), 0 0 16px rgba(244,63,94,.16) !important;
+    }
+
+    .status-badge::after {
+      content: "" !important;
+      width: 7px !important;
+      height: 7px !important;
+      min-width: 7px !important;
+      border-radius: 999px !important;
+      order: -1 !important;
+      display: inline-block !important;
+      position: relative !important;
+      z-index: 2 !important;
+    }
+
+    .status-badge.online::after {
+      background: #10b981 !important;
+      box-shadow: 0 0 0 4px rgba(16,185,129,.12), 0 0 12px rgba(16,185,129,.85) !important;
+      animation: statusPulse 1.8s ease-in-out infinite !important;
+    }
+
+    .status-badge.offline::after {
+      background: #ef4444 !important;
+      box-shadow: 0 0 0 4px rgba(239,68,68,.12), 0 0 12px rgba(239,68,68,.75) !important;
+      animation: statusPulse 1.8s ease-in-out infinite !important;
+    }
+
+    @keyframes statusPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(.72); opacity: .72; }
+    }
+
+    @media (max-width: 420px) {
+      .status-badge {
+        top: 7px !important;
+        right: 7px !important;
+        height: 24px !important;
+        min-width: 84px !important;
+        padding: 0 10px !important;
+        font-size: 8px !important;
+      }
+      .coin-card { padding-top: 42px !important; }
+    }
+  
+
+    /* ===== FINAL FIX: Visible Sky-Blue Left Glow Line on Every Card ===== */
+    .php-app-header,
+    .profile-card-home,
+    .profile-card,
+    .action-card,
+    .coin-card,
+    .simple-card,
+    .history-card,
+    .leader-card,
+    .bottom-sheet,
+    .highlight-box,
+    .review-box,
+    .admin-head,
+    .admin-order,
+    .settings-card,
+    .manager-card,
+    .stat-card,
+    .tile,
+    .copy-box,
+    .vpn-promo-card,
+    .help-hero-card,
+    .help-mini-card,
+    .notify-enable-card {
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+    }
+
+    .php-app-header::after,
+    .profile-card-home::after,
+    .profile-card::after,
+    .action-card::after,
+    .coin-card::after,
+    .simple-card::after,
+    .history-card::after,
+    .leader-card::after,
+    .bottom-sheet::after,
+    .highlight-box::after,
+    .review-box::after,
+    .admin-head::after,
+    .admin-order::after,
+    .settings-card::after,
+    .manager-card::after,
+    .stat-card::after,
+    .tile::after,
+    .copy-box::after,
+    .vpn-promo-card::after,
+    .help-hero-card::after,
+    .help-mini-card::after,
+    .notify-enable-card::after {
+      content: "" !important;
+      position: absolute !important;
+      left: 0 !important;
+      top: 9px !important;
+      bottom: 9px !important;
+      width: 4px !important;
+      border-radius: 0 999px 999px 0 !important;
+      background: linear-gradient(180deg, #bae6fd 0%, #38bdf8 38%, #0ea5e9 70%, #60a5fa 100%) !important;
+      box-shadow:
+        0 0 0 1px rgba(125, 211, 252, .22),
+        0 0 10px rgba(56, 189, 248, .78),
+        0 0 22px rgba(14, 165, 233, .48),
+        0 0 34px rgba(59, 130, 246, .28) !important;
+      z-index: 3 !important;
+      pointer-events: none !important;
+    }
+
+    .coin-card .status-badge,
+    .status-badge {
+      right: 0 !important;
+      left: auto !important;
+      z-index: 7 !important;
+    }
+
+    @media (max-width: 480px) {
+      .php-app-header::after,
+      .profile-card-home::after,
+      .profile-card::after,
+      .action-card::after,
+      .coin-card::after,
+      .simple-card::after,
+      .history-card::after,
+      .leader-card::after,
+      .bottom-sheet::after,
+      .highlight-box::after,
+      .review-box::after,
+      .admin-head::after,
+      .admin-order::after,
+      .settings-card::after,
+      .manager-card::after,
+      .stat-card::after,
+      .tile::after,
+      .copy-box::after,
+      .vpn-promo-card::after,
+      .help-hero-card::after,
+      .help-mini-card::after,
+      .notify-enable-card::after {
+        width: 3px !important;
+        top: 8px !important;
+        bottom: 8px !important;
+      }
+    }
+
+</style>
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
@@ -2516,7 +2724,7 @@
           const inputLabel = getCoinInputLabel(inputType);
           html += `
             <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${c.key.replace(/'/g, "\\'")}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${String(v.transferId || '').replace(/'/g, "\\'")}', ${normalizeSubmitLimit(v.submitLimit)}, ${adminRateLimit}, '${inputType}')` : ''}">
-              <div class="status-badge ${isOnline ? 'online' : 'offline'}">${isOnline ? '● Online' : '● Offline'}</div>
+              <div class="status-badge ${isOnline ? 'online' : 'offline'}">${isOnline ? 'ONLINE' : 'OFFLINE'}</div>
               <div class="left-wrap">
                 <div class="icon-box">🪙</div>
                 <div>
