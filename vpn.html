@@ -1756,6 +1756,40 @@
             }
         }
 
+
+
+        /* === Custom Loading Logo Image === */
+        .loader-ring{
+            overflow: visible !important;
+        }
+        .loader-logo-link{
+            position: relative;
+            z-index: 5;
+            width: 84px;
+            height: 84px;
+            border-radius: 24px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid rgba(37,99,235,.12);
+            box-shadow: 0 10px 24px rgba(15,23,42,.10);
+            text-decoration: none;
+        }
+        .loader-logo-img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        @media(max-width:420px){
+            .loader-logo-link{
+                width: 76px;
+                height: 76px;
+                border-radius: 22px;
+            }
+        }
+
 </style>
 </head>
 <body>
@@ -1763,7 +1797,11 @@
     <div id="notify-stack" class="notify-stack" aria-live="polite" aria-atomic="true"></div>
 
     <div id="loading-screen">
-        <div class="loader-ring"></div>
+        <div class="loader-ring">
+            <a href="https://ibb.co.com/ZRCkYqXL" target="_blank" rel="noopener noreferrer" class="loader-logo-link">
+                <img src="https://i.ibb.co.com/WN1YPm5x/LOGO.png" alt="LOGO" border="0" class="loader-logo-img">
+            </a>
+        </div>
         <p class="mt-4 font-bold text-slate-400 text-sm tracking-widest animate-pulse uppercase">VPN ZONE</p>
     </div>
 
