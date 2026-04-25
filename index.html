@@ -2347,6 +2347,122 @@
       #admin-master-ui.active .admin-head h2, #admin-master-ui[style*="display: flex"] .admin-head h2, .admin-mask.active .admin-head h2 { font-size: 17px !important; }
     }
 
+
+
+    /* === Admin Status Bar Scrolls Away Fix ===
+       User requested: ADMIN COMMAND CENTER/status bar should NOT stay in front while scrolling.
+       The whole admin panel now scrolls normally, so the status header moves upward with content. */
+    #admin-master-ui.active,
+    #admin-master-ui[style*="display: flex"],
+    .admin-mask.active {
+      align-items: stretch !important;
+      justify-content: center !important;
+    }
+
+    #admin-master-ui.active .admin-panel,
+    #admin-master-ui[style*="display: flex"] .admin-panel,
+    .admin-mask.active .admin-panel {
+      position: fixed !important;
+      inset: 0 auto 0 50% !important;
+      transform: translateX(-50%) !important;
+      width: min(100vw, 520px) !important;
+      max-width: 520px !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      display: block !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px 120px !important;
+      margin: 0 !important;
+      background: linear-gradient(180deg,#f7f9fc 0%,#eef3f8 100%) !important;
+    }
+
+    #admin-master-ui.active .admin-top,
+    #admin-master-ui[style*="display: flex"] .admin-top,
+    .admin-mask.active .admin-top,
+    #admin-master-ui.active .admin-head,
+    #admin-master-ui[style*="display: flex"] .admin-head,
+    .admin-mask.active .admin-head,
+    #admin-master-ui.active .admin-tabs,
+    #admin-master-ui[style*="display: flex"] .admin-tabs,
+    .admin-mask.active .admin-tabs {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      transform: none !important;
+      z-index: 2 !important;
+    }
+
+    #admin-master-ui.active .admin-top,
+    #admin-master-ui[style*="display: flex"] .admin-top,
+    .admin-mask.active .admin-top {
+      width: 100% !important;
+      padding: 0 0 8px !important;
+      background: transparent !important;
+      border-bottom: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    #admin-master-ui.active .admin-head,
+    #admin-master-ui[style*="display: flex"] .admin-head,
+    .admin-mask.active .admin-head {
+      margin: 0 !important;
+      border-radius: 18px !important;
+      padding: 10px 11px !important;
+      background: linear-gradient(135deg,rgba(255,255,255,.99),rgba(242,247,252,.98)) !important;
+      border: 1px solid rgba(15,23,42,.08) !important;
+      box-shadow: 0 7px 18px rgba(15,23,42,.06) !important;
+    }
+
+    #admin-master-ui.active .admin-head [style*="position:sticky"],
+    #admin-master-ui[style*="display: flex"] .admin-head [style*="position:sticky"],
+    .admin-mask.active .admin-head [style*="position:sticky"] {
+      position: static !important;
+      top: auto !important;
+    }
+
+    #admin-master-ui.active .admin-tabs,
+    #admin-master-ui[style*="display: flex"] .admin-tabs,
+    .admin-mask.active .admin-tabs {
+      width: auto !important;
+      margin: 8px 0 12px !important;
+      padding: 5px !important;
+      border-radius: 18px !important;
+      background: rgba(255,255,255,.98) !important;
+      border: 1px solid rgba(15,23,42,.08) !important;
+      box-shadow: 0 8px 18px rgba(15,23,42,.06) !important;
+      pointer-events: auto !important;
+    }
+
+    #admin-master-ui.active #admin-dynamic-content,
+    #admin-master-ui[style*="display: flex"] #admin-dynamic-content,
+    .admin-mask.active #admin-dynamic-content {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      height: auto !important;
+      min-height: auto !important;
+      overflow: visible !important;
+      padding: 0 0 16px !important;
+      z-index: 1 !important;
+    }
+
+    @media (max-width: 420px) {
+      #admin-master-ui.active .admin-panel,
+      #admin-master-ui[style*="display: flex"] .admin-panel,
+      .admin-mask.active .admin-panel {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+      }
+    }
+
 </style>
 </head>
 <body>
