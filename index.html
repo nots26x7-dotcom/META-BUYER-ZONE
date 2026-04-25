@@ -1555,7 +1555,7 @@
 
       <div class="section-title">
         <span>Coin Market</span>
-        <span class="small-note">BEST RATE</span>
+        <span class="small-note">Per-Coin Admin Rate</span>
       </div>
       <div id="market-list-display"></div>
     </section>
@@ -1605,7 +1605,10 @@
 
       <div class="stack">
         <input type="number" id="input-qty" class="input" placeholder="Amount" oninput="calculatePayout()">
-        <input type="text" id="input-sender" class="input" placeholder="Sender Username">
+        <div>
+          <small id="sender-input-label" class="small-note" style="display:block;margin:0 0 6px 3px;font-weight:900;">Sender Username</small>
+          <input type="text" id="input-sender" class="input" placeholder="Enter Sender Username">
+        </div>
         <div class="grid-2">
           <select id="input-method" class="select"></select>
           <input type="text" id="input-number" class="input" placeholder="Payment Number">
@@ -1637,7 +1640,7 @@
         <div class="review-row"><span>Amount</span><b id="r-qty">---</b></div>
         <div class="review-row"><span>Submit Limit</span><b id="r-limit">---</b></div>
         <div class="review-row"><span>Admin Rate From</span><b id="r-admin-limit">---</b></div>
-        <div class="review-row"><span>Sender</span><b id="r-sender">---</b></div>
+        <div class="review-row"><span id="r-sender-label">Sender Username</span><b id="r-sender">---</b></div>
         <div class="review-row"><span>Method</span><b id="r-method">---</b></div>
         <div class="review-row"><span>Account No</span><b id="r-number">---</b></div>
         <div class="review-row"><span>Applied Rate</span><b id="r-rate">---</b></div>
@@ -1715,6 +1718,7 @@
     let currentCoinTID = "";
     let currentCoinSubmitLimit = 0;
     let currentCoinAdminRateLimit = 200000;
+    let currentCoinInputType = 'username';
     let currentAppliedRate = 0;
     let calculatedFinalPayout = 0;
     let adminActiveTab = 'pending';
@@ -1757,6 +1761,23 @@
       db.ref('marketConfig/' + coinKey).update({
         adminRateFrom: parsed,
         adminRateLimit: parsed
+      });
+    }
+
+    function normalizeCoinInputType(value) {
+      return String(value || '').toLowerCase() === 'code' ? 'code' : 'username';
+    }
+
+    function getCoinInputLabel(type) {
+      return normalizeCoinInputType(type) === 'code' ? 'Code' : 'Sender Username';
+    }
+
+    function updateCoinInputType(coinKey, value) {
+      if (!db || !coinKey) return;
+      const inputType = normalizeCoinInputType(value);
+      db.ref('marketConfig/' + coinKey).update({
+        inputType: inputType,
+        senderType: inputType
       });
     }
 
@@ -1848,8 +1869,10 @@
           const v = c.val() || {};
           const isOnline = v.status !== false;
           const adminRateLimit = getCoinAdminRateFrom(v);
+          const inputType = normalizeCoinInputType(v.inputType || v.senderType);
+          const inputLabel = getCoinInputLabel(inputType);
           html += `
-            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${c.key.replace(/'/g, "\\'")}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${String(v.transferId || '').replace(/'/g, "\\'")}', ${normalizeSubmitLimit(v.submitLimit)}, ${adminRateLimit})` : ''}">
+            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${c.key.replace(/'/g, "\\'")}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${String(v.transferId || '').replace(/'/g, "\\'")}', ${normalizeSubmitLimit(v.submitLimit)}, ${adminRateLimit}, '${inputType}')` : ''}">
               <div class="status-badge ${isOnline ? 'online' : 'offline'}">${isOnline ? '● Online' : '● Offline'}</div>
               <div class="left-wrap">
                 <div class="icon-box">🪙</div>
@@ -1862,7 +1885,7 @@
                 <div class="rate-box"><small>User Rate</small><div class="rate-val">${parseFloat(v.userRate || 0)}৳</div></div>
                 <div class="rate-box"><small>Admin Rate</small><div class="rate-val">${parseFloat(v.adminRate || 0)}৳</div></div>
               </div>
-              <div class="coin-foot">Min: ${normalizeSubmitLimit(v.submitLimit).toLocaleString()} • Admin From: ${adminRateLimit.toLocaleString()}+</div>
+              <div class="coin-foot">Min: ${normalizeSubmitLimit(v.submitLimit).toLocaleString()} • Admin From: ${adminRateLimit.toLocaleString()}+ • Need: ${inputLabel}</div>
             </div>`;
         });
         document.getElementById('market-list-display').innerHTML = html || `<div class="empty-state glass action-card">No market data found.</div>`;
@@ -1884,13 +1907,14 @@
       });
     }
 
-    function openOrderModal(name, userRate, adminRate, tid, submitLimit, adminRateLimit) {
+    function openOrderModal(name, userRate, adminRate, tid, submitLimit, adminRateLimit, inputType) {
       currentSelectedCoin = name;
       currentCoinRate = parseFloat(userRate || 0);
       currentAdminRate = parseFloat(adminRate || 0);
       currentCoinTID = tid || '';
       currentCoinSubmitLimit = normalizeSubmitLimit(submitLimit);
       currentCoinAdminRateLimit = normalizeAdminRateLimit(adminRateLimit);
+      currentCoinInputType = normalizeCoinInputType(inputType);
       currentAppliedRate = currentCoinRate;
 
       document.getElementById('modal-coin-title').innerText = `Sell ${name}`;
@@ -1904,7 +1928,12 @@
       qtyInput.value = '';
       qtyInput.placeholder = `Amount (Min ${currentCoinSubmitLimit.toLocaleString()})`;
       qtyInput.min = currentCoinSubmitLimit;
-      document.getElementById('input-sender').value = '';
+      const senderLabel = getCoinInputLabel(currentCoinInputType);
+      const senderLabelEl = document.getElementById('sender-input-label');
+      const senderInput = document.getElementById('input-sender');
+      if (senderLabelEl) senderLabelEl.innerText = senderLabel;
+      senderInput.value = '';
+      senderInput.placeholder = `Enter ${senderLabel}`;
       document.getElementById('input-number').value = '';
       openModal('order-modal');
     }
@@ -1930,15 +1959,17 @@
       const method = document.getElementById('input-method').value;
       const number = document.getElementById('input-number').value.trim();
 
+      const senderLabel = getCoinInputLabel(currentCoinInputType);
       if (qty < currentCoinSubmitLimit || !sender || !method || !number) {
         safeHaptic('notify', 'error');
-        return showToast(`Fill all details correctly! (Min ${currentCoinSubmitLimit.toLocaleString()})`);
+        return showToast(`Fill all details correctly! Enter ${senderLabel}. (Min ${currentCoinSubmitLimit.toLocaleString()})`);
       }
 
       document.getElementById('r-coin').innerText = currentSelectedCoin;
       document.getElementById('r-qty').innerText = qty;
       document.getElementById('r-limit').innerText = currentCoinSubmitLimit.toLocaleString();
       document.getElementById('r-admin-limit').innerText = currentCoinAdminRateLimit.toLocaleString();
+      document.getElementById('r-sender-label').innerText = senderLabel;
       document.getElementById('r-sender').innerText = sender;
       document.getElementById('r-method').innerText = method;
       document.getElementById('r-number').innerText = number;
@@ -1964,6 +1995,8 @@
         amt: document.getElementById('r-qty').innerText,
         payable: parseFloat(calculatedFinalPayout.toFixed(2)),
         sender: document.getElementById('r-sender').innerText,
+        senderInputType: currentCoinInputType,
+        senderLabel: getCoinInputLabel(currentCoinInputType),
         number: document.getElementById('r-number').innerText,
         method: document.getElementById('r-method').innerText,
         status: 'pending',
@@ -2011,7 +2044,7 @@
             <div class="simple-card glass history-card">
               <div>
                 <b>${d.amt} ${d.coin}</b><br>
-                <small class="muted">Payable: ${formatMoney(d.payable)} • To: ${d.targetId || '---'}</small>
+                <small class="muted">Payable: ${formatMoney(d.payable)} • ${d.senderLabel || getCoinInputLabel(d.senderInputType)}: ${d.sender || '---'} • To: ${d.targetId || '---'}</small>
               </div>
               <div class="status-chip" style="background:${bg};color:${color};border:1px solid rgba(255,255,255,.06);">${String(d.status || 'pending').toUpperCase()}</div>
             </div>`;
@@ -2153,7 +2186,7 @@
               <div class="admin-order-top">
                 <div>
                   <b style="font-size:16px;">@${o.user || 'unknown'}</b><br>
-                  <small style="color:#8ca4c8;">${o.sender || '---'}</small>
+                  <small style="color:#8ca4c8;">${o.senderLabel || getCoinInputLabel(o.senderInputType)}: ${o.sender || '---'}</small>
                 </div>
                 <div class="status-chip" style="background:${color}1f;color:${color};border:1px solid ${color}44;">${String(o.status || '').toUpperCase()}</div>
               </div>
@@ -2200,6 +2233,13 @@
           <div class="stack">
             <input type="text" id="new-c-name" class="input" placeholder="Coin Name">
             <input type="text" id="new-c-tid" class="input" placeholder="Address / UID">
+            <div>
+              <small class="small-note" style="display:block;margin:0 0 6px 3px;font-weight:900;color:#2563eb;">Sell Form Will Ask For</small>
+              <select id="new-c-input-type" class="select">
+                <option value="username">Username</option>
+                <option value="code">Code</option>
+              </select>
+            </div>
             <div class="grid-2">
               <input type="number" id="new-c-user" class="input" placeholder="User Rate">
               <input type="number" id="new-c-admin" class="input" placeholder="Admin Rate">
@@ -2281,6 +2321,13 @@
               </div>
               <div class="stack">
                 <input type="text" class="input" value="${v.transferId || ''}" onchange="db.ref('marketConfig/${c.key}').update({transferId:this.value})">
+                <div>
+                  <small class="small-note" style="display:block;margin:0 0 6px 3px;font-weight:900;color:#2563eb;">User Sell Form Input</small>
+                  <select class="select" onchange="updateCoinInputType('${String(c.key).replace(/'/g, "\\'")}', this.value)">
+                    <option value="username" ${normalizeCoinInputType(v.inputType || v.senderType) === 'username' ? 'selected' : ''}>Username</option>
+                    <option value="code" ${normalizeCoinInputType(v.inputType || v.senderType) === 'code' ? 'selected' : ''}>Code</option>
+                  </select>
+                </div>
                 <div class="grid-2">
                   <input type="number" class="input" value="${parseFloat(v.userRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({userRate:parseFloat(this.value||0)})">
                   <input type="number" class="input" value="${parseFloat(v.adminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({adminRate:parseFloat(this.value||0)})">
@@ -2335,15 +2382,17 @@
       const tid = document.getElementById('new-c-tid').value.trim();
       const ur = parseFloat(document.getElementById('new-c-user').value || 0);
       const ar = parseFloat(document.getElementById('new-c-admin').value || 0);
+      const inputType = normalizeCoinInputType(document.getElementById('new-c-input-type').value);
       const sl = normalizeSubmitLimit(document.getElementById('new-c-limit').value);
       const adminLimit = normalizeAdminRateLimit(document.getElementById('new-c-admin-limit').value);
       if (!n || !tid || !ur || !ar) return showToast('Fill all coin fields.');
-      db.ref('marketConfig/' + n).set({ transferId: tid, userRate: ur, adminRate: ar, submitLimit: sl, adminRateFrom: adminLimit, adminRateLimit: adminLimit, status: true }).then(() => {
+      db.ref('marketConfig/' + n).set({ transferId: tid, userRate: ur, adminRate: ar, submitLimit: sl, adminRateFrom: adminLimit, adminRateLimit: adminLimit, inputType: inputType, senderType: inputType, status: true }).then(() => {
         safeHaptic('notify', 'success');
         document.getElementById('new-c-name').value = '';
         document.getElementById('new-c-tid').value = '';
         document.getElementById('new-c-user').value = '';
         document.getElementById('new-c-admin').value = '';
+        document.getElementById('new-c-input-type').value = 'username';
         document.getElementById('new-c-limit').value = '';
         document.getElementById('new-c-admin-limit').value = '';
         showToast('Coin added successfully!');
