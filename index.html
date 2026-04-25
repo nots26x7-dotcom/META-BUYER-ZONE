@@ -2148,6 +2148,137 @@
       }
     }
 
+
+
+    /* ===== Fixed Admin Status Bar Upgrade ===== */
+    .admin-mask.active {
+      align-items: stretch !important;
+      justify-content: center !important;
+    }
+
+    .admin-mask.active .admin-panel {
+      position: fixed !important;
+      inset: 0 !important;
+      width: min(100vw, 520px) !important;
+      max-width: 520px !important;
+      height: 100dvh !important;
+      margin: 0 auto !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 142px 10px 112px !important;
+      background: linear-gradient(180deg, #f7f9fc 0%, #eef3f8 100%) !important;
+      scroll-padding-top: 152px;
+    }
+
+    .admin-mask.active .admin-top {
+      position: fixed !important;
+      top: 0 !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: min(100vw, 520px) !important;
+      max-width: 520px !important;
+      z-index: 9998 !important;
+      padding: calc(env(safe-area-inset-top, 0px) + 8px) 10px 8px !important;
+      background:
+        linear-gradient(180deg, rgba(247,249,252,.99) 0%, rgba(247,249,252,.98) 72%, rgba(247,249,252,.88) 100%) !important;
+      border-bottom: 1px solid rgba(15,23,42,.08) !important;
+      box-shadow: 0 12px 28px rgba(15,23,42,.10) !important;
+      backdrop-filter: blur(18px) saturate(1.18) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.18) !important;
+    }
+
+    .admin-mask.active .admin-head {
+      position: relative !important;
+      top: auto !important;
+      margin: 0 !important;
+      border-radius: 18px !important;
+      padding: 11px 12px 12px !important;
+      background: linear-gradient(135deg, rgba(255,255,255,.99), rgba(242,247,252,.98)) !important;
+      border: 1px solid rgba(15,23,42,.08) !important;
+      box-shadow: 0 8px 22px rgba(15,23,42,.07) !important;
+    }
+
+    .admin-mask.active .admin-head > div:first-child {
+      gap: 10px !important;
+    }
+
+    .admin-mask.active .admin-head h2 {
+      font-size: 18px !important;
+      margin-top: 3px !important;
+      color: #0f172a !important;
+      line-height: 1.05 !important;
+    }
+
+    .admin-mask.active .admin-head h2 + * {
+      margin-top: 0 !important;
+    }
+
+    .admin-mask.active .admin-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 6px !important;
+      margin-top: 8px !important;
+    }
+
+    .admin-mask.active .stat-card {
+      border-radius: 13px !important;
+      padding: 8px 6px !important;
+      background: linear-gradient(180deg, rgba(255,255,255,.99), rgba(248,250,252,.96)) !important;
+      border: 1px solid rgba(15,23,42,.07) !important;
+      box-shadow: 0 5px 14px rgba(15,23,42,.05) !important;
+    }
+
+    .admin-mask.active .stat-card small {
+      font-size: 7.5px !important;
+      color: #64748b !important;
+      letter-spacing: .08em !important;
+    }
+
+    .admin-mask.active .stat-card b {
+      font-size: 15px !important;
+      margin-top: 3px !important;
+      color: #0f172a !important;
+    }
+
+    .admin-mask.active .admin-tabs {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 9990 !important;
+      margin: 0 0 10px !important;
+      border-radius: 18px !important;
+      background: rgba(255,255,255,.96) !important;
+      border: 1px solid rgba(15,23,42,.08) !important;
+      box-shadow: 0 8px 22px rgba(15,23,42,.07) !important;
+      backdrop-filter: blur(14px) saturate(1.1) !important;
+      -webkit-backdrop-filter: blur(14px) saturate(1.1) !important;
+    }
+
+    .admin-mask.active .admin-tab {
+      padding: 10px 8px !important;
+      border-radius: 14px !important;
+      font-size: 11px !important;
+    }
+
+    @media (max-width: 420px) {
+      .admin-mask.active .admin-panel {
+        padding-top: 132px !important;
+      }
+      .admin-mask.active .admin-head {
+        padding: 10px !important;
+      }
+      .admin-mask.active .admin-head h2 {
+        font-size: 16px !important;
+      }
+      .admin-mask.active .admin-grid {
+        gap: 5px !important;
+      }
+      .admin-mask.active .stat-card {
+        padding: 7px 4px !important;
+      }
+      .admin-mask.active .stat-card b {
+        font-size: 14px !important;
+      }
+    }
+
 </style>
 </head>
 <body>
