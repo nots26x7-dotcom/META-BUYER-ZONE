@@ -1603,6 +1603,159 @@
             .payment-number-row #active-num{ font-size:16px !important; }
             .pay-copy-btn{ min-width:68px; height:38px; font-size:10px; }
         }
+
+
+        /* === FINAL: Left Blue Glow Line Only | Online/Offline Old Style Kept === */
+        .glass,
+        .card,
+        .store-card,
+        #user-profile-card,
+        #help-page,
+        .sheet,
+        .pay-choice,
+        .payment-number-row,
+        .acc-box,
+        .adm-nav,
+        .admin-topbar,
+        .adm-content > .card,
+        #adm-pending .card,
+        #adm-history-list .card,
+        #stock-inventory-list .card,
+        #adm-vpn-list .card,
+        #user-orders .card,
+        .notification-card {
+            position: relative !important;
+            overflow: hidden !important;
+            isolation: isolate !important;
+        }
+
+        .glass::before,
+        .card::before,
+        .store-card::before,
+        #user-profile-card::before,
+        #help-page::before,
+        .sheet::before,
+        .pay-choice::before,
+        .payment-number-row::before,
+        .acc-box::before,
+        .adm-nav::before,
+        .admin-topbar::before,
+        .adm-content > .card::before,
+        #adm-pending .card::before,
+        #adm-history-list .card::before,
+        #stock-inventory-list .card::before,
+        #adm-vpn-list .card::before,
+        #user-orders .card::before,
+        .notification-card::before {
+            content: "" !important;
+            display: block !important;
+            position: absolute !important;
+            left: 0 !important;
+            top: 9px !important;
+            bottom: 9px !important;
+            width: 4px !important;
+            height: auto !important;
+            border-radius: 0 999px 999px 0 !important;
+            background: linear-gradient(180deg, #7dd3fc 0%, #38bdf8 45%, #0ea5e9 100%) !important;
+            box-shadow:
+                0 0 0 1px rgba(125, 211, 252, .20),
+                0 0 8px rgba(56, 189, 248, .65),
+                0 0 16px rgba(14, 165, 233, .42),
+                0 0 28px rgba(37, 99, 235, .25) !important;
+            opacity: 1 !important;
+            z-index: 2 !important;
+            pointer-events: none !important;
+            transform: none !important;
+            inset-inline-start: 0 !important;
+        }
+
+        .glass > *,
+        .card > *,
+        .store-card > *,
+        #user-profile-card > *,
+        #help-page > *,
+        .sheet > *,
+        .pay-choice > *,
+        .payment-number-row > *,
+        .acc-box > *,
+        .adm-nav > *,
+        .admin-topbar > *,
+        .adm-content > .card > *,
+        #adm-pending .card > *,
+        #adm-history-list .card > *,
+        #stock-inventory-list .card > *,
+        #adm-vpn-list .card > *,
+        #user-orders .card > *,
+        .notification-card > * {
+            position: relative !important;
+            z-index: 3 !important;
+        }
+
+        .store-card,
+        .card,
+        .payment-number-row,
+        .pay-choice,
+        .acc-box,
+        .notification-card {
+            padding-left: 16px !important;
+        }
+
+        #user-profile-card,
+        .sheet,
+        #help-page {
+            padding-left: 18px !important;
+        }
+
+        /* Keep old Online/Offline badge look, no banner style */
+        .online-badge,
+        .offline-badge {
+            position: static !important;
+            right: auto !important;
+            top: auto !important;
+            width: auto !important;
+            height: auto !important;
+            border-radius: 10px !important;
+            min-width: 58px !important;
+            padding: 5px 8px !important;
+            font-size: 8px !important;
+            letter-spacing: .06em !important;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, .06) !important;
+            overflow: visible !important;
+        }
+
+        .online-badge::before,
+        .offline-badge::before,
+        .online-badge::after,
+        .offline-badge::after {
+            display: none !important;
+            content: none !important;
+        }
+
+        @media(max-width:420px){
+            .glass::before,
+            .card::before,
+            .store-card::before,
+            #user-profile-card::before,
+            #help-page::before,
+            .sheet::before,
+            .pay-choice::before,
+            .payment-number-row::before,
+            .acc-box::before,
+            .adm-nav::before,
+            .admin-topbar::before,
+            .adm-content > .card::before,
+            #adm-pending .card::before,
+            #adm-history-list .card::before,
+            #stock-inventory-list .card::before,
+            #adm-vpn-list .card::before,
+            #user-orders .card::before,
+            .notification-card::before {
+                width: 3px !important;
+                top: 8px !important;
+                bottom: 8px !important;
+            }
+        }
+
 </style>
 </head>
 <body>
