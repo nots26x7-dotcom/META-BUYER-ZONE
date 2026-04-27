@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>META BUYER ZONE</title>
+  <title>NIVA EXCHANGE</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -53,7 +53,7 @@
       0%,100% { transform: translate(0,0) scale(1); }
       50% { transform: translate(12px, 18px) scale(1.08); }
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+   
     @keyframes pulseGlow {
       0%,100% { box-shadow: 0 0 0 0 rgba(59,130,246,.24), 0 10px 35px rgba(59,130,246,.18); }
       50% { box-shadow: 0 0 0 10px rgba(59,130,246,0), 0 16px 45px rgba(34,197,94,.16); }
@@ -66,10 +66,7 @@
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
+   
 
     #particle-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: .65; }
     .hidden { display: none !important; }
@@ -102,14 +99,7 @@
       margin-bottom: 28px;
       animation: pulseGlow 2s ease-in-out infinite;
     }
-    .loader-orb::before,
-    .loader-orb::after {
-      content: "";
-      position: absolute;
-      inset: -8px;
-      border-radius: 40px;
-      border: 2px solid transparent;
-    }
+
     .loader-orb::before { border-top-color: #8fa1b7; border-right-color: #8fa1b7; animation: spin 1.4s linear infinite; }
     .loader-orb::after { inset: -18px; border-bottom-color: #bcc7d4; border-left-color: #bcc7d4; animation: spin 1.8s linear infinite reverse; }
     .loader-inner {
@@ -2470,10 +2460,10 @@
   <div id="loading">
     <div class="loader-orb glass">
       <div class="loader-inner">
-      <a href="https://ibb.co.com/LzZXgc34"><img src="https://i.ibb.co.com/BVC56Q98/Gemini-Generated-Image-su92j7su92j7su92.png" alt="Gemini-Generated-Image-su92j7su92j7su92" border="0"></a>
+<a href="https://ibb.co.com/hJFZTTzb"><img src="https://i.ibb.co.com/ycFYxxjt/photo-2026-04-27-17-36-37.jpg" alt="photo 2026 04 27 17 36 37" border="0"></a>
       </div>
     </div>
-    <div class="loader-title">META<span> BUYER</span> ZONE</div>
+    <div class="loader-title">NIVA<span> EXCHANGE</span> </div>
     <div class="loader-bar"></div>
     <div style="margin-top:14px;color:#95a9cc;font-size:12px;font-weight:700;letter-spacing:.08em;">Best Deal • Premium Experience</div>
   </div>
@@ -2484,8 +2474,8 @@
     <header class="php-app-header glass">
       <div class="php-app-header-row">
         <div>
-          <div class="php-app-kicker">PHP PANEL LOOK • HTML BUILD</div>
-          <h1 class="php-app-title">META <span>BUYER</span> ZONE</h1>
+          <div class="php-app-kicker">BEST COIN BUY SELL BOT</div>
+          <h1 class="php-app-title">NIVA <span>EXCHANGE</span> </h1>
         </div>
         <div class="php-app-live">LIVE</div>
       </div>
@@ -2909,7 +2899,7 @@
         if (!('Notification' in window)) return;
         if (Notification.permission !== 'granted') return;
         if (document.visibilityState === 'visible') return;
-        new Notification(title || 'META BUYER ZONE', {
+        new Notification(title || 'NIVA EXCHANGE', {
           body: message || '',
           tag: 'meta-buyer-zone',
           icon: document.getElementById('user-pfp')?.src || undefined
@@ -2919,13 +2909,13 @@
 
     function notifyApp(title, message, type, opts) {
       const options = opts || {};
-      pushInAppNotification(title || 'META BUYER ZONE', message || '', type || 'info');
+      pushInAppNotification(title || 'NIVA EXCHANGE', message || '', type || 'info');
       if (options.feedback !== false) runNotificationFeedback(type || 'info');
-      if (options.native) sendNativeNotification(title || 'META BUYER ZONE', message || '');
+      if (options.native) sendNativeNotification(title || 'NIVA EXCHANGE', message || '');
     }
 
     function showToast(msg, type) {
-      notifyApp('META BUYER ZONE', msg, type || 'info', { feedback: true, native: false });
+      notifyApp('NIVA EXCHANGE', msg, type || 'info', { feedback: true, native: false });
     }
 
     function updateNotificationCardState() {
@@ -3859,7 +3849,7 @@
       setTimeout(() => {
         if (!notificationBooted) {
           notificationBooted = true;
-          notifyApp('Welcome Back, ' + getCurrentUserName(), 'META BUYER ZONE is ready.', 'success', { feedback: true, native: false });
+          notifyApp('Welcome Back, ' + getCurrentUserName(), 'NIVA EXCHANGE is ready.', 'success', { feedback: true, native: false });
         }
       }, 1850);
     });
