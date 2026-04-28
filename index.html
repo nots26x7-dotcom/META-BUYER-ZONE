@@ -2087,17 +2087,17 @@
     .notify-enable-card::after {
       content: "" !important;
       position: absolute !important;
-      left: 0 !important;
-      top: 9px !important;
-      bottom: 9px !important;
-      width: 4px !important;
-      border-radius: 0 999px 999px 0 !important;
-      background: linear-gradient(180deg, #bae6fd 0%, #38bdf8 38%, #0ea5e9 70%, #60a5fa 100%) !important;
+      left: 12px !important;
+      right: 12px !important;
+      top: 0 !important;
+      height: 4px !important;
+      width: auto !important;
+      border-radius: 0 0 999px 999px !important;
+      background: linear-gradient(90deg, #bae6fd 0%, #38bdf8 35%, #0ea5e9 65%, #60a5fa 100%) !important;
       box-shadow:
-        0 0 0 1px rgba(125, 211, 252, .22),
-        0 0 10px rgba(56, 189, 248, .78),
-        0 0 22px rgba(14, 165, 233, .48),
-        0 0 34px rgba(59, 130, 246, .28) !important;
+        0 0 0 1px rgba(125, 211, 252, .18),
+        0 0 10px rgba(56, 189, 248, .50),
+        0 0 20px rgba(14, 165, 233, .28) !important;
       z-index: 3 !important;
       pointer-events: none !important;
     }
@@ -2132,9 +2132,11 @@
       .help-hero-card::after,
       .help-mini-card::after,
       .notify-enable-card::after {
-        width: 3px !important;
-        top: 8px !important;
-        bottom: 8px !important;
+        left: 10px !important;
+        right: 10px !important;
+        top: 0 !important;
+        height: 3px !important;
+        width: auto !important;
       }
     }
 
@@ -2453,19 +2455,408 @@
       }
     }
 
-</style>
+
+    /* === Premium Loading Screen Upgrade === */
+    #loading {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 9999 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 24px !important;
+      overflow: hidden !important;
+      color: #0f172a !important;
+      background:
+        radial-gradient(circle at 16% 16%, rgba(37, 99, 235, .20), transparent 32%),
+        radial-gradient(circle at 84% 18%, rgba(16, 185, 129, .17), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(6, 182, 212, .16), transparent 42%),
+        linear-gradient(180deg, #ffffff 0%, #f8fbff 48%, #eef6ff 100%) !important;
+      transition: opacity .45s ease, visibility .45s ease !important;
+    }
+
+    #loading::before,
+    #loading::after {
+      content: "" !important;
+      position: absolute !important;
+      width: 320px !important;
+      height: 320px !important;
+      border-radius: 999px !important;
+      filter: blur(74px) !important;
+      opacity: .42 !important;
+      pointer-events: none !important;
+      animation: loaderAuraFloat 7s ease-in-out infinite !important;
+    }
+
+    #loading::before {
+      top: -118px !important;
+      left: -110px !important;
+      background: rgba(37, 99, 235, .30) !important;
+    }
+
+    #loading::after {
+      right: -120px !important;
+      bottom: -90px !important;
+      background: rgba(16, 185, 129, .28) !important;
+      animation-delay: -3s !important;
+    }
+
+    .loader-bg-orb,
+    .loader-bg-grid {
+      position: absolute !important;
+      pointer-events: none !important;
+      z-index: 0 !important;
+    }
+
+    .loader-bg-orb {
+      width: 150px !important;
+      height: 150px !important;
+      border-radius: 999px !important;
+      background: linear-gradient(135deg, rgba(37,99,235,.18), rgba(6,182,212,.10), rgba(16,185,129,.16)) !important;
+      box-shadow: 0 0 44px rgba(37,99,235,.14) !important;
+      animation: loaderSmallFloat 6s ease-in-out infinite !important;
+    }
+
+    .loader-bg-orb-1 {
+      top: 18% !important;
+      right: 14% !important;
+    }
+
+    .loader-bg-orb-2 {
+      left: 12% !important;
+      bottom: 16% !important;
+      width: 110px !important;
+      height: 110px !important;
+      animation-delay: -2s !important;
+    }
+
+    .loader-bg-grid {
+      inset: 0 !important;
+      background-image:
+        linear-gradient(rgba(37,99,235,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37,99,235,.045) 1px, transparent 1px) !important;
+      background-size: 34px 34px !important;
+      mask-image: radial-gradient(circle at center, rgba(0,0,0,.55), transparent 72%) !important;
+      -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,.55), transparent 72%) !important;
+      opacity: .7 !important;
+    }
+
+    .loader-card {
+      position: relative !important;
+      z-index: 2 !important;
+      width: min(92vw, 340px) !important;
+      min-height: 390px !important;
+      border-radius: 34px !important;
+      padding: 26px 22px 22px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,250,252,.78)) !important;
+      border: 1px solid rgba(15, 23, 42, .08) !important;
+      box-shadow:
+        0 28px 70px rgba(15, 23, 42, .12),
+        0 0 0 1px rgba(255,255,255,.62) inset !important;
+      backdrop-filter: blur(22px) saturate(1.25) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.25) !important;
+      animation: loaderCardIn .55s cubic-bezier(.2,.85,.2,1) both !important;
+      overflow: hidden !important;
+    }
+
+    .loader-card::before {
+      content: "" !important;
+      position: absolute !important;
+      left: 18px !important;
+      right: 18px !important;
+      top: 0 !important;
+      height: 4px !important;
+      border-radius: 0 0 999px 999px !important;
+      background: linear-gradient(90deg, #2563eb, #06b6d4, #10b981) !important;
+      box-shadow: 0 0 20px rgba(6,182,212,.42) !important;
+    }
+
+    .loader-card::after {
+      content: "" !important;
+      position: absolute !important;
+      inset: -1px !important;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.42) 46%, transparent 58%) !important;
+      transform: translateX(-130%) !important;
+      animation: loaderGlassSweep 3.8s ease-in-out infinite !important;
+      pointer-events: none !important;
+    }
+
+    .loader-badge {
+      position: relative !important;
+      z-index: 2 !important;
+      margin-bottom: 18px !important;
+      padding: 8px 12px !important;
+      border-radius: 999px !important;
+      font-size: 9px !important;
+      line-height: 1 !important;
+      font-weight: 900 !important;
+      letter-spacing: .16em !important;
+      color: #1d4ed8 !important;
+      background: rgba(219, 234, 254, .72) !important;
+      border: 1px solid rgba(96, 165, 250, .30) !important;
+      box-shadow: 0 10px 24px rgba(37,99,235,.08) !important;
+    }
+
+    #loading .loader-orb {
+      position: relative !important;
+      z-index: 2 !important;
+      width: 126px !important;
+      height: 126px !important;
+      margin: 0 0 18px !important;
+      border-radius: 32px !important;
+      display: grid !important;
+      place-items: center !important;
+      background:
+        conic-gradient(from 90deg, #2563eb, #06b6d4, #10b981, #2563eb) !important;
+      border: 0 !important;
+      box-shadow:
+        0 20px 50px rgba(37,99,235,.18),
+        0 0 36px rgba(6,182,212,.24) !important;
+      animation: loaderLogoFloat 3.2s ease-in-out infinite !important;
+    }
+
+    #loading .loader-orb::before,
+    #loading .loader-orb::after {
+      content: "" !important;
+      position: absolute !important;
+      inset: -9px !important;
+      border-radius: 39px !important;
+      border: 1.5px solid rgba(37,99,235,.18) !important;
+      border-top-color: rgba(37,99,235,.72) !important;
+      border-right-color: rgba(6,182,212,.58) !important;
+      animation: loaderRingSpin 1.9s linear infinite !important;
+      pointer-events: none !important;
+    }
+
+    #loading .loader-orb::after {
+      inset: -18px !important;
+      border-color: rgba(16,185,129,.14) !important;
+      border-bottom-color: rgba(16,185,129,.72) !important;
+      border-left-color: rgba(6,182,212,.48) !important;
+      animation: loaderRingSpin 2.5s linear infinite reverse !important;
+    }
+
+    #loading .loader-inner {
+      width: 94px !important;
+      height: 94px !important;
+      border-radius: 26px !important;
+      overflow: hidden !important;
+      display: grid !important;
+      place-items: center !important;
+      background: #ffffff !important;
+      border: 3px solid rgba(255,255,255,.88) !important;
+      box-shadow: 0 12px 30px rgba(15,23,42,.14) !important;
+    }
+
+    #loading .loader-inner a,
+    #loading .loader-inner img {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    #loading .loader-inner img {
+      object-fit: cover !important;
+      border: 0 !important;
+    }
+
+    #loading .loader-title {
+      position: relative !important;
+      z-index: 2 !important;
+      margin: 0 !important;
+      color: #0f172a !important;
+      font-size: 27px !important;
+      line-height: 1 !important;
+      font-weight: 950 !important;
+      letter-spacing: -.04em !important;
+      text-shadow: none !important;
+    }
+
+    #loading .loader-title span {
+      background: linear-gradient(135deg, #2563eb, #06b6d4, #10b981) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+    }
+
+    .loader-subtitle {
+      position: relative !important;
+      z-index: 2 !important;
+      margin: 9px 0 18px !important;
+      max-width: 245px !important;
+      color: #64748b !important;
+      font-size: 12px !important;
+      line-height: 1.45 !important;
+      font-weight: 750 !important;
+    }
+
+    #loading .loader-bar {
+      position: relative !important;
+      z-index: 2 !important;
+      width: min(238px, 72vw) !important;
+      height: 8px !important;
+      margin: 0 !important;
+      border-radius: 999px !important;
+      background: rgba(37,99,235,.10) !important;
+      overflow: hidden !important;
+      box-shadow: inset 0 1px 2px rgba(15,23,42,.06) !important;
+    }
+
+    #loading .loader-bar::after {
+      content: "" !important;
+      position: absolute !important;
+      inset: 0 !important;
+      width: 46% !important;
+      border-radius: inherit !important;
+      background: linear-gradient(90deg, #2563eb, #06b6d4, #10b981) !important;
+      box-shadow: 0 0 20px rgba(6,182,212,.40) !important;
+      animation: loaderProgressMove 1.65s ease-in-out infinite !important;
+    }
+
+    .loader-mini-row {
+      position: relative !important;
+      z-index: 2 !important;
+      width: 100% !important;
+      margin-top: 18px !important;
+      display: flex !important;
+      justify-content: center !important;
+      gap: 7px !important;
+      flex-wrap: wrap !important;
+    }
+
+    .loader-mini-row span {
+      padding: 7px 9px !important;
+      border-radius: 999px !important;
+      color: #475569 !important;
+      background: rgba(248,250,252,.82) !important;
+      border: 1px solid rgba(15,23,42,.06) !important;
+      font-size: 9px !important;
+      font-weight: 900 !important;
+      letter-spacing: .05em !important;
+      animation: loaderChipPulse 1.9s ease-in-out infinite !important;
+    }
+
+    .loader-mini-row span:nth-child(2) { animation-delay: .18s !important; }
+    .loader-mini-row span:nth-child(3) { animation-delay: .36s !important; }
+
+    @keyframes loaderCardIn {
+      from { opacity: 0; transform: translateY(18px) scale(.965); filter: blur(8px); }
+      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    @keyframes loaderAuraFloat {
+      0%, 100% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(18px, 14px, 0) scale(1.08); }
+    }
+
+    @keyframes loaderSmallFloat {
+      0%, 100% { transform: translateY(0) scale(1); opacity: .75; }
+      50% { transform: translateY(-18px) scale(1.06); opacity: .98; }
+    }
+
+    @keyframes loaderLogoFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(1deg); }
+    }
+
+    @keyframes loaderRingSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes loaderGlassSweep {
+      0%, 35% { transform: translateX(-135%); }
+      70%, 100% { transform: translateX(135%); }
+    }
+
+    @keyframes loaderProgressMove {
+      0% { transform: translateX(-115%); }
+      55% { transform: translateX(70%); }
+      100% { transform: translateX(235%); }
+    }
+
+    @keyframes loaderChipPulse {
+      0%, 100% { transform: translateY(0); opacity: .72; }
+      50% { transform: translateY(-2px); opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .loader-card {
+        width: min(92vw, 318px) !important;
+        min-height: 360px !important;
+        border-radius: 30px !important;
+        padding: 23px 18px 20px !important;
+      }
+
+      #loading .loader-orb {
+        width: 112px !important;
+        height: 112px !important;
+        border-radius: 29px !important;
+      }
+
+      #loading .loader-inner {
+        width: 84px !important;
+        height: 84px !important;
+        border-radius: 23px !important;
+      }
+
+      #loading .loader-title {
+        font-size: 24px !important;
+      }
+
+      .loader-subtitle {
+        font-size: 11.5px !important;
+      }
+
+      .loader-mini-row span {
+        font-size: 8.5px !important;
+        padding: 6px 8px !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #loading *,
+      #loading *::before,
+      #loading *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+
+  </style>
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
   <div id="loading">
-    <div class="loader-orb glass">
-      <div class="loader-inner">
-<a href="https://ibb.co.com/hJFZTTzb"><img src="https://i.ibb.co.com/ycFYxxjt/photo-2026-04-27-17-36-37.jpg" alt="photo 2026 04 27 17 36 37" border="0"></a>
+    <div class="loader-bg-orb loader-bg-orb-1"></div>
+    <div class="loader-bg-orb loader-bg-orb-2"></div>
+    <div class="loader-bg-grid"></div>
+
+    <div class="loader-card">
+      <div class="loader-badge">SECURE • FAST • TRUSTED</div>
+
+      <div class="loader-orb glass">
+        <div class="loader-inner">
+          <a href="https://ibb.co.com/hJFZTTzb"><img src="https://i.ibb.co.com/ycFYxxjt/photo-2026-04-27-17-36-37.jpg" alt="photo 2026 04 27 17 36 37" border="0"></a>
+        </div>
+      </div>
+
+      <div class="loader-title">NIVA<span> EXCHANGE</span></div>
+      <div class="loader-subtitle">Preparing your premium exchange dashboard</div>
+
+      <div class="loader-bar"></div>
+
+      <div class="loader-mini-row">
+        <span>Best Deal</span>
+        <span>Premium Rate</span>
+        <span>Live Support</span>
       </div>
     </div>
-    <div class="loader-title">NIVA<span> EXCHANGE</span> </div>
-    <div class="loader-bar"></div>
-    <div style="margin-top:14px;color:#95a9cc;font-size:12px;font-weight:700;letter-spacing:.08em;">Best Deal • Premium Experience</div>
   </div>
 
   <div id="toast-stack" class="notification-top-stack" aria-live="polite" aria-atomic="true"></div>
