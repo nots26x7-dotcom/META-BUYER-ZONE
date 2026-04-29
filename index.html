@@ -284,6 +284,25 @@
     }
     .muted { color: var(--muted); }
 
+.how-sell-btn {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: #ffecec;
+  color: #ff4d4f;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s ease;
+}
+
+.how-sell-btn:hover {
+  background: #ffd6d6;
+}
+
+
     .coin-card {
       padding-top: 42px;
       cursor: pointer;
@@ -2925,10 +2944,14 @@
         <button class="admin-button" onclick="openAdminPanel()">🛡️ Access Admin Dashboard</button>
       </div>
 
-      <div class="section-title">
-        <span>Coin Market</span>
-        <span class="small-note">Per-Coin Admin Rate</span>
-      </div>
+<div class="section-title">
+  <span>Exchange Market</span>
+
+  <!-- সরাসরি লিঙ্ক এখানে বসাও -->
+  <a href="https://t.me/Nivaexchangeowner" target="_blank" class="how-sell-btn">
+    ▶ How to Sell
+  </a>
+</div>
       <div id="market-list-display"></div>
     </section>
 
