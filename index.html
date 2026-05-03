@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NIVA EXCHANGE</title>
+  <title>NIVA EXCHANGE | MADE BY @S26X_BEAST </title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -2162,6 +2162,30 @@ content: "" !important;
 
 
 
+
+
+    /* ===== Coin Card Click Hint ===== */
+    .coin-click-hint {
+      margin-top: 8px !important;
+      padding: 8px 10px !important;
+      border-radius: 999px !important;
+      text-align: center !important;
+      font-size: 10px !important;
+      font-weight: 900 !important;
+      letter-spacing: .16em !important;
+      text-transform: uppercase !important;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #2563eb, #06b6d4, #10b981) !important;
+      box-shadow: 0 8px 20px rgba(37,99,235,.16) !important;
+    }
+
+    .coin-card.offline .coin-click-hint {
+      color: #64748b !important;
+      background: rgba(226,232,240,.9) !important;
+      box-shadow: none !important;
+    }
+
+
     /* ===== Fixed Admin Status Bar Upgrade ===== */
     .admin-mask.active {
       align-items: stretch !important;
@@ -3457,6 +3481,7 @@ content: "" !important;
                 <div class="rate-box"><small>Admin Rate</small><div class="rate-val">${parseFloat(v.adminRate || 0)}৳</div></div>
               </div>
               <div class="coin-foot">Min: ${normalizeSubmitLimit(v.submitLimit).toLocaleString()} • Admin From: ${adminRateLimit.toLocaleString()}+ • Need: ${inputLabel}</div>
+              <div class="coin-click-hint">CLICK HERE</div>
             </div>`;
         });
         document.getElementById('market-list-display').innerHTML = html || `<div class="empty-state glass action-card">No market data found.</div>`;
@@ -3837,8 +3862,13 @@ content: "" !important;
               </div>
 
               <div class="copy-box" onclick="copyToClipboard('${String(o.number || '').replace(/'/g, "\\'")}')">
-                <small style="display:block;color:#93c5fd;font-weight:900;letter-spacing:.08em;">TAP TO COPY NUMBER</small>
+                <small style="display:block;color:#93c5fd;font-weight:900;letter-spacing:.08em;">TAP TO COPY PAYMENT NUMBER</small>
                 <b style="font-size:16px;">📱 ${o.number || '---'}</b>
+              </div>
+
+              <div class="copy-box" onclick="copyToClipboard('${String(o.sender || '').replace(/'/g, "\\'")}')">
+                <small style="display:block;color:#10b981;font-weight:900;letter-spacing:.08em;">TAP TO COPY ${o.senderLabel || getCoinInputLabel(o.senderInputType)}</small>
+                <b style="font-size:16px;">🔑 ${o.sender || '---'}</b>
               </div>
 
               <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;">
