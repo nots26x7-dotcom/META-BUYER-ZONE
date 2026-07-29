@@ -5,9 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>NIVA EXCHANGE</title>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://telegram.org">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://niva-exchange-default-rtdb.firebaseio.com">
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js" defer></script>
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
@@ -422,16 +427,6 @@
     .coin-card,.coin-box,.order-card,.hist-card{will-change:transform;contain:layout style;}
     .coin-detail-mask{will-change:opacity;}
 
-    /* ===== GREEN GLOW PAYMENT BANNER ===== */
-    @keyframes greenGlow{0%,100%{box-shadow:0 0 10px rgba(52,211,153,.4),0 0 20px rgba(52,211,153,.2)}50%{box-shadow:0 0 20px rgba(52,211,153,.7),0 0 40px rgba(52,211,153,.35),0 0 60px rgba(52,211,153,.15)}}
-    @keyframes glowText{0%,100%{text-shadow:0 0 8px rgba(52,211,153,.6)}50%{text-shadow:0 0 16px rgba(52,211,153,1),0 0 30px rgba(52,211,153,.5)}}
-    .pay-save-banner{background:linear-gradient(135deg,rgba(52,211,153,.12),rgba(16,185,129,.06));border:1px solid rgba(52,211,153,.45);border-radius:var(--radius-xl);padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;cursor:pointer;animation:riseUp .4s ease both;transition:all .2s ease;}
-    .pay-save-banner:active{transform:scale(.98);background:rgba(52,211,153,.2);}
-    .pay-save-icon{width:42px;height:42px;border-radius:12px;background:rgba(52,211,153,.2);border:1px solid rgba(52,211,153,.4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-    .pay-save-title{font-size:14px;font-weight:900;color:var(--emerald);letter-spacing:.3px;animation:glowText 2.5s ease-in-out infinite;}
-    .pay-save-sub{font-size:10px;font-weight:600;color:rgba(52,211,153,.7);margin-top:2px;}
-    .pay-save-arrow{margin-left:auto;font-size:18px;color:var(--emerald);flex-shrink:0;}
-
     /* ===== PAYMENT SETTINGS SCREEN ===== */
     .pay-settings-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
     .pay-settings-method-card{background:var(--panel2);border:1px solid var(--border);border-radius:var(--radius-xl);padding:16px;margin-bottom:12px;animation:riseUp .35s ease both;}
@@ -502,16 +497,6 @@
       <button class="qa-btn qa-admin hidden" type="button" id="admin-btn" style="grid-column:1/-1;"><div class="qa-icon" style="background:var(--sky-light);color:var(--sky-dark);">🛡️</div><div><div class="qa-main-text">Admin Panel</div><div class="qa-sub-text" style="color:var(--sky-dark);">RESTRICTED ACCESS</div></div></button>
     </div>
 
-    <!-- GREEN GLOW PAYMENT BANNER -->
-    <div class="pay-save-banner" onclick="userSwitchTab('payment-settings-scr')">
-      <div class="pay-save-icon">💳</div>
-      <div style="flex:1;min-width:0;">
-        <div class="pay-save-title">SAVE YOUR PAYMENT METHOD</div>
-        <div class="pay-save-sub">Tap to save your payment numbers for faster selling</div>
-      </div>
-      <div class="pay-save-arrow">›</div>
-    </div>
-
     <div id="home-scr">
       <div class="sec-title" style="margin-top:18px;">LIVE MARKET <div class="s-dot on" style="margin-left:4px;width:7px;height:7px;"></div></div>
       <div id="market-list"></div>
@@ -565,6 +550,7 @@
       <input type="number" id="c-qty" class="form-input" placeholder="e.g. 5500" inputmode="decimal" min="0" step="1">
       <div class="coin-k-hint">Enter your full coin amount. Example: <b>5500 = 5,500 coins</b> | <b>1000000 = 1M coins</b></div>
       <input type="text" id="c-sender" class="form-input" placeholder="Sender Username / Transfer Code">
+      <input type="text" id="c-trx-id" class="form-input" placeholder="Transaction ID">
       <!-- Hidden fields (used by submit logic) -->
       <select id="m-select" class="hidden"></select>
       <input type="text" id="m-num" class="hidden">
@@ -577,7 +563,7 @@
       <div class="calc-box"><div class="calc-row"><span style="color:var(--subtext);">Coin Unit</span><span id="coin-unit-val" style="font-weight:800;" class="coin-k-display">—</span></div><div class="calc-row"><span style="color:var(--subtext);">Base Amount</span><span id="base-val" style="font-weight:800;">0.00 ৳</span></div><div class="calc-row"><span style="color:var(--danger);">Send Fee</span><span id="fee-val" style="color:var(--danger);font-weight:800;">- 5.00 ৳</span></div><div class="calc-divider"></div><div class="calc-row"><span style="color:var(--subtext);">Net Payable</span><span id="c-res" style="color:var(--sky-dark);">0.00 ৳</span></div></div>
       <div class="proof-upload" id="proof-upload-box">
         <input type="file" id="proof-file" accept="image/*" class="hidden">
-        <div class="proof-head"><span>📸 Proof / Screenshot</span><small>Required</small></div>
+        <div class="proof-head"><span>📸 Proof / Screenshot</span><small id="proof-required-badge">Required</small></div>
         <button class="proof-select-btn" type="button" id="proof-select-btn">+ Upload Transfer Screenshot</button>
         <div class="proof-preview hidden" id="proof-preview">
           <img id="proof-preview-img" alt="Proof Screenshot Preview">
@@ -615,7 +601,7 @@
            <input type="text" id="vpn-pay-trx" class="form-input" placeholder="Sender Number / Transaction ID" style="text-align:center;font-weight:900;">
            <div class="proof-upload" style="margin-bottom:14px;">
               <input type="file" id="vpn-proof-file" accept="image/*" class="hidden">
-              <div class="proof-head"><span>📸 Proof / Screenshot</span><small>Required</small></div>
+              <div class="proof-head"><span>📸 Proof / Screenshot</span><small id="vpn-proof-required-badge">Required</small></div>
               <button class="proof-select-btn" type="button" id="vpn-proof-select-btn">+ Upload Payment Screenshot</button>
               <div class="proof-preview hidden" id="vpn-proof-preview">
                 <img id="vpn-proof-preview-img" alt="Proof Screenshot Preview">
@@ -705,6 +691,11 @@
             <button class="settings-module-card" type="button" data-settings-module="vpn-payment-methods">
               <div class="settings-module-icon" style="background:var(--success-bg);color:var(--success);">💳</div>
               <div><div class="settings-module-title">VPN Payment Methods</div><div class="settings-module-desc">Manage payment methods for VPNs.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="order-verification">
+              <div class="settings-module-icon" style="background:var(--danger-bg);color:var(--danger);">🔒</div>
+              <div><div class="settings-module-title">Order Verification</div><div class="settings-module-desc">Require payment proof + transaction ID on submission.</div></div>
               <div class="settings-module-arrow">›</div>
             </button>
             <button class="settings-module-card" type="button" data-settings-module="branding-links">
@@ -828,6 +819,20 @@
             </div>
             <div class="notice-box" style="margin-top:4px;"><div class="notice-title">Notice Preview</div><div class="notice-text" id="broadcast-notice-preview">Notice preview...</div></div>
             <button class="btn-action btn-cyan" type="button" id="send-broadcast-notice-btn" style="margin-top:12px;">📤 Send Notice</button>
+          </div>
+        </div>
+
+        <div id="settings-order-verification" class="settings-page settings-module-page hidden" data-settings-page="order-verification">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Order Verification</span></div><div class="settings-page-title-row"><div class="settings-page-title">Order Verification</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--danger);"></div>🔒 SUBMISSION REQUIREMENT</div>
+            <div class="pay-row" style="align-items:flex-start;">
+              <div class="pay-name" style="flex-direction:column;align-items:flex-start;gap:4px;">
+                <span>Require Proof + Transaction ID</span>
+                <div style="font-size:10px;font-weight:600;color:var(--subtext);line-height:1.4;">When ON, users must upload a payment proof screenshot and enter a Transaction ID before submitting a Coin Sell or VPN order. When OFF, both become optional.</div>
+              </div>
+              <label class="switch" style="margin-left:auto;flex-shrink:0;"><input type="checkbox" id="require-proof-trx-toggle" onchange="updateDbField('settings/requireProofTrxId', this.checked)"><span class="slider"></span></label>
+            </div>
           </div>
         </div>
 
@@ -974,7 +979,7 @@
 
   <div class="toast" id="toast"></div>
 
-  <script>
+  <script defer>
     const APP_DEFAULT_NAME = "NIVA EXCHANGE";
     const LEGACY_BRAND_REGEX = /META\s*BUYER\s*ZONE/gi;
     function normalizeBrandName(value){
@@ -1049,6 +1054,7 @@
     let selPricingTiers = [], selMinSubmitLimit = DEFAULT_MIN_SUBMIT_LIMIT, selInputType = 'username';
     let channelLinkValue = '', helpLinkValue = '', disclaimerNoticeValue = DEFAULT_DISCLAIMER_NOTICE, submitting = false;
     let proofFileName = '', proofImageDataUrl = '', proofProcessing = false;
+    let requireProofTrxId = true;
     let currentSellPayMethod = '', currentSellPayNumber = '';
     
     // Config Caches
@@ -1372,6 +1378,7 @@
       });
       db.ref('settings/links').on('value', snap => { const l = snap.val() || {}; channelLinkValue = normalizeLink(l.channel); helpLinkValue = normalizeLink(l.help); });
       db.ref('settings/disclaimer').on('value', snap => { disclaimerNoticeValue = normalizeDisclaimerNotice(typeof snap.val() === 'string' ? snap.val() : snap.val()?.noticeText); renderDisclaimerNotice(); });
+      db.ref('settings/requireProofTrxId').on('value', snap => { requireProofTrxId = snap.val() !== false; applyProofRequirementUI(); });
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderMarket(marketCache); finishLoading(); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderVpns(vpnConfigCache); });
       db.ref('paymentMethods').on('value', snap => { paymentMethodsCache = snap.val() || {}; renderUserCoinPayments(paymentMethodsCache); });
@@ -1637,9 +1644,9 @@
       // Placeholder using full coin min
       $('c-qty').placeholder = `e.g. ${selMinSubmitLimit} (Min: ${formatKDisplay(selMinSubmitLimit/1000)})`;
       $('c-sender').placeholder = selInputType === 'code' ? 'Enter Transfer Code' : 'Sender Username';
-      ['c-qty','c-sender'].forEach(id => $(id).value = '');
+      ['c-qty','c-sender','c-trx-id'].forEach(id => { if($(id)) $(id).value = ''; });
       $('coin-unit-val').textContent = '—'; $('base-val').textContent = '0.00 ৳'; $('c-res').textContent = '0.00 ৳';
-      resetProofInput(); finalP = 0;
+      resetProofInput(); applyProofRequirementUI(); finalP = 0;
       // Reset payment method selection and render cards
       currentSellPayMethod = ''; currentSellPayNumber = '';
       if($('m-select')) $('m-select').value = '';
@@ -1662,6 +1669,13 @@
       $('base-val').textContent = money(base);
       $('c-res').textContent = money(finalP);
     }
+    function applyProofRequirementUI(){
+      const label = requireProofTrxId ? 'Required' : 'Optional';
+      if($('proof-required-badge')) $('proof-required-badge').textContent = label;
+      if($('vpn-proof-required-badge')) $('vpn-proof-required-badge').textContent = label;
+      if($('c-trx-id')) $('c-trx-id').placeholder = requireProofTrxId ? 'Transaction ID' : 'Transaction ID (Optional)';
+      if($('vpn-pay-trx')) $('vpn-pay-trx').placeholder = requireProofTrxId ? 'Sender Number / Transaction ID' : 'Sender Number / Transaction ID (Optional)';
+    }
     function resetProofInput(){
       proofFileName = ''; proofImageDataUrl = ''; proofProcessing = false;
       if($('proof-file')) $('proof-file').value = '';
@@ -1682,9 +1696,12 @@
       if(!requireFirebase()) return;
       const q = Number($('c-qty').value || 0); // full coin amount entered by user
       const qK = q / 1000;
-      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value;
+      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value, trxId = $('c-trx-id') ? $('c-trx-id').value.trim() : '';
       if(!selC || !q || q < selMinSubmitLimit || !sender || !method || !number){ showToast('Fill all fields correctly','error'); return; }
-      if(!proofImageDataUrl){ showToast('Upload proof screenshot','error'); return; }
+      if(requireProofTrxId){
+        if(!trxId){ showToast('Enter transaction ID','error'); return; }
+        if(!proofImageDataUrl){ showToast('Upload proof screenshot','error'); return; }
+      }
       calc();
       const displayAmt = q.toLocaleString() + ' ' + selC;
       $('sum-amt').textContent = displayAmt; $('sum-method').textContent = method; $('sum-number').textContent = number; $('sum-sender').textContent = sender; $('sum-total').textContent = money(finalP);
@@ -1695,7 +1712,7 @@
       if(submitting || !requireFirebase() || guardBannedUser()) return;
       const q = Number($('c-qty').value || 0); // full coin amount entered by user
       const qK = q / 1000;
-      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value;
+      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value, trxId = $('c-trx-id') ? $('c-trx-id').value.trim() : '';
       let activeRate = selR;
       for(const tier of selPricingTiers){ if(q >= Number(tier.from) && (Number(tier.to)===0||q<=Number(tier.to))){ activeRate=Number(tier.rate); break; } }
       const coinUnit = qK; // rate applied per 1,000 coins
@@ -1703,11 +1720,12 @@
       const orderRef = db.ref('orders').push(); const orderId = orderRef.key;
       const orderData = {
         id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'coin',
-        coin:selC, amt:q, coinUnit:parseFloat(coinUnit.toFixed(4)), payable:parseFloat(finalP.toFixed(2)), sender, number, method, targetId:currentTID, appliedRate:activeRate,
-        proof_image_url:proofImageDataUrl, proof_file_name:proofFileName, proof_uploaded:true, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+        coin:selC, amt:q, coinUnit:parseFloat(coinUnit.toFixed(4)), payable:parseFloat(finalP.toFixed(2)), sender, number, method, trx_id:trxId, targetId:currentTID, appliedRate:activeRate,
+        proof_image_url:proofImageDataUrl, proof_file_name:proofFileName, proof_uploaded:!!proofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
       };
       orderRef.set(orderData).then(() => {
-        sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, proofImageDataUrl, buildNewOrderMessage(orderData)); 
+        if(proofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, proofImageDataUrl, buildNewOrderMessage(orderData));
+        else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
         sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
         hideConfirm(); closeOrderModal(); showToast('✓ Order Submitted!','success'); userSwitchTab('history-scr');
       }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = '✓ Submit'; btn.disabled = false; });
@@ -1767,18 +1785,22 @@
     function submitVpnOrder(){
       if(submitting || !requireFirebase() || guardBannedUser()) return;
       const numOrTrx = $('vpn-pay-trx').value.trim();
-      if(!selVpnBrand || !selVpnPlanName || !selVpnPayMethod || !numOrTrx){ showToast('Fill all fields correctly','error'); return; }
-      if(!vpnProofImageDataUrl){ showToast('Upload payment proof screenshot','error'); return; }
+      if(!selVpnBrand || !selVpnPlanName || !selVpnPayMethod){ showToast('Fill all fields correctly','error'); return; }
+      if(requireProofTrxId){
+        if(!numOrTrx){ showToast('Enter transaction ID','error'); return; }
+        if(!vpnProofImageDataUrl){ showToast('Upload payment proof screenshot','error'); return; }
+      }
       
       submitting = true; const btn = $('submit-vpn-order-btn'); btn.textContent = '⏳ Submitting...'; btn.disabled = true;
       const orderRef = db.ref('orders').push(); const orderId = orderRef.key;
       const orderData = {
         id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'vpn',
         vpn_brand:selVpnBrand, vpn_plan:selVpnPlanName, payable:parseFloat(selVpnPlanPrice.toFixed(2)), method:selVpnPayMethod, number:numOrTrx, targetId:selVpnPayNumberTarget,
-        proof_image_url:vpnProofImageDataUrl, proof_file_name:vpnProofFileName, proof_uploaded:true, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+        proof_image_url:vpnProofImageDataUrl, proof_file_name:vpnProofFileName, proof_uploaded:!!vpnProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
       };
       orderRef.set(orderData).then(() => {
-        sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, vpnProofImageDataUrl, buildNewOrderMessage(orderData)); 
+        if(vpnProofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, vpnProofImageDataUrl, buildNewOrderMessage(orderData));
+        else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
         sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
         $('vpn-checkout-modal').classList.remove('active'); showToast('✓ VPN Order Submitted!','success'); userSwitchTab('history-scr');
       }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = 'CONFIRM VPN ORDER →'; btn.disabled = false; });
@@ -1865,6 +1887,7 @@
       db.ref('settings/branding').on('value', snap => { const b = snap.val() || {}; $('site-name').value = normalizeBrandName(b.siteName || APP_DEFAULT_NAME); });
       db.ref('settings/links').on('value', snap => { const l = snap.val() || {}; $('link-channel').value = l.channel || ''; $('link-help').value = l.help || ''; });
       db.ref('settings/disclaimer').on('value', snap => { disclaimerNoticeValue = normalizeDisclaimerNotice(typeof snap.val() === 'string' ? snap.val() : snap.val()?.noticeText); renderDisclaimerNotice(); });
+      db.ref('settings/requireProofTrxId').on('value', snap => { const v = snap.val() !== false; requireProofTrxId = v; if($('require-proof-trx-toggle')) $('require-proof-trx-toggle').checked = v; applyProofRequirementUI(); });
     }
     
     function adminSwitchTab(tab){
