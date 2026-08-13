@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>NIVA EXCHANGE</title>
+  <title>NIVA EXCHANGE </title>
 
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://telegram.org">
@@ -124,7 +124,7 @@
     .hist-payout{font-size:14px;font-weight:900;color:var(--sky-dark);}
 
     .nav-dock{position:fixed;bottom:16px;left:14px;right:14px;max-width:560px;margin:auto;height:68px;background:var(--panel2);border:1px solid var(--border-hi);border-radius:22px;display:flex;justify-content:space-around;align-items:center;z-index:1000;box-shadow:var(--shadow-lg);}
-    .nav-tab{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:16px;transition:all .2s ease;color:var(--subtext);}
+    .nav-tab{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 7px;border-radius:16px;transition:all .2s ease;color:var(--subtext);}
     .nav-icon{font-size:21px;transition:transform .2s ease;}
     .nav-label{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;}
     .nav-tab.active{color:var(--sky-dark);background:var(--sky-light);}
@@ -503,6 +503,93 @@
     .dev-contact-text small{font-size:9.5px;font-weight:700;color:var(--subtext);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
     .dev-cta{margin-top:17px;font-size:11.5px;font-weight:700;color:var(--sky-dark);background:var(--sky-light);border:1px solid rgba(56,189,248,.25);padding:11px 14px;border-radius:12px;line-height:1.65;}
     .dev-footnote{margin-top:13px;font-size:9px;font-weight:700;color:var(--gray-mid);letter-spacing:1px;}
+
+    /* ================= LEADERBOARD SYSTEM ================= */
+    @keyframes lbSpin{to{transform:rotate(360deg)}}
+    @keyframes lbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    @keyframes lbFloatBig{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes lbBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+    @keyframes lbGlowPulse{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.18)}}
+    @keyframes lbShine{0%{background-position:-120% 0}100%{background-position:220% 0}}
+
+    .lb-hero{background:linear-gradient(135deg,rgba(251,191,36,.14),rgba(167,139,250,.08) 60%,transparent);border:1px solid rgba(251,191,36,.28);border-radius:var(--radius-xl);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(251,191,36,.08);}
+    .lb-hero-icon{font-size:26px;filter:drop-shadow(0 2px 6px rgba(251,191,36,.5));animation:lbFloat 2.4s ease-in-out infinite;flex-shrink:0;}
+    .lb-hero-title{font-size:14px;font-weight:900;color:#fff;letter-spacing:.3px;}
+    .lb-hero-sub{font-size:10.5px;font-weight:650;color:var(--subtext);margin-top:2px;line-height:1.4;}
+
+    .lb-podium{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:8px;padding:34px 4px 0;margin-bottom:10px;}
+    .lb-pod-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;width:96px;animation:riseUp .5s ease both;}
+    .lb-pod-card.rk-1{order:2;z-index:3;}
+    .lb-pod-card.rk-2{order:1;z-index:2;}
+    .lb-pod-card.rk-3{order:3;z-index:1;}
+
+    .lb-avatar-ring{position:relative;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;animation:lbFloat 3.1s ease-in-out infinite;}
+    .lb-pod-card.rk-1 .lb-avatar-ring{width:88px;height:88px;animation:lbFloatBig 3s ease-in-out infinite;}
+    .lb-avatar-ring::before{content:'';position:absolute;inset:-4px;border-radius:50%;padding:4px;background:conic-gradient(from 0deg,var(--gold),#fff7cc,var(--gold) 40%,rgba(251,191,36,.15) 55%,var(--gold));animation:lbSpin 3.2s linear infinite;}
+    .lb-pod-card.rk-2 .lb-avatar-ring::before{background:conic-gradient(from 0deg,#e4e4e7,#ffffff,#e4e4e7 40%,rgba(228,228,231,.15) 55%,#e4e4e7);animation-duration:3.6s;}
+    .lb-pod-card.rk-3 .lb-avatar-ring::before{background:conic-gradient(from 0deg,#cd7f32,#f0c090,#cd7f32 40%,rgba(205,127,50,.15) 55%,#cd7f32);animation-duration:3.9s;}
+    .lb-avatar-glow{position:absolute;top:50%;left:50%;width:120%;height:120%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(251,191,36,.55),transparent 68%);filter:blur(6px);animation:lbGlowPulse 2.4s ease-in-out infinite;z-index:0;}
+    .lb-pod-card.rk-2 .lb-avatar-glow{background:radial-gradient(circle,rgba(228,228,231,.45),transparent 68%);}
+    .lb-pod-card.rk-3 .lb-avatar-glow{background:radial-gradient(circle,rgba(205,127,50,.45),transparent 68%);}
+    .lb-avatar-img{position:relative;width:calc(100% - 8px);height:calc(100% - 8px);border-radius:50%;object-fit:cover;border:2px solid var(--bg2);background:var(--panel);z-index:1;box-shadow:0 6px 18px rgba(0,0,0,.45);}
+    .lb-crown{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:22px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.5));animation:lbBounce 1.7s ease-in-out infinite;z-index:4;}
+    .lb-pod-name{margin-top:9px;font-size:12px;font-weight:900;color:var(--text);max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .lb-pod-badge{margin-top:6px;font-size:9.5px;font-weight:900;letter-spacing:.4px;padding:3px 11px;border-radius:20px;color:#241a02;}
+    .lb-pod-card.rk-1 .lb-pod-badge{background:linear-gradient(135deg,#fde68a,var(--gold));box-shadow:0 4px 12px rgba(251,191,36,.4);}
+    .lb-pod-card.rk-2 .lb-pod-badge{background:linear-gradient(135deg,#f4f4f5,#c4c4c9);}
+    .lb-pod-card.rk-3 .lb-pod-badge{background:linear-gradient(135deg,#f0c090,#cd7f32);color:#3a1d05;}
+    .lb-pod-pedestal{margin-top:12px;width:76px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.015));border:1px solid var(--border);border-bottom:none;position:relative;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;}
+    .lb-pod-pedestal::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,.14) 45%,transparent 90%);background-size:200% 100%;animation:lbShine 2.8s ease-in-out infinite;}
+    .lb-pod-pedestal-num{font-size:15px;font-weight:900;color:var(--subtext);}
+    .lb-pod-card.rk-1 .lb-pod-pedestal{height:56px;}
+    .lb-pod-card.rk-1 .lb-pod-pedestal-num{color:var(--gold);font-size:18px;}
+    .lb-pod-card.rk-2 .lb-pod-pedestal{height:40px;}
+    .lb-pod-card.rk-3 .lb-pod-pedestal{height:26px;}
+
+    .lb-list{margin-top:6px;}
+    .lb-row-card{background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:12px;margin-bottom:9px;box-shadow:var(--shadow-sm);animation:riseUp .4s ease both;transition:transform .15s ease,border-color .15s ease;}
+    .lb-row-card:active{transform:scale(.98);border-color:var(--border-hi);}
+    .lb-row-rank{width:22px;text-align:center;font-size:12.5px;font-weight:900;color:var(--subtext);flex-shrink:0;}
+    .lb-row-avatar-wrap{position:relative;width:42px;height:42px;flex-shrink:0;}
+    .lb-row-avatar{width:100%;height:100%;border-radius:12px;object-fit:cover;border:2px solid var(--border-hi);background:var(--sky-light);}
+    .lb-row-name{font-size:13px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+    .lb-empty-podium-slot{opacity:.28;}
+
+    .lb-admin-row{display:grid;grid-template-columns:22px 38px 1fr auto auto;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:14px;margin-bottom:8px;border:1px solid var(--border);}
+    .lb-admin-rank{font-size:11px;font-weight:900;color:var(--subtext);text-align:center;}
+    .lb-admin-avatar{width:38px;height:38px;border-radius:11px;object-fit:cover;border:1px solid var(--border-hi);background:var(--sky-light);}
+    .lb-admin-name{font-size:12.5px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .lb-admin-sub{font-size:9.5px;font-weight:600;color:var(--subtext);margin-top:1px;}
+    .lb-admin-amt{font-size:12px;font-weight:900;color:var(--gold);white-space:nowrap;}
+    .lb-row-amt{font-size:11.5px;font-weight:900;color:var(--gold);white-space:nowrap;flex-shrink:0;}
+    .lb-row-sub{font-size:9.5px;font-weight:650;color:var(--subtext);margin-top:1px;}
+    @media(max-width:380px){.lb-podium{gap:2px;}.lb-pod-card{width:84px;}.lb-pod-pedestal{width:66px;}.lb-admin-row{grid-template-columns:18px 32px 1fr auto;}.lb-admin-amt{display:none;}.lb-row-amt{font-size:10px;}}
+
+    /* ================= REFERRAL CARD ================= */
+    .ref-card{background:linear-gradient(150deg,rgba(251,191,36,.14),rgba(251,191,36,.03));border:1px solid rgba(251,191,36,.35);border-radius:var(--radius-xl);padding:16px;margin-bottom:14px;box-shadow:0 6px 20px rgba(251,191,36,.08);animation:riseUp .45s .04s ease both;}
+    .ref-card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+    .ref-card-icon{width:40px;height:40px;border-radius:12px;background:rgba(251,191,36,.18);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+    .ref-card-title{font-size:14.5px;font-weight:900;color:var(--text);}
+    .ref-card-sub{font-size:10px;font-weight:700;color:var(--subtext);margin-top:2px;}
+    .ref-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+    .ref-stat-box{background:rgba(0,0,0,.22);border:1px solid var(--border);border-radius:14px;padding:10px 12px;}
+    .ref-stat-box small{display:block;font-size:9px;font-weight:800;letter-spacing:.5px;color:var(--subtext);text-transform:uppercase;margin-bottom:4px;}
+    .ref-stat-box b{font-size:15px;font-weight:900;color:var(--gold);}
+    .ref-link-row{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.25);border:1px dashed rgba(251,191,36,.3);border-radius:13px;padding:10px 12px;margin-bottom:12px;}
+    .ref-link-text{flex:1;min-width:0;font-size:10.5px;font-weight:700;color:var(--subtext);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .ref-copy-btn{flex-shrink:0;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.35);color:var(--gold);font-size:10px;font-weight:900;padding:8px 10px;border-radius:10px;letter-spacing:.4px;}
+    .ref-withdraw-btn{width:100%;background:linear-gradient(135deg,var(--gold),rgba(251,191,36,.7));border:none;color:#1c1300;padding:13px;border-radius:13px;font-size:13px;font-weight:900;letter-spacing:.3px;box-shadow:0 6px 18px rgba(251,191,36,.25);}
+
+    /* ================= FORCE JOIN OVERLAY ================= */
+    #force-join-scr{position:fixed;inset:0;background:var(--bg);z-index:9500;display:none;align-items:center;justify-content:center;padding:24px;}
+    .fj-channel-card{display:flex;align-items:center;gap:11px;background:rgba(0,0,0,.22);border:1px solid var(--border);border-radius:15px;padding:11px 12px;margin-bottom:9px;text-align:left;}
+    .fj-channel-icon{width:38px;height:38px;border-radius:11px;background:rgba(56,189,248,.14);color:var(--sky-dark);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+    .fj-channel-name{font-size:12.5px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .fj-channel-sub{font-size:9.5px;font-weight:650;color:var(--subtext);margin-top:1px;}
+    .fj-join-btn{flex-shrink:0;background:linear-gradient(135deg,var(--sky-dark),rgba(56,189,248,.7));border:none;color:#000;font-size:10.5px;font-weight:900;padding:8px 13px;border-radius:10px;}
+
+    /* ================= WITHDRAW / REFERRAL SHARED ================= */
+    #wd-history-list .pay-row{margin-bottom:7px;}
   </style>
 </head>
 <body>
@@ -513,7 +600,7 @@
       <div class="load-ring"></div>
       <div class="loader-box"><img id="loader-logo" src="https://blogger.googleusercontent.com/img/a/AVvXsEjGP9QLeE3svTKp0WBPd4dPU016ScT0BJkgsiXnlFqvBx1I2fRshJUs6WHsAhVzRraoiYFEd4GJ8l3uRZeatIbg4Zv_C25cMt9XLDIecl7I-TP6LcFKHIs_PJp8RPqOtgrdlmESBPnr7h6TI4Yus7SF0XnSe04_AUjAhU7K2VMeV90DJaibcjFAU5WuruFv=w669-h648" alt="Logo" onerror="this.style.display='none'"></div>
     </div>
-    <div class="load-title" id="brand-text">NIVA EXCHANGE</div>
+    <div class="load-title" id="brand-text">NIVA EXCHANGE </div>
     <div class="load-sub">DIGITAL ASSET EXCHANGE</div>
   </div>
 
@@ -532,17 +619,17 @@
     <div class="qa-grid" id="quick-grid" style="animation:riseUp .4s .06s ease both;">
       <button class="qa-btn" type="button" id="help-btn"><div class="qa-icon" style="background:var(--sky-light);color:var(--sky-dark);">🎧</div><div><div class="qa-main-text">Help Line</div><div class="qa-sub-text">24/7 Support</div></div></button>
       <button class="qa-btn" type="button" id="channel-btn"><div class="qa-icon" style="background:rgba(124,58,237,.15);color:#a78bfa;">📢</div><div><div class="qa-main-text">Channel</div><div class="qa-sub-text">News & Updates</div></div></button>
-      <button class="qa-btn vpn-premium-btn" type="button" id="open-vpn-btn" style="grid-column:1/-1;">
+      <button class="qa-btn vpn-premium-btn" type="button" id="open-vpn-btn">
         <div class="qa-icon" style="background:var(--purple);color:#fff;">🌐</div>
-        <div><div class="qa-main-text" style="color:var(--purple);">BUY PREMIUM VPN</div><div class="qa-sub-text">High-speed secure connections</div></div>
+        <div><div class="qa-main-text" style="color:var(--purple);font-size:13px;">PREMIUM VPN</div><div class="qa-sub-text">Secure connections</div></div>
       </button>
-      <button class="qa-btn payment-settings-btn" type="button" id="open-payment-settings-btn" style="grid-column:1/-1;">
-        <div class="qa-icon" style="background:var(--emerald);color:#fff;">💾</div>
-        <div><div class="qa-main-text" style="color:var(--emerald);font-size:15px;">SAVE PAYMENT NUMBER</div><div class="qa-sub-text">Auto-fill your number when selling coins</div></div>
+      <button class="qa-btn vpn-premium-btn" type="button" id="open-proxy-btn">
+        <div class="qa-icon" style="background:var(--sky-dark);color:#fff;">🛰️</div>
+        <div><div class="qa-main-text" style="color:var(--sky-dark);font-size:13px;">PROXY SELL</div><div class="qa-sub-text">Fast private proxies</div></div>
       </button>
-      <button class="qa-btn dev-info-qa-btn" type="button" id="open-devinfo-btn" style="grid-column:1/-1;">
-        <div class="qa-icon" style="background:#6366f1;color:#fff;">👨‍💻</div>
-        <div><div class="qa-main-text" style="color:#6366f1;">DEVELOPER INFO</div><div class="qa-sub-text">Contact & hire the developer</div></div>
+      <button class="qa-btn vpn-premium-btn" type="button" id="open-mail-btn" style="grid-column:1/-1;">
+        <div class="qa-icon" style="background:#f472b6;color:#fff;">📧</div>
+        <div><div class="qa-main-text" style="color:#f472b6;font-size:13px;">BUY MAIL</div><div class="qa-sub-text">Select quantity & buy in bulk</div></div>
       </button>
       <button class="qa-btn qa-admin hidden" type="button" id="admin-btn" style="grid-column:1/-1;"><div class="qa-icon" style="background:var(--sky-light);color:var(--sky-dark);">🛡️</div><div><div class="qa-main-text">Admin Panel</div><div class="qa-sub-text" style="color:var(--sky-dark);">RESTRICTED ACCESS</div></div></button>
     </div>
@@ -552,25 +639,23 @@
       <div id="market-list"></div>
     </div>
 
-    <!-- PAYMENT SETTINGS SCREEN -->
-    <div id="payment-settings-scr" style="display:none;padding-top:6px;">
-      <div class="pay-settings-header">
-        <button class="cd-back-btn" type="button" onclick="userSwitchTab('home-scr')">←</button>
-        <div>
-          <div style="font-size:18px;font-weight:900;color:var(--text);">Payment Settings</div>
-          <div style="font-size:10px;font-weight:700;color:var(--subtext);margin-top:2px;">Save your payment numbers</div>
-        </div>
-      </div>
-      <div class="notice-box" style="margin-bottom:14px;">
-        <div class="notice-title">💡 How it works</div>
-        <div class="notice-text">Save your payment number for each method below. When you sell coins, your saved numbers will auto-fill in the form.</div>
-      </div>
-      <div id="payment-settings-list"></div>
-    </div>
-
     <div id="vpn-scr" style="display:none;padding-top:6px;">
       <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">PREMIUM VPN STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
       <div id="vpn-brand-list"></div>
+    </div>
+
+    <div id="proxy-scr" style="display:none;padding-top:6px;">
+      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">PROXY SELL STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
+      <button class="qa-btn vpn-premium-btn" type="button" id="open-mail-btn" style="margin-bottom:14px;">
+        <div class="qa-icon" style="background:#f472b6;color:#fff;">📧</div>
+        <div><div class="qa-main-text" style="color:#f472b6;font-size:13px;">BUY MAIL</div><div class="qa-sub-text">Select quantity & buy in bulk</div></div>
+      </button>
+      <div id="proxy-brand-list"></div>
+    </div>
+
+    <div id="mail-scr" style="display:none;padding-top:6px;">
+      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">BUY MAIL STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('proxy-scr')" style="padding:4px 8px;">← Back</button></div>
+      <div id="mail-brand-list"></div>
     </div>
 
     <div id="history-scr" style="display:none;padding-top:6px;">
@@ -578,9 +663,45 @@
       <div id="history-list"></div>
     </div>
 
+    <!-- ================= REFERRAL SCREEN ================= -->
+    <div id="referral-scr" style="display:none;padding-top:6px;">
+      <div class="sec-title">REFERRAL PROGRAM</div>
+      <div class="ref-card">
+        <div class="ref-card-head">
+          <div class="ref-card-icon">🎁</div>
+          <div style="flex:1;min-width:0;">
+            <div class="ref-card-title">Referral Program</div>
+            <div class="ref-card-sub">Invite friends & earn ৳ for every referral</div>
+          </div>
+        </div>
+        <div class="ref-card-stats">
+          <div class="ref-stat-box"><small>Referral Balance</small><b id="ref-balance-val">0.00৳</b></div>
+          <div class="ref-stat-box"><small>Total Referrals</small><b id="ref-count-val">0</b></div>
+        </div>
+        <div class="ref-link-row">
+          <div class="ref-link-text" id="ref-link-val">—</div>
+          <button class="ref-copy-btn" type="button" id="ref-copy-btn">⧉ COPY</button>
+        </div>
+        <button class="ref-withdraw-btn" type="button" id="ref-withdraw-btn">💸 Withdraw Balance</button>
+      </div>
+    </div>
+
     <div id="tutorial-scr" style="display:none;padding-top:6px;">
       <div class="sec-title">TUTORIAL VIDEOS</div>
       <div id="tutorial-list"></div>
+    </div>
+
+    <!-- ================= LEADERBOARD SCREEN ================= -->
+    <div id="leaderboard-scr" style="display:none;padding-top:6px;">
+      <div class="lb-hero">
+        <div class="lb-hero-icon">🏆</div>
+        <div>
+          <div class="lb-hero-title">TOP SELLERS</div>
+          <div class="lb-hero-sub" id="lb-hero-sub">Rankings update in real time as orders get approved</div>
+        </div>
+      </div>
+      <div class="lb-podium" id="lb-podium"></div>
+      <div class="lb-list" id="lb-list"></div>
     </div>
 
     <!-- ================= DEVELOPER INFO SCREEN ================= -->
@@ -614,7 +735,10 @@
     <nav class="nav-dock" id="user-nav">
       <button class="nav-tab active" id="tab-home" type="button" data-screen="home-scr"><span class="nav-icon">🏠</span><span class="nav-label">Market</span></button>
       <button class="nav-tab" id="tab-hist" type="button" data-screen="history-scr"><span class="nav-icon">🕒</span><span class="nav-label">History</span></button>
+      <button class="nav-tab" id="tab-referral" type="button" data-screen="referral-scr"><span class="nav-icon">🎁</span><span class="nav-label">Refer</span></button>
       <button class="nav-tab" id="tab-tutorial" type="button" data-screen="tutorial-scr"><span class="nav-icon">▶️</span><span class="nav-label">Tutorial</span></button>
+      <button class="nav-tab" id="tab-leaderboard" type="button" data-screen="leaderboard-scr"><span class="nav-icon">🏆</span><span class="nav-label">Leaders</span></button>
+      <button class="nav-tab" id="tab-devinfo" type="button" data-screen="dev-info-scr"><span class="nav-icon">👨‍💻</span><span class="nav-label">Dev Info</span></button>
     </nav>
   </div>
 
@@ -697,6 +821,100 @@
     </div>
   </div>
 
+  <div id="proxy-checkout-modal" class="modal-mask z-[2500]">
+    <div class="bottom-sheet">
+      <div class="sheet-handle"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div class="sheet-title" id="proxy-checkout-title">Select Plan</div>
+        <button class="x-btn" type="button" id="close-proxy-checkout-btn">✕</button>
+      </div>
+
+      <!-- Plan Step -->
+      <div id="proxy-step-plans">
+        <div id="proxy-plan-container"></div>
+      </div>
+
+      <!-- Payment Step -->
+      <div id="proxy-step-payment" class="hidden">
+        <div style="margin-bottom:16px;text-align:center;">
+          <b style="font-size:12px;color:var(--subtext);display:block;margin-bottom:4px;">Amount Payable</b>
+          <span id="proxy-payable-amount" style="font-size:24px;font-weight:900;color:var(--sky-dark);">0.00 ৳</span>
+        </div>
+        <div class="sec-title" style="margin-bottom:10px;">1. SELECT PAYMENT METHOD</div>
+        <div class="vpn-pay-grid" id="proxy-pay-methods-grid"></div>
+        <div id="proxy-pay-details" class="hidden">
+           <div class="transfer-id-box" style="margin-bottom:12px;"><small>SEND MONEY TO THIS NUMBER</small><div class="tid-value" id="proxy-pay-target">—</div><button class="copy-btn" type="button" onclick="copyTextValue(document.getElementById('proxy-pay-target').textContent, 'Payment Number')">⧉ COPY NUMBER</button></div>
+           <input type="text" id="proxy-pay-trx" class="form-input" placeholder="Sender Number / Transaction ID" style="text-align:center;font-weight:900;">
+           <div class="proof-upload" style="margin-bottom:14px;">
+              <input type="file" id="proxy-proof-file" accept="image/*" class="hidden">
+              <div class="proof-head"><span>📸 Proof / Screenshot</span><small id="proxy-proof-required-badge">Required</small></div>
+              <button class="proof-select-btn" type="button" id="proxy-proof-select-btn">+ Upload Payment Screenshot</button>
+              <div class="proof-preview hidden" id="proxy-proof-preview">
+                <img id="proxy-proof-preview-img" alt="Proof Screenshot Preview">
+                <div class="proof-preview-meta"><b id="proxy-proof-file-name">Screenshot selected</b><small id="proxy-proof-file-size">Ready to submit</small></div>
+                <button class="proof-remove-btn" type="button" id="proxy-proof-remove-btn">Remove</button>
+              </div>
+           </div>
+           <button class="btn-primary" type="button" id="submit-proxy-order-btn">CONFIRM PROXY ORDER →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mail-checkout-modal" class="modal-mask z-[2500]">
+    <div class="bottom-sheet">
+      <div class="sheet-handle"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div class="sheet-title" id="mail-checkout-title">Buy Mail</div>
+        <button class="x-btn" type="button" id="close-mail-checkout-btn">✕</button>
+      </div>
+
+      <!-- Quantity Step -->
+      <div id="mail-step-qty">
+        <div class="notice-box" style="margin-bottom:14px;">
+          <div class="notice-title">📧 <span id="mail-qty-brand-name">Mail Brand</span></div>
+          <div class="notice-text">Price per piece: <b id="mail-qty-unit-price">0.00৳</b> &nbsp;|&nbsp; In stock: <b id="mail-qty-stock-count">0</b></div>
+        </div>
+        <div class="sec-title" style="margin-bottom:10px;">SELECT QUANTITY</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <button class="btn-action btn-blue" type="button" id="mail-qty-minus-btn" style="width:44px;padding:12px 0;font-size:16px;flex-shrink:0;">−</button>
+          <input type="number" id="mail-qty-input" class="form-input" style="text-align:center;font-weight:900;margin:0;" min="1" value="1">
+          <button class="btn-action btn-cyan" type="button" id="mail-qty-plus-btn" style="width:44px;padding:12px 0;font-size:16px;flex-shrink:0;">+</button>
+        </div>
+        <div style="margin-bottom:16px;text-align:center;">
+          <b style="font-size:12px;color:var(--subtext);display:block;margin-bottom:4px;">Total Payable</b>
+          <span id="mail-qty-total-amount" style="font-size:24px;font-weight:900;color:#f472b6;">0.00 ৳</span>
+        </div>
+        <button class="btn-primary" type="button" id="mail-qty-continue-btn">CONTINUE →</button>
+      </div>
+
+      <!-- Payment Step -->
+      <div id="mail-step-payment" class="hidden">
+        <div style="margin-bottom:16px;text-align:center;">
+          <b style="font-size:12px;color:var(--subtext);display:block;margin-bottom:4px;">Amount Payable</b>
+          <span id="mail-payable-amount" style="font-size:24px;font-weight:900;color:#f472b6;">0.00 ৳</span>
+        </div>
+        <div class="sec-title" style="margin-bottom:10px;">1. SELECT PAYMENT METHOD</div>
+        <div class="vpn-pay-grid" id="mail-pay-methods-grid"></div>
+        <div id="mail-pay-details" class="hidden">
+           <div class="transfer-id-box" style="margin-bottom:12px;"><small>SEND MONEY TO THIS NUMBER</small><div class="tid-value" id="mail-pay-target">—</div><button class="copy-btn" type="button" onclick="copyTextValue(document.getElementById('mail-pay-target').textContent, 'Payment Number')">⧉ COPY NUMBER</button></div>
+           <input type="text" id="mail-pay-trx" class="form-input" placeholder="Sender Number / Transaction ID" style="text-align:center;font-weight:900;">
+           <div class="proof-upload" style="margin-bottom:14px;">
+              <input type="file" id="mail-proof-file" accept="image/*" class="hidden">
+              <div class="proof-head"><span>📸 Proof / Screenshot</span><small id="mail-proof-required-badge">Required</small></div>
+              <button class="proof-select-btn" type="button" id="mail-proof-select-btn">+ Upload Payment Screenshot</button>
+              <div class="proof-preview hidden" id="mail-proof-preview">
+                <img id="mail-proof-preview-img" alt="Proof Screenshot Preview">
+                <div class="proof-preview-meta"><b id="mail-proof-file-name">Screenshot selected</b><small id="mail-proof-file-size">Ready to submit</small></div>
+                <button class="proof-remove-btn" type="button" id="mail-proof-remove-btn">Remove</button>
+              </div>
+           </div>
+           <button class="btn-primary" type="button" id="submit-mail-order-btn">CONFIRM MAIL ORDER →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="confirm-modal" class="confirm-mask z-[3000]">
     <div class="confirm-box">
       <div class="confirm-icon">🔐</div>
@@ -724,14 +942,25 @@
     </div>
   </div>
 
+  <div id="force-join-scr">
+    <div class="denied-box" style="border-color:rgba(56,189,248,.3);">
+      <div class="denied-icon">📢</div>
+      <div class="denied-title" style="color:var(--sky-dark);">Join Required Channels</div>
+      <div class="denied-text">Please join the channel(s) below, then tap Verify to continue.</div>
+      <div id="force-join-list" style="text-align:left;margin-bottom:2px;"></div>
+      <button class="btn-action btn-cyan" type="button" id="force-join-verify-btn" style="margin-top:16px;">✓ Verify Membership</button>
+    </div>
+  </div>
+
   <div id="admin-panel" class="hidden">
-    <div class="admin-header"><div><div class="header-brand" id="admin-brand-name">NIVA EXCHANGE</div><div class="header-sub">ADMIN CONTROL PANEL</div></div><button class="back-btn" type="button" id="admin-back-btn">← Back</button></div>
+    <div class="admin-header"><div><div class="header-brand" id="admin-brand-name">NIVA EXCHANGE </div><div class="header-sub">ADMIN CONTROL PANEL</div></div><button class="back-btn" type="button" id="admin-back-btn">← Back</button></div>
     <div class="stats-row"><div class="stat-box"><div class="stat-icon" style="background:rgba(251,191,36,.1);color:var(--warning);">⏳</div><div><div class="stat-label">PENDING ORDERS</div><div class="stat-value" id="stat-pending" style="color:var(--warning);">0</div></div></div></div>
     <div class="tab-strip">
       <button class="tab-item active" id="admin-tab-pending" type="button" data-admin-tab="pending">PENDING<span class="tab-badge" id="cnt-pending">0</span></button>
       <button class="tab-item" id="admin-tab-approved" type="button" data-admin-tab="approved">APPROVED<span class="tab-badge" id="cnt-completed">0</span></button>
       <button class="tab-item" id="admin-tab-rejected" type="button" data-admin-tab="rejected">REJECTED<span class="tab-badge" id="cnt-rejected">0</span></button>
       <button class="tab-item" id="admin-tab-payment" type="button" data-admin-tab="payment">PAYMENT<span class="tab-badge" id="cnt-payment">0</span></button>
+      <button class="tab-item" id="admin-tab-withdraw" type="button" data-admin-tab="withdraw">WITHDRAW<span class="tab-badge" id="cnt-withdraw">0</span></button>
       <button class="tab-item" id="admin-tab-settings" type="button" data-admin-tab="settings">⚙ SETTINGS</button>
     </div>
     
@@ -739,6 +968,10 @@
       <div id="payment-tools" class="payment-tools hidden">
          <input type="search" id="payment-search" class="form-input" placeholder="Search username, coin ID, target ID">
          <select id="payment-filter" class="form-input"><option value="pending">Pending Payment</option><option value="paid">Paid Payment</option><option value="all">All Payments</option></select>
+      </div>
+      <div id="withdraw-tools" class="payment-tools hidden">
+         <input type="search" id="withdraw-search" class="form-input" placeholder="Search username or user ID">
+         <select id="withdraw-filter" class="form-input"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="all">All</option></select>
       </div>
       <div id="order-list"></div>
     </div>
@@ -776,6 +1009,21 @@
               <div><div class="settings-module-title">VPN Payment Methods</div><div class="settings-module-desc">Manage payment methods for VPNs.</div></div>
               <div class="settings-module-arrow">›</div>
             </button>
+            <button class="settings-module-card" type="button" data-settings-module="proxy-management">
+              <div class="settings-module-icon" style="background:rgba(56,189,248,.12);color:var(--sky-dark);">🛰️</div>
+              <div><div class="settings-module-title">Proxy Management</div><div class="settings-module-desc">Add proxy brands, plans, and manage stock.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="proxy-payment-methods">
+              <div class="settings-module-icon" style="background:var(--success-bg);color:var(--success);">💳</div>
+              <div><div class="settings-module-title">Proxy Payment Methods</div><div class="settings-module-desc">Manage payment methods for Proxy Sell.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="mail-management">
+              <div class="settings-module-icon" style="background:rgba(244,114,182,.12);color:#f472b6;">📧</div>
+              <div><div class="settings-module-title">Buy Mail Management</div><div class="settings-module-desc">Add mail brands, set price per piece, manage stock.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
             <button class="settings-module-card" type="button" data-settings-module="order-verification">
               <div class="settings-module-icon" style="background:var(--danger-bg);color:var(--danger);">🔒</div>
               <div><div class="settings-module-title">Order Verification</div><div class="settings-module-desc">Require payment proof + transaction ID on submission.</div></div>
@@ -794,6 +1042,16 @@
             <button class="settings-module-card" type="button" data-settings-module="tutorial-management">
               <div class="settings-module-icon" style="background:rgba(56,189,248,.12);color:var(--sky-dark);">🎬</div>
               <div><div class="settings-module-title">Tutorial Management</div><div class="settings-module-desc">Add and manage tutorial videos.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="referral-settings">
+              <div class="settings-module-icon" style="background:rgba(251,191,36,.1);color:var(--gold);">🎁</div>
+              <div><div class="settings-module-title">Referral Program</div><div class="settings-module-desc">Set referral bonus & minimum withdraw amount.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="force-join">
+              <div class="settings-module-icon" style="background:rgba(56,189,248,.12);color:var(--sky-dark);">📢</div>
+              <div><div class="settings-module-title">Force Join Channels</div><div class="settings-module-desc">Require users to join channels before using the app.</div></div>
               <div class="settings-module-arrow">›</div>
             </button>
           </div>
@@ -965,9 +1223,113 @@
           </div>
         </div>
 
+        <div id="settings-proxy-management" class="settings-page settings-module-page hidden" data-settings-page="proxy-management">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Proxy Management</span></div><div class="settings-page-title-row"><div class="settings-page-title">Proxy Management</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--sky-dark);"></div>🛰️ PROXY BRANDS & STOCK</div>
+            <div class="notice-box"><div class="notice-title">💡 How stock works</div><div class="notice-text">For each brand, add stock either one at a time with "Single Field", or paste many proxies at once (one per line) with "Bulk Box".</div></div>
+            <div class="add-form">
+               <input type="text" id="px-name" class="form-input" placeholder="Proxy Brand / Category Name">
+               <div class="proof-upload" style="margin-bottom:12px;">
+                 <input type="file" id="px-logo-file" accept="image/*" class="hidden">
+                 <div class="proof-head"><span>📸 Proxy Logo Image</span><small>Gallery</small></div>
+                 <button class="proof-select-btn" type="button" onclick="document.getElementById('px-logo-file').click()">+ Select Logo</button>
+                 <div class="proof-preview hidden" id="px-logo-preview">
+                   <img id="px-logo-preview-img" alt="Proxy Logo">
+                   <div class="proof-preview-meta"><b id="px-logo-file-name">Selected</b></div>
+                   <button class="proof-remove-btn" type="button" id="px-logo-remove-btn">Remove</button>
+                 </div>
+               </div>
+               <button class="btn-action btn-cyan" type="button" id="add-proxy-btn">+ Add Proxy Brand</button>
+            </div>
+            <div id="adm-proxy-list"></div>
+          </div>
+        </div>
+
+        <div id="settings-proxy-payment-methods" class="settings-page settings-module-page hidden" data-settings-page="proxy-payment-methods">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Proxy Payment Methods</span></div><div class="settings-page-title-row"><div class="settings-page-title">Proxy Payment Methods</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+             <div class="settings-group-title"><div class="stitle-bar" style="background:var(--emerald);"></div>💳 PROXY PAYMENTS</div>
+             <div class="add-form" style="display:flex;flex-direction:column;gap:9px;margin-bottom:12px;">
+                <input type="text" id="new-proxy-pay" class="form-input" placeholder="Method Name (e.g. bKash)">
+                <input type="text" id="new-proxy-pay-num" class="form-input" placeholder="Payment Number">
+                <div class="proof-upload" style="margin-bottom:0;">
+                   <input type="file" id="proxy-p-logo-file" accept="image/*" class="hidden">
+                   <div class="proof-head"><span>📸 Method Logo</span><small>Gallery</small></div>
+                   <button class="proof-select-btn" type="button" onclick="document.getElementById('proxy-p-logo-file').click()">+ Select Logo</button>
+                   <div class="proof-preview hidden" id="proxy-p-logo-preview">
+                     <img id="proxy-p-logo-preview-img" alt="Pay Logo">
+                     <div class="proof-preview-meta"><b id="proxy-p-logo-file-name">Selected</b></div>
+                     <button class="proof-remove-btn" type="button" id="proxy-p-logo-remove-btn">Remove</button>
+                   </div>
+                </div>
+                <button class="btn-action btn-emerald" type="button" id="add-proxy-payment-btn">Add Method</button>
+             </div>
+             <div id="proxy-payment-list"></div>
+          </div>
+        </div>
+
+        <div id="settings-mail-management" class="settings-page settings-module-page hidden" data-settings-page="mail-management">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Buy Mail Management</span></div><div class="settings-page-title-row"><div class="settings-page-title">Buy Mail Management</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:#f472b6;"></div>📧 MAIL BRANDS & STOCK</div>
+            <div class="notice-box"><div class="notice-title">💡 How this works</div><div class="notice-text">Set a price per piece and a minimum order quantity. Users pick how many pieces to buy, and on approval you deliver exactly that many automatically from stock. Payment methods are shared with Proxy Sell.</div></div>
+            <div class="add-form">
+               <input type="text" id="ml-name" class="form-input" placeholder="Mail Brand Name (e.g. Outlook Mail)">
+               <input type="number" id="ml-price" class="form-input" placeholder="Price Per Piece (৳)" step="0.01">
+               <input type="number" id="ml-minqty" class="form-input" placeholder="Minimum Order Quantity (e.g. 1)">
+               <div class="proof-upload" style="margin-bottom:12px;">
+                 <input type="file" id="ml-logo-file" accept="image/*" class="hidden">
+                 <div class="proof-head"><span>📸 Mail Logo Image</span><small>Gallery</small></div>
+                 <button class="proof-select-btn" type="button" onclick="document.getElementById('ml-logo-file').click()">+ Select Logo</button>
+                 <div class="proof-preview hidden" id="ml-logo-preview">
+                   <img id="ml-logo-preview-img" alt="Mail Logo">
+                   <div class="proof-preview-meta"><b id="ml-logo-file-name">Selected</b></div>
+                   <button class="proof-remove-btn" type="button" id="ml-logo-remove-btn">Remove</button>
+                 </div>
+               </div>
+               <button class="btn-action btn-cyan" type="button" id="add-mail-btn">+ Add Mail Brand</button>
+            </div>
+            <div id="adm-mail-list"></div>
+          </div>
+        </div>
+
         <div id="settings-tutorial-management" class="settings-page settings-module-page hidden" data-settings-page="tutorial-management">
           <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Tutorial Management</span></div><div class="settings-page-title-row"><div class="settings-page-title">Tutorial Management</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
           <div class="settings-group"><div class="settings-group-title"><div class="stitle-bar" style="background:var(--sky-dark);"></div>🎬 TUTORIAL MANAGEMENT</div><div class="add-form"><input type="url" id="tutorial-url" class="form-input" placeholder="YouTube Video Link (watch, youtu.be, embed)"><input type="text" id="tutorial-title" class="form-input" placeholder="Video Title (Optional)"><button class="btn-action btn-cyan" type="button" id="add-tutorial-btn">+ Add Tutorial Video</button></div><div id="tutorial-admin-list"></div></div>
+        </div>
+
+        <div id="settings-referral-settings" class="settings-page settings-module-page hidden" data-settings-page="referral-settings">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Referral Program</span></div><div class="settings-page-title-row"><div class="settings-page-title">Referral Program</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--gold);"></div>🎁 REFERRAL SETTINGS</div>
+            <div class="notice-box"><div class="notice-title">💡 How it works</div><div class="notice-text">Set how much a user earns (৳) every time someone opens the app via their referral link, and the minimum amount a user must have to request a withdraw.</div></div>
+            <input type="number" id="ref-amount-per-referral" class="form-input" placeholder="Bonus per Referral (৳) e.g. 5" step="0.01">
+            <input type="number" id="ref-min-withdraw" class="form-input" placeholder="Minimum Withdraw Amount (৳) e.g. 50" step="0.01">
+            <button class="btn-action btn-cyan" type="button" id="save-referral-settings-btn">💾 Save Referral Settings</button>
+          </div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--emerald);"></div>📊 REFERRAL OVERVIEW</div>
+            <div class="user-tracking-grid">
+              <div class="user-track-stat"><small>Total Referrers</small><b id="ref-total-referrers">0</b></div>
+              <div class="user-track-stat"><small>Total Paid Out</small><b id="ref-total-paid">0.00৳</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="settings-force-join" class="settings-page settings-module-page hidden" data-settings-page="force-join">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Force Join Channels</span></div><div class="settings-page-title-row"><div class="settings-page-title">Force Join Channels</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--sky-dark);"></div>📢 FORCE JOIN CHANNELS</div>
+            <div class="notice-box"><div class="notice-title">💡 How it works</div><div class="notice-text">The bot must be added as ADMIN in each channel below for auto-verification to work. You can add multiple channels — users must join ALL of them before using the app. Enter the channel's @username, or its numeric chat ID for private channels.</div></div>
+            <div class="add-form" style="display:flex;flex-direction:column;gap:9px;margin-bottom:12px;">
+              <input type="text" id="new-fj-name" class="form-input" placeholder="Channel Display Name">
+              <input type="text" id="new-fj-link" class="form-input" placeholder="Channel Join Link (https://t.me/...)">
+              <input type="text" id="new-fj-chatid" class="form-input" placeholder="Channel @username or Chat ID">
+              <button class="btn-action btn-cyan" type="button" id="add-fj-btn">+ Add Channel</button>
+            </div>
+            <div id="fj-list"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1049,6 +1411,24 @@
   </div>
   <input type="file" id="payment-proof-file" accept="image/*" class="hidden">
 
+  <!-- ================= WITHDRAW MODAL ================= -->
+  <div id="withdraw-modal" class="modal-mask z-[2600]">
+    <div class="bottom-sheet">
+      <div class="sheet-handle"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div class="sheet-title">🎁 Withdraw Referral Balance</div><button class="x-btn" type="button" id="close-withdraw-btn">✕</button></div>
+      <div class="notice-box">
+        <div class="notice-title">💰 Balance & Limit</div>
+        <div class="notice-text">Available Balance: <b id="wd-balance-val">0.00৳</b>&nbsp; | &nbsp;Minimum Withdraw: <b id="wd-min-val">0.00৳</b></div>
+      </div>
+      <input type="number" id="wd-amount-input" class="form-input" placeholder="Enter amount to withdraw (৳)" step="0.01" min="0">
+      <div class="sec-title" style="margin-top:4px;">SELECT PAYMENT METHOD</div>
+      <div id="wd-pay-options" style="margin-bottom:14px;"></div>
+      <button class="btn-go" type="button" id="wd-submit-btn" style="width:100%;">✓ Submit Withdraw Request</button>
+      <div class="sec-title" style="margin-top:18px;">RECENT WITHDRAW HISTORY</div>
+      <div id="wd-history-list"></div>
+    </div>
+  </div>
+
   <div id="proof-modal" class="confirm-mask z-[5000]">
     <div class="proof-viewer-box">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
@@ -1063,7 +1443,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_DEFAULT_NAME = "NIVA EXCHANGE";
+    const APP_DEFAULT_NAME = "NIVA EXCHANGE ";
     const LEGACY_BRAND_REGEX = /META\s*BUYER\s*ZONE/gi;
     function normalizeBrandName(value){
       const raw = String(value || '').trim();
@@ -1111,14 +1491,14 @@
     const MAX_PROOF_DATA_URL_LENGTH = 950000; 
 
     const firebaseConfig = {
-  apiKey: "AIzaSyDMPXsRLChUaHlpIRHwm6PH4uYxR21stO4",
-  authDomain: "niva-exchange.firebaseapp.com",
-  databaseURL: "https://niva-exchange-default-rtdb.firebaseio.com",
-  projectId: "niva-exchange",
-  storageBucket: "niva-exchange.firebasestorage.app",
-  messagingSenderId: "899429789770",
-  appId: "1:899429789770:web:b7157859ea18f766b276b3",
-  measurementId: "G-66SZ44489Z"
+      apiKey: "AIzaSyDwPchjHJ8SrtKxXb18diT8c9fHiiMqLII",
+      authDomain: "niva-buyer-zone-9f0d2.firebaseapp.com",
+      databaseURL: "https://niva-buyer-zone-9f0d2-default-rtdb.firebaseio.com",
+      projectId: "niva-buyer-zone-9f0d2",
+      storageBucket: "niva-buyer-zone-9f0d2.firebasestorage.app",
+      messagingSenderId: "92493493182",
+      appId: "1:92493493182:web:edaf82fb0401b4154d3fef",
+      measurementId: "G-P2DHHSESBH"
     };
 
     const $ = (id) => document.getElementById(id);
@@ -1141,20 +1521,28 @@
     let currentSellPayMethod = '', currentSellPayNumber = '';
     
     // Config Caches
-    let marketCache = {}, vpnConfigCache = {}, paymentMethodsCache = {}, vpnPaymentMethodsCache = {}, tutorialCache = {}, userRegistryCache = {}, globalOrders = {};
+    let marketCache = {}, vpnConfigCache = {}, proxyConfigCache = {}, mailConfigCache = {}, paymentMethodsCache = {}, vpnPaymentMethodsCache = {}, proxyPaymentMethodsCache = {}, tutorialCache = {}, userRegistryCache = {}, globalOrders = {};
+    // Referral / Withdraw / Force-Join Caches
+    let referralSettingsCache = {}, forceJoinChannelsCache = {}, myWithdrawalsCache = {}, withdrawalsCache = {};
+    let selectedWithdrawMethod = '', selectedWithdrawNumber = '';
+    const REFERRAL_BOT_APP_LINK = "https://t.me/NivaBuyerZone_bot/app";
     let currentAdminTab = 'pending', adminStarted = false, adminConfirmCallback = null;
     let paymentTargetOrderId = '', proofModalSrc = '', paymentProofTargetOrderId = '', paymentProofProcessing = false;
     let broadcastNoticeImageDataUrl = '', broadcastNoticeImageFileName = '', broadcastNoticeImageProcessing = false, leaderboardUserListOpen = false, userTrackingSearchTerm = '';
     const ACTIVE_USER_WINDOW_MS = 10 * 60 * 1000;
 
     // Logo Caches
-    let cLogoDataUrl = '', editCLogoDataUrl = '', vpnLogoDataUrl = '', payLogoDataUrl = '', vpnPayLogoDataUrl = '';
+    let cLogoDataUrl = '', editCLogoDataUrl = '', vpnLogoDataUrl = '', payLogoDataUrl = '', vpnPayLogoDataUrl = '', proxyLogoDataUrl = '', proxyPayLogoDataUrl = '', mailLogoDataUrl = '';
     let editCoinTargetKey = '';
 
     // VPN States
     let selVpnBrand = '', selVpnPlanName = '', selVpnPlanPrice = 0, selVpnPayMethod = '', selVpnPayNumberTarget = '';
+    let selMailBrand = '', selMailQty = 1, selMailUnitPrice = 0, selMailPayMethod = '', selMailPayNumberTarget = '';
+    let selProxyBrand = '', selProxyPlanName = '', selProxyPlanPrice = 0, selProxyPayMethod = '', selProxyPayNumberTarget = '';
     let vpnProofFileName = '', vpnProofImageDataUrl = '', vpnProofProcessing = false;
-    let deliveryTargetOrderId = '', deliveryTargetVpnBrand = '';
+    let proxyProofFileName = '', proxyProofImageDataUrl = '', proxyProofProcessing = false;
+    let mailProofFileName = '', mailProofImageDataUrl = '', mailProofProcessing = false;
+    let deliveryTargetOrderId = '', deliveryTargetVpnBrand = '', deliveryTargetType = 'vpn';
 
     window.addEventListener('error', (event) => { setTimeout(finishLoading, 0); });
     window.addEventListener('unhandledrejection', (event) => { setTimeout(finishLoading, 0); });
@@ -1255,7 +1643,7 @@
       const noticeText = String(textEl ? textEl.value : '').trim();
       const videoLink = normalizeLink(videoEl ? videoEl.value : '');
       const imageNote = broadcastNoticeImageDataUrl ? `\n\n📸 Screenshot Attached` : '';
-      preview.textContent = noticeText ? `📢 NIVA EXCHANGE Notice\n\n${noticeText}${videoLink ? `\n\n🎬 Video Link:\n${videoLink}` : ''}${imageNote}` : 'Notice text preview here.';
+      preview.textContent = noticeText ? `📢 NIVA EXCHANGE  Notice\n\n${noticeText}${videoLink ? `\n\n🎬 Video Link:\n${videoLink}` : ''}${imageNote}` : 'Notice text preview here.';
     }
     function resetBroadcastNoticeImage(){
       broadcastNoticeImageDataUrl = ''; broadcastNoticeImageFileName = ''; broadcastNoticeImageProcessing = false;
@@ -1383,20 +1771,26 @@
       if(order.order_type === 'vpn'){
         return `🆕 <b>NEW VPN ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.vpn_plan || '—')}\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
       }
+      if(order.order_type === 'proxy'){
+        return `🆕 <b>NEW PROXY ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.proxy_plan || '—')}\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
+      }
+      if(order.order_type === 'mail'){
+        return `🆕 <b>NEW MAIL ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n📧 <b>Mail:</b> ${tgEscape(order.mail_brand || '—')}\n📦 <b>Quantity:</b> ${Number(order.mail_qty || 0)} pcs\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
+      }
       return `🆕 <b>NEW COIN ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n🪙 <b>Coin:</b> ${tgEscape(order.coin || '—')}\n📦 <b>Amount:</b> ${Number(order.amt || 0).toLocaleString()}\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📨 <b>Sender:</b> ${tgEscape(order.sender || '—')}\n🎯 <b>Target ID:</b> ${tgEscape(order.targetId || order.target_id || '—')}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
     }
     
     function buildUserOrderSubmittedMessage(order){
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.vpn_plan || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.vpn_plan || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.proxy_plan || '—')}` : order.order_type === 'mail' ? `📧 <b>Mail:</b> ${tgEscape(order.mail_brand || '—')}\n📦 <b>Quantity:</b> ${Number(order.mail_qty || 0)} pcs` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
       return `📩 <b>অর্ডার গ্রহণ করা হয়েছে</b>\n\nআপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। আমাদের টিম অর্ডারটি যাচাই করছে।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
     }
     
     function buildOrderStatusMessage(order, orderStatus){
       const status = String(orderStatus || '').toLowerCase();
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}` : order.order_type === 'mail' ? `📧 <b>Mail:</b> ${tgEscape(order.mail_brand || '—')} (${Number(order.mail_qty||0)} pcs)` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
 
       if(status === 'approved' || status === 'completed'){
-        let extra = order.order_type === 'vpn' ? `\n🔐 <b>Credentials:</b> Check App History` : `\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}`;
+        let extra = (order.order_type === 'vpn' || order.order_type === 'proxy' || order.order_type === 'mail') ? `\n🔐 <b>Credentials:</b> Check App History` : `\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}`;
         return `✅ <b>অর্ডার অনুমোদিত হয়েছে</b>\n\nআপনার অর্ডারটি যাচাই করে অনুমোদন করা হয়েছে।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}${extra}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
       }
 
@@ -1408,7 +1802,7 @@
     }
 
     function buildPaymentPaidMessage(order){
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}` : order.order_type === 'mail' ? `📧 <b>Mail:</b> ${tgEscape(order.mail_brand || '—')} (${Number(order.mail_qty||0)} pcs)` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
       return `💸 <b>পেমেন্ট সম্পন্ন হয়েছে</b>\n\nআপনার অর্ডারের পেমেন্ট সফলভাবে সম্পন্ন করা হয়েছে। অনুগ্রহ করে আপনার পেমেন্ট অ্যাকাউন্ট চেক করুন।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}\n🔖 <b>রেফারেন্স:</b> ${tgEscape(order.payment_reference_id || '—')}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
     }
 
@@ -1459,7 +1853,7 @@
     function startUserListeners(){
       if(!firebaseReady) return;
       registerCurrentUser();
-      if(currentUserId){ db.ref('users/' + userRefKey).on('value', snap => { userRegistryCache = {...userRegistryCache, [userRefKey]: snap.val()||{}}; if(guardBannedUser()){} }); }
+      if(currentUserId){ db.ref('users/' + userRefKey).on('value', snap => { userRegistryCache = {...userRegistryCache, [userRefKey]: snap.val()||{}}; if(guardBannedUser()){} renderReferralCard(); }); }
       db.ref('settings/branding').on('value', snap => {
         const b = snap.val() || {}; const name = normalizeBrandName(b.siteName || APP_DEFAULT_NAME);
         document.title = name; $('brand-text').textContent = name; $('admin-brand-name').textContent = name; sanitizeLegacyBrandInDom();
@@ -1469,11 +1863,268 @@
       db.ref('settings/requireProofTrxId').on('value', snap => { requireProofTrxId = snap.val() !== false; applyProofRequirementUI(); });
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderMarket(marketCache); finishLoading(); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderVpns(vpnConfigCache); });
+      db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderProxies(proxyConfigCache); });
+      db.ref('mailConfig').on('value', snap => { mailConfigCache = snap.val() || {}; renderMails(mailConfigCache); });
       db.ref('paymentMethods').on('value', snap => { paymentMethodsCache = snap.val() || {}; renderUserCoinPayments(paymentMethodsCache); });
       db.ref('vpnPaymentMethods').on('value', snap => { vpnPaymentMethodsCache = snap.val() || {}; renderUserVpnPayments(vpnPaymentMethodsCache); });
+      db.ref('proxyPaymentMethods').on('value', snap => { proxyPaymentMethodsCache = snap.val() || {}; renderUserProxyPayments(proxyPaymentMethodsCache); });
       db.ref('orders').orderByChild('userKey').equalTo(userRefKey).on('value', snap => renderUserHistory(snap.val() || {}));
       db.ref('tutorialVideos').on('value', snap => { tutorialCache = snap.val() || {}; renderTutorialVideos(tutorialCache); });
+      db.ref('settings/referral').on('value', snap => { referralSettingsCache = snap.val() || {}; renderReferralCard(); });
+      db.ref('settings/forceJoinChannels').on('value', snap => { forceJoinChannelsCache = snap.val() || {}; checkForceJoinStatus(); });
+      if(currentUserId){ db.ref('withdrawals').orderByChild('userKey').equalTo(userRefKey).on('value', snap => { myWithdrawalsCache = snap.val() || {}; renderMyWithdrawals(); }); }
+      processReferralIfNeeded();
+      startLeaderboardListener();
       setTimeout(finishLoading, 3500);
+    }
+
+    // ================= LEADERBOARD SYSTEM =================
+    let leaderboardCache = [];
+    function startLeaderboardListener(){
+      if(!firebaseReady || !db) return;
+      // Indexed, filtered query — only pulls approved orders, not the whole orders table, so this stays light even as order volume grows
+      db.ref('orders').orderByChild('order_status').equalTo('approved').on('value', snap => {
+        leaderboardCache = buildLeaderboardRanking(snap.val() || {});
+        // Only touch the DOM if the leaderboard tab is actually open right now — background updates never cause lag on other tabs
+        const scr = $('leaderboard-scr');
+        if(scr && scr.style.display !== 'none') renderLeaderboard();
+      });
+    }
+    function buildLeaderboardRanking(ordersObj){
+      const map = new Map();
+      Object.values(ordersObj || {}).forEach(o => {
+        if(!o || !o.userKey) return;
+        const key = o.userKey;
+        if(!map.has(key)) map.set(key, { userKey:key, name:o.user || o.username || 'Trader', coins:0, taka:0, orders:0 });
+        const u = map.get(key);
+        u.coins += Number(o.amt) || 0;
+        u.taka += Number(o.payable) || 0;
+        u.orders += 1;
+        if(o.user) u.name = o.user; // keep freshest display name
+      });
+      return Array.from(map.values())
+        .filter(u => u.taka > 0)
+        .sort((a,b) => b.taka - a.taka) // ranked by total BDT sold, not coin count
+        .slice(0, 20); // top 20 is plenty for a leaderboard and keeps render cheap
+    }
+    function renderLeaderboard(){
+      const podEl = $('lb-podium'), listEl = $('lb-list'), subEl = $('lb-hero-sub');
+      if(!podEl || !listEl) return;
+      const rows = leaderboardCache || [];
+      if(!rows.length){
+        podEl.innerHTML = '';
+        listEl.innerHTML = '<div class="empty-state">No sellers yet — be the first on the board! 🚀</div>';
+        if(subEl) subEl.textContent = 'Rankings update in real time as orders get approved';
+        return;
+      }
+      if(subEl) subEl.textContent = `${rows.length} seller${rows.length>1?'s':''} ranked by total BDT sold`;
+      const medals = ['🥇','🥈','🥉'];
+      podEl.innerHTML = [0,1,2].map(i => {
+        const u = rows[i];
+        if(!u) return `<div class="lb-pod-card rk-${i+1} lb-empty-podium-slot">
+          <div class="lb-avatar-ring"><div class="lb-avatar-glow"></div><img class="lb-avatar-img" src="${DEFAULT_PROFILE_IMAGE}" alt=""></div>
+          <div class="lb-pod-name">—</div><div class="lb-pod-badge">#${i+1}</div>
+          <div class="lb-pod-pedestal"><span class="lb-pod-pedestal-num">${i+1}</span></div>
+        </div>`;
+        return `<div class="lb-pod-card rk-${i+1}">
+          ${i===0?'<div class="lb-crown">👑</div>':''}
+          <div class="lb-avatar-ring"><div class="lb-avatar-glow"></div><img class="lb-avatar-img" src="${DEFAULT_PROFILE_IMAGE}" alt=""></div>
+          <div class="lb-pod-name">${escapeHtml(u.name)}</div>
+          <div class="lb-pod-badge">${money(u.taka)}</div>
+          <div class="lb-pod-pedestal"><span class="lb-pod-pedestal-num">${medals[i]}</span></div>
+        </div>`;
+      }).join('');
+      const rest = rows.slice(3);
+      listEl.innerHTML = rest.length ? rest.map((u, idx) => `
+        <div class="lb-row-card" style="animation-delay:${idx*.03}s;">
+          <div class="lb-row-rank">#${idx+4}</div>
+          <div class="lb-row-avatar-wrap"><img class="lb-row-avatar" src="${DEFAULT_PROFILE_IMAGE}" alt=""></div>
+          <div style="flex:1;min-width:0;">
+            <div class="lb-row-name">${escapeHtml(u.name)}</div>
+            <div class="lb-row-sub">${u.orders} order${u.orders>1?'s':''} approved</div>
+          </div>
+          <div class="lb-row-amt">${money(u.taka)}</div>
+        </div>`).join('') : '';
+    }
+
+    // ================= REFERRAL SYSTEM =================
+    function getReferralLink(){ return `${REFERRAL_BOT_APP_LINK}?startapp=ref_${currentUserId || 0}`; }
+    function copyReferralLink(){ copyTextValue(getReferralLink(), 'Referral Link'); }
+
+    function renderReferralCard(){
+      const me = userRegistryCache[userRefKey] || {};
+      const balance = Number(me.referralBalance || 0);
+      const count = Number(me.referralCount || 0);
+      if($('ref-balance-val')) $('ref-balance-val').textContent = money(balance);
+      if($('ref-count-val')) $('ref-count-val').textContent = count;
+      if($('ref-link-val')) $('ref-link-val').textContent = getReferralLink();
+    }
+
+    function extractReferrerId(){
+      const sp = String(tg.initDataUnsafe?.start_param || '').trim();
+      const m = sp.match(/^ref_(\d+)$/);
+      return m ? m[1] : '';
+    }
+
+    // Credits the referrer exactly once per new user — guarded by a referral_processed flag
+    // written to the referred user's own record BEFORE the bonus transaction runs.
+    async function processReferralIfNeeded(){
+      if(!firebaseReady || !db || !currentUserId) return;
+      const refId = extractReferrerId();
+      if(!refId) return;
+      const refKey = 'tg_' + refId;
+      if(refKey === userRefKey) return; // can't refer yourself
+      try{
+        const myRef = db.ref('users/' + userRefKey);
+        const snap = await myRef.once('value');
+        const me = snap.val() || {};
+        if(me.referral_processed) return; // already handled, never re-credit
+        await myRef.update({ referredBy: refKey, referral_processed: true });
+        const setSnap = await db.ref('settings/referral').once('value');
+        const bonus = Number((setSnap.val()||{}).amountPerReferral || 0);
+        if(bonus > 0){
+          await db.ref('users/' + refKey + '/referralBalance').transaction(cur => (Number(cur)||0) + bonus);
+          await db.ref('users/' + refKey + '/referralCount').transaction(cur => (Number(cur)||0) + 1);
+          sendTelegramMessage(refId, `🎉 <b>নতুন রেফারেল!</b>\n\nআপনার রেফার লিংক দিয়ে একজন নতুন ইউজার জয়েন করেছে।\n💰 <b>বোনাস পেয়েছেন:</b> ${bonus.toFixed(2)}৳`);
+        }
+      }catch(e){}
+    }
+
+    // ================= WITHDRAW SYSTEM =================
+    function openWithdrawModal(){
+      if(guardBannedUser()) return;
+      const me = userRegistryCache[userRefKey] || {};
+      const balance = Number(me.referralBalance || 0);
+      const minW = Number((referralSettingsCache||{}).minWithdraw || 0);
+      $('wd-balance-val').textContent = money(balance);
+      $('wd-min-val').textContent = money(minW);
+      $('wd-amount-input').value = '';
+      selectedWithdrawMethod = ''; selectedWithdrawNumber = '';
+      renderWithdrawPayOptions();
+      renderMyWithdrawals();
+      $('withdraw-modal').classList.add('active');
+    }
+    function closeWithdrawModal(){ $('withdraw-modal').classList.remove('active'); }
+
+    function renderWithdrawPayOptions(){
+      const container = $('wd-pay-options'); if(!container) return;
+      const saved = getUserSavedPayments();
+      const methods = Object.entries(paymentMethodsCache || {}).filter(([key,v]) => v && v.status !== false && saved[key]);
+      if(!methods.length){
+        container.innerHTML = '<div class="pay-settings-empty">⚠️ No saved payment number found.<br>Go to "Save Payment Number" and save one first.</div>';
+        return;
+      }
+      container.innerHTML = methods.map(([key,v]) => {
+        const num = saved[key];
+        const logoHtml = v.logo ? `<img src="${escapeHtml(v.logo)}" alt="${escapeHtml(key)}">` : '💳';
+        return `<div class="sell-pay-card" id="wd-pay-card-${escapeHtml(key)}" onclick="selectWithdrawPayMethod('${escapeHtml(key)}','${escapeHtml(num)}')">
+          <div class="sell-pay-check" id="wd-pay-check-${escapeHtml(key)}"></div>
+          <div class="sell-pay-icon">${logoHtml}</div>
+          <div style="flex:1;min-width:0;"><div class="sell-pay-name">${escapeHtml(key)}</div><div class="sell-pay-num">${escapeHtml(num)}</div></div>
+        </div>`;
+      }).join('');
+    }
+    function selectWithdrawPayMethod(method, number){
+      selectedWithdrawMethod = method; selectedWithdrawNumber = number;
+      document.querySelectorAll('#wd-pay-options .sell-pay-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#wd-pay-options .sell-pay-check').forEach(c => { c.innerHTML = ''; });
+      const card = $('wd-pay-card-' + method), check = $('wd-pay-check-' + method);
+      if(card) card.classList.add('active'); if(check) check.innerHTML = '✓';
+    }
+
+    function submitWithdrawRequest(){
+      if(!requireFirebase() || guardBannedUser()) return;
+      const me = userRegistryCache[userRefKey] || {};
+      const balance = Number(me.referralBalance || 0);
+      const minW = Number((referralSettingsCache||{}).minWithdraw || 0);
+      const amount = Number($('wd-amount-input').value || 0);
+      if(!selectedWithdrawMethod || !selectedWithdrawNumber){ showToast('Select a payment method','error'); return; }
+      if(!amount || amount <= 0){ showToast('Enter a valid amount','error'); return; }
+      if(minW > 0 && amount < minW){ showToast(`Minimum withdraw is ${money(minW)}`,'error'); return; }
+      if(amount > balance){ showToast('Insufficient referral balance','error'); return; }
+      const btn = $('wd-submit-btn'); btn.disabled = true; btn.textContent = '⏳ Submitting...';
+      const balRef = db.ref('users/' + userRefKey + '/referralBalance');
+      balRef.transaction(cur => {
+        const curBal = Number(cur || 0);
+        if(curBal < amount) return; // abort — insufficient at commit time
+        return curBal - amount;
+      }).then(result => {
+        if(!result.committed){ showToast('Insufficient referral balance','error'); btn.disabled=false; btn.textContent='✓ Submit Withdraw Request'; return; }
+        const wRef = db.ref('withdrawals').push(); const wId = wRef.key;
+        const wData = {
+          id:wId, userKey:userRefKey, user:userDisplayName, username:userUsername, telegram_chat_id:currentUserId,
+          amount: parseFloat(amount.toFixed(2)), method:selectedWithdrawMethod, number:selectedWithdrawNumber,
+          status:'pending', created_at:firebase.database.ServerValue.TIMESTAMP
+        };
+        wRef.set(wData).then(() => {
+          sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, `💸 <b>NEW WITHDRAW REQUEST</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(wData))}\n🆔 <b>User ID:</b> ${tgEscape(currentUserId)}\n💰 <b>Amount:</b> ${Number(amount).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(selectedWithdrawMethod)}\n📱 <b>Number:</b> ${tgEscape(selectedWithdrawNumber)}\n\n🆔 <b>Request ID:</b> #${tgEscape(String(wId).slice(-7))}`);
+          showToast('✓ Withdraw request submitted!','success');
+          closeWithdrawModal();
+        }).catch(() => { showToast('Failed to submit. Balance refunded, try again.','error'); balRef.transaction(cur => (Number(cur)||0) + amount); });
+      }).catch(() => { showToast('Failed. Try again.','error'); }).finally(() => { btn.disabled=false; btn.textContent='✓ Submit Withdraw Request'; });
+    }
+
+    function renderMyWithdrawals(){
+      const wrap = $('wd-history-list'); if(!wrap) return;
+      const arr = Object.values(myWithdrawalsCache || {}).sort((a,b) => Number(b.created_at||0) - Number(a.created_at||0)).slice(0, 10);
+      if(!arr.length){ wrap.innerHTML = '<div class="empty-state" style="padding:16px;">No withdrawal history yet</div>'; return; }
+      wrap.innerHTML = arr.map(w => {
+        const status = String(w.status || 'pending');
+        const cls = status === 'approved' ? 'good' : status === 'rejected' ? 'bad' : '';
+        return `<div class="pay-row"><div class="pay-name">${money(w.amount)} <small style="font-weight:600;color:var(--subtext);">via ${escapeHtml(w.method)}</small></div><span class="mini-pill ${cls}">${escapeHtml(status.toUpperCase())}</span></div>`;
+      }).join('');
+    }
+
+    // ================= FORCE JOIN CHANNELS =================
+    function normalizeChannelChatId(v){
+      const s = String(v || '').trim();
+      if(!s) return '';
+      if(/^-?\d+$/.test(s)) return s; // numeric chat id (private channels)
+      if(/^https?:\/\/t\.me\//i.test(s)){
+        const uname = s.replace(/^https?:\/\/t\.me\//i, '').split(/[/?]/)[0];
+        return uname ? '@' + uname : '';
+      }
+      return '@' + s.replace(/^@/, '');
+    }
+    async function checkChannelMembership(chatId, userId){
+      try{
+        const url = telegramApiUrl('getChatMember') + `?chat_id=${encodeURIComponent(chatId)}&user_id=${encodeURIComponent(userId)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if(!data || data.ok !== true) return false;
+        const status = String(data.result?.status || '').toLowerCase();
+        return ['member','administrator','creator','owner'].includes(status);
+      }catch(e){ return false; }
+    }
+    function renderForceJoinScreen(list){
+      const wrap = $('force-join-list'); if(!wrap) return;
+      wrap.innerHTML = (list || []).map(c => `<div class="fj-channel-card">
+          <div class="fj-channel-icon">📢</div>
+          <div style="flex:1;min-width:0;">
+            <div class="fj-channel-name">${escapeHtml(c.name || 'Channel')}</div>
+            <div class="fj-channel-sub">Tap to join, then verify below</div>
+          </div>
+          <button class="fj-join-btn" type="button" onclick="openSafeLink('${escapeHtml(c.link || '')}')">Join</button>
+        </div>`).join('') || '<div class="empty-state">No channels to join</div>';
+    }
+    async function checkForceJoinStatus(){
+      const overlay = $('force-join-scr');
+      if(isAdmin){ if(overlay) overlay.style.display = 'none'; return true; } // admins are never gated out
+      const channels = Object.entries(forceJoinChannelsCache || {}).filter(([,v]) => v && v.status !== false && v.chatId);
+      if(!channels.length || !currentUserId){ if(overlay) overlay.style.display = 'none'; return true; }
+      const results = await Promise.all(channels.map(async ([key,v]) => ({ key, v, joined: await checkChannelMembership(v.chatId, currentUserId) })));
+      const notJoined = results.filter(r => !r.joined);
+      renderForceJoinScreen(notJoined.map(r => ({ key:r.key, ...r.v })));
+      if(overlay) overlay.style.display = notJoined.length ? 'flex' : 'none';
+      return !notJoined.length;
+    }
+    async function handleForceJoinVerify(){
+      const btn = $('force-join-verify-btn');
+      if(btn){ btn.disabled = true; btn.textContent = '⏳ Checking...'; }
+      const ok = await checkForceJoinStatus();
+      if(btn){ btn.disabled = false; btn.textContent = '✓ Verify Membership'; }
+      if(ok){ showToast('✓ Verified! Welcome aboard.','success'); try{ tg.HapticFeedback.notificationOccurred('success'); }catch(e){} }
+      else{ showToast('Please join all channels first.','error'); try{ tg.HapticFeedback.notificationOccurred('error'); }catch(e){} }
     }
 
     function renderMarket(data){
@@ -1541,6 +2192,27 @@
         const on = v.status !== false;
         const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">🌐</span>';
         return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openVpnModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">PREMIUM VPN</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
+      }).join('');
+    }
+
+    function renderProxies(data){
+      const entries = Object.entries(data || {});
+      if(!entries.length){ $('proxy-brand-list').innerHTML = '<div class="empty-state">No proxies available</div>'; return; }
+      $('proxy-brand-list').innerHTML = entries.map(([key,v],idx) => {
+        const on = v.status !== false;
+        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">🛰️</span>';
+        return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openProxyModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">PROXY SELL</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
+      }).join('');
+    }
+
+    function renderMails(data){
+      const entries = Object.entries(data || {});
+      if(!entries.length){ $('mail-brand-list').innerHTML = '<div class="empty-state">No mail brands available</div>'; return; }
+      $('mail-brand-list').innerHTML = entries.map(([key,v],idx) => {
+        const on = v.status !== false;
+        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">📧</span>';
+        const stockCount = Object.keys(v.stock||{}).length;
+        return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openMailModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">${money(v.pricePerUnit||0)} / PIECE · ${stockCount} IN STOCK</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
       }).join('');
     }
 
@@ -1682,15 +2354,32 @@
       }
     }
 
+    function renderUserProxyPayments(data){
+      const entries = Object.entries(data || {}).filter(([,v]) => v && v.status !== false);
+      if($('proxy-pay-methods-grid')) {
+         $('proxy-pay-methods-grid').innerHTML = entries.map(([key,v]) => {
+            const logoHtml = v.logo ? `<img src="${escapeHtml(v.logo)}">` : `<div style="width:40px;height:40px;border-radius:10px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:16px;">💳</div>`;
+            return `<div class="vpn-pay-card" data-pay-key="${escapeHtml(key)}" data-pay-num="${escapeHtml(v.number || '')}" onclick="selectProxyPayMethod('${escapeHtml(key)}', '${escapeHtml(v.number || '')}')">${logoHtml}<b>${escapeHtml(key)}</b></div>`;
+         }).join('');
+      }
+      // Buy Mail shares payment methods with Proxy Sell
+      if($('mail-pay-methods-grid')) {
+         $('mail-pay-methods-grid').innerHTML = entries.map(([key,v]) => {
+            const logoHtml = v.logo ? `<img src="${escapeHtml(v.logo)}">` : `<div style="width:40px;height:40px;border-radius:10px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:16px;">💳</div>`;
+            return `<div class="vpn-pay-card" data-pay-key="${escapeHtml(key)}" data-pay-num="${escapeHtml(v.number || '')}" onclick="selectMailPayMethod('${escapeHtml(key)}', '${escapeHtml(v.number || '')}')">${logoHtml}<b>${escapeHtml(key)}</b></div>`;
+         }).join('');
+      }
+    }
+
     function renderUserHistory(data){
       const arr = Object.values(data || {}).sort((a,b) => getCreatedAt(b) - getCreatedAt(a));
       const approved = arr.filter(o => getOrderStatus(o) === 'approved').length;
       $('suc-count').textContent = approved;
       if(!arr.length){ $('history-list').innerHTML = '<div class="empty-state">No orders yet</div>'; return; }
       $('history-list').innerHTML = arr.map((o,i) => {
-        const info = getUserStatusInfo(o), isVpn = o.order_type === 'vpn', os = getOrderStatus(o);
-        const title = isVpn ? `${escapeHtml(o.vpn_brand)} - ${escapeHtml(o.vpn_plan)}` : escapeHtml(o.coin);
-        const badge = isVpn ? `<span class="hist-type-badge">VPN</span>` : `<span class="hist-type-badge" style="background:var(--sky-dark);">COIN</span>`;
+        const info = getUserStatusInfo(o), isVpn = o.order_type === 'vpn', isProxy = o.order_type === 'proxy', isMail = o.order_type === 'mail', os = getOrderStatus(o);
+        const title = isVpn ? `${escapeHtml(o.vpn_brand)} - ${escapeHtml(o.vpn_plan)}` : isProxy ? `${escapeHtml(o.proxy_brand)} - ${escapeHtml(o.proxy_plan)}` : isMail ? `${escapeHtml(o.mail_brand)} - ${Number(o.mail_qty||0)} pcs` : escapeHtml(o.coin);
+        const badge = isVpn ? `<span class="hist-type-badge">VPN</span>` : isProxy ? `<span class="hist-type-badge" style="background:var(--purple);">PROXY</span>` : isMail ? `<span class="hist-type-badge" style="background:#f472b6;">MAIL</span>` : `<span class="hist-type-badge" style="background:var(--sky-dark);">COIN</span>`;
         let detailsHtml = '';
         if(isVpn){
            detailsHtml = `<div class="hist-info-cell"><div class="hic-label">PAYMENT</div><div class="hic-value">${escapeHtml(o.method)} (${escapeHtml(o.number)})</div></div><div class="hist-info-cell"><div class="hic-label">ORDER STATUS</div><div class="hic-value">${escapeHtml(info.label)}</div></div>`;
@@ -1699,6 +2388,24 @@
                <div style="font-size:9px;font-weight:900;color:var(--purple);margin-bottom:6px;text-transform:uppercase;">🔐 Delivery Credentials</div>
                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;margin-bottom:6px;"><div><span style="font-size:8px;color:var(--subtext);display:block;">Email / ID</span><b style="font-size:11px;">${escapeHtml(o.delivered_email)}</b></div><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(o.delivered_email)}', 'Email')" style="margin:0;">Copy</button></div>
                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;"><div><span style="font-size:8px;color:var(--subtext);display:block;">Password</span><b style="font-size:11px;">${escapeHtml(o.delivered_pass)}</b></div><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(o.delivered_pass)}', 'Password')" style="margin:0;">Copy</button></div>
+             </div>`;
+           }
+        }else if(isProxy){
+           detailsHtml = `<div class="hist-info-cell"><div class="hic-label">PAYMENT</div><div class="hic-value">${escapeHtml(o.method)} (${escapeHtml(o.number)})</div></div><div class="hist-info-cell"><div class="hic-label">ORDER STATUS</div><div class="hic-value">${escapeHtml(info.label)}</div></div>`;
+           if(os === 'approved' && o.delivered_proxy){
+             detailsHtml += `<div style="grid-column:1/-1;background:rgba(56,189,248,.1);border:1px dashed var(--sky-dark);border-radius:10px;padding:10px;margin-top:4px;">
+               <div style="font-size:9px;font-weight:900;color:var(--sky-dark);margin-bottom:6px;text-transform:uppercase;">🛰️ Your Proxy</div>
+               <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;"><div><span style="font-size:8px;color:var(--subtext);display:block;">Proxy</span><b style="font-size:11px;">${escapeHtml(o.delivered_proxy)}</b></div><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(o.delivered_proxy)}', 'Proxy')" style="margin:0;">Copy</button></div>
+             </div>`;
+           }
+        }else if(isMail){
+           detailsHtml = `<div class="hist-info-cell"><div class="hic-label">PAYMENT</div><div class="hic-value">${escapeHtml(o.method)} (${escapeHtml(o.number)})</div></div><div class="hist-info-cell"><div class="hic-label">ORDER STATUS</div><div class="hic-value">${escapeHtml(info.label)}</div></div>`;
+           if(os === 'approved' && o.delivered_mail){
+             const mailLines = String(o.delivered_mail).split('\n').filter(Boolean);
+             const mailRows = mailLines.map(line => `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;margin-bottom:6px;"><b style="font-size:11px;word-break:break-all;">${escapeHtml(line)}</b><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(line)}', 'Mail')" style="margin:0;flex-shrink:0;margin-left:8px;">Copy</button></div>`).join('');
+             detailsHtml += `<div style="grid-column:1/-1;background:rgba(244,114,182,.1);border:1px dashed #f472b6;border-radius:10px;padding:10px;margin-top:4px;">
+               <div style="font-size:9px;font-weight:900;color:#f472b6;margin-bottom:6px;text-transform:uppercase;">📧 Your Mail (${mailLines.length} pcs)</div>
+               ${mailRows}
              </div>`;
            }
         }else{
@@ -1892,8 +2599,179 @@
       }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = 'CONFIRM VPN ORDER →'; btn.disabled = false; });
     }
 
+    function openProxyModal(key){
+      if(guardBannedUser()) return;
+      const px = proxyConfigCache[key]; if(!px) return;
+      selProxyBrand = key; selProxyPlanName = ''; selProxyPlanPrice = 0; selProxyPayMethod = ''; selProxyPayNumberTarget = '';
+      $('proxy-checkout-title').textContent = px.name || key;
+
+      const plansContainer = $('proxy-plan-container'); plansContainer.innerHTML = '';
+      if(px.plans){
+         px.plans.forEach((p, idx) => {
+            if(p.name && p.price > 0){
+               plansContainer.innerHTML += `<div class="vpn-plan-card" onclick="selectProxyPlan('${escapeHtml(p.name)}', ${p.price})"><span>${escapeHtml(p.name)}</span><b>${money(p.price)}</b></div>`;
+            }
+         });
+      }else{ plansContainer.innerHTML = `<div style="color:var(--subtext);text-align:center;">No active plans available right now.</div>`; }
+
+      $('proxy-step-plans').classList.remove('hidden'); $('proxy-step-payment').classList.add('hidden');
+      $('proxy-checkout-modal').classList.add('active'); try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function selectProxyPlan(planName, price){
+      selProxyPlanName = planName; selProxyPlanPrice = price;
+      $('proxy-payable-amount').textContent = money(price);
+      $('proxy-step-plans').classList.add('hidden'); $('proxy-step-payment').classList.remove('hidden');
+      document.querySelectorAll('#proxy-pay-methods-grid .vpn-pay-card').forEach(c => c.classList.remove('active'));
+      $('proxy-pay-details').classList.add('hidden');
+      resetProxyProofInput();
+    }
+    function selectProxyPayMethod(key, targetNum){
+      selProxyPayMethod = key; selProxyPayNumberTarget = targetNum;
+      document.querySelectorAll('#proxy-pay-methods-grid .vpn-pay-card').forEach(c => {
+         if(c.dataset.payKey === key) c.classList.add('active'); else c.classList.remove('active');
+      });
+      $('proxy-pay-target').textContent = targetNum || 'N/A';
+      $('proxy-pay-details').classList.remove('hidden');
+      try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function resetProxyProofInput(){
+      proxyProofFileName = ''; proxyProofImageDataUrl = ''; proxyProofProcessing = false;
+      if($('proxy-proof-file')) $('proxy-proof-file').value = '';
+      if($('proxy-proof-preview')) $('proxy-proof-preview').classList.add('hidden');
+      if($('proxy-proof-preview-img')) $('proxy-proof-preview-img').removeAttribute('src');
+      if($('proxy-proof-select-btn')) $('proxy-proof-select-btn').textContent = '+ Upload Payment Screenshot';
+    }
+    async function handleProxyProofFileChange(e){
+      const file = e.target.files && e.target.files[0]; if(!file) return;
+      if(!/^image\//i.test(file.type || '')){ resetProxyProofInput(); showToast('Only image upload','error'); return; }
+      try{
+        proxyProofProcessing = true; proxyProofFileName = file.name || 'proxy_proof.jpg'; $('proxy-proof-select-btn').textContent = 'Processing...';
+        proxyProofImageDataUrl = await compressImageFile(file);
+        $('proxy-proof-preview-img').src = proxyProofImageDataUrl; $('proxy-proof-file-name').textContent = proxyProofFileName; $('proxy-proof-preview').classList.remove('hidden'); $('proxy-proof-select-btn').textContent = 'Change Screenshot'; showToast('Screenshot ready','success');
+      }catch(err){ resetProxyProofInput(); showToast('Process failed','error'); }finally{ proxyProofProcessing = false; }
+    }
+    function submitProxyOrder(){
+      if(submitting || !requireFirebase() || guardBannedUser()) return;
+      const numOrTrx = $('proxy-pay-trx').value.trim();
+      if(!selProxyBrand || !selProxyPlanName || !selProxyPayMethod){ showToast('Fill all fields correctly','error'); return; }
+      if(!numOrTrx){ showToast('Enter transaction ID','error'); return; }
+      if(requireProofTrxId){
+        if(!proxyProofImageDataUrl){ showToast('Upload payment proof screenshot','error'); return; }
+      }
+
+      submitting = true; const btn = $('submit-proxy-order-btn'); btn.textContent = '⏳ Submitting...'; btn.disabled = true;
+      const orderRef = db.ref('orders').push(); const orderId = orderRef.key;
+      const orderData = {
+        id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'proxy',
+        proxy_brand:selProxyBrand, proxy_plan:selProxyPlanName, payable:parseFloat(selProxyPlanPrice.toFixed(2)), method:selProxyPayMethod, number:numOrTrx, targetId:selProxyPayNumberTarget,
+        proof_image_url:proxyProofImageDataUrl, proof_file_name:proxyProofFileName, proof_uploaded:!!proxyProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+      };
+      orderRef.set(orderData).then(() => {
+        if(proxyProofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, proxyProofImageDataUrl, buildNewOrderMessage(orderData));
+        else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
+        sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
+        $('proxy-checkout-modal').classList.remove('active'); showToast('✓ Proxy Order Submitted!','success'); userSwitchTab('history-scr');
+      }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = 'CONFIRM PROXY ORDER →'; btn.disabled = false; });
+    }
+
+    function openMailModal(key){
+      if(guardBannedUser()) return;
+      const ml = mailConfigCache[key]; if(!ml) return;
+      selMailBrand = key; selMailUnitPrice = Number(ml.pricePerUnit || 0); selMailPayMethod = ''; selMailPayNumberTarget = '';
+      const stockCount = Object.keys(ml.stock || {}).length;
+      const minQty = Math.max(1, Number(ml.minQty || 1));
+      selMailQty = minQty;
+      $('mail-checkout-title').textContent = ml.name || key;
+      $('mail-qty-brand-name').textContent = ml.name || key;
+      $('mail-qty-unit-price').textContent = money(selMailUnitPrice);
+      $('mail-qty-stock-count').textContent = stockCount;
+      $('mail-qty-input').value = stockCount ? minQty : 0;
+      $('mail-qty-input').min = minQty;
+      $('mail-qty-input').max = stockCount || minQty;
+      updateMailQtyTotal();
+      $('mail-step-qty').classList.remove('hidden'); $('mail-step-payment').classList.add('hidden');
+      $('mail-checkout-modal').classList.add('active'); try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function updateMailQtyTotal(){
+      const ml = mailConfigCache[selMailBrand] || {};
+      const stockCount = Object.keys(ml.stock || {}).length;
+      const minQty = Math.max(1, Number(ml.minQty || 1));
+      let qty = Math.round(Number($('mail-qty-input').value || minQty));
+      if(!stockCount){ qty = 0; }
+      else{
+        if(qty < minQty) qty = minQty;
+        if(qty > stockCount) qty = stockCount;
+      }
+      $('mail-qty-input').value = qty;
+      selMailQty = qty;
+      $('mail-qty-total-amount').textContent = money(qty * selMailUnitPrice);
+    }
+    function stepMailQty(delta){
+      const cur = Number($('mail-qty-input').value || 1);
+      $('mail-qty-input').value = cur + delta;
+      updateMailQtyTotal();
+    }
+    function proceedMailToPayment(){
+      const ml = mailConfigCache[selMailBrand] || {};
+      const stockCount = Object.keys(ml.stock || {}).length;
+      if(!stockCount){ showToast('Out of stock right now','error'); return; }
+      if(selMailQty < 1){ showToast('Enter a valid quantity','error'); return; }
+      $('mail-payable-amount').textContent = money(selMailQty * selMailUnitPrice);
+      $('mail-step-qty').classList.add('hidden'); $('mail-step-payment').classList.remove('hidden');
+      document.querySelectorAll('#mail-pay-methods-grid .vpn-pay-card').forEach(c => c.classList.remove('active'));
+      $('mail-pay-details').classList.add('hidden');
+      resetMailProofInput();
+    }
+    function selectMailPayMethod(key, targetNum){
+      selMailPayMethod = key; selMailPayNumberTarget = targetNum;
+      document.querySelectorAll('#mail-pay-methods-grid .vpn-pay-card').forEach(c => {
+         if(c.dataset.payKey === key) c.classList.add('active'); else c.classList.remove('active');
+      });
+      $('mail-pay-target').textContent = targetNum || 'N/A';
+      $('mail-pay-details').classList.remove('hidden');
+      try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function resetMailProofInput(){
+      mailProofFileName = ''; mailProofImageDataUrl = ''; mailProofProcessing = false;
+      if($('mail-proof-file')) $('mail-proof-file').value = '';
+      if($('mail-proof-preview')) $('mail-proof-preview').classList.add('hidden');
+      if($('mail-proof-preview-img')) $('mail-proof-preview-img').removeAttribute('src');
+      if($('mail-proof-select-btn')) $('mail-proof-select-btn').textContent = '+ Upload Payment Screenshot';
+    }
+    async function handleMailProofFileChange(e){
+      const file = e.target.files && e.target.files[0]; if(!file) return;
+      if(!/^image\//i.test(file.type || '')){ resetMailProofInput(); showToast('Only image upload','error'); return; }
+      try{
+        mailProofProcessing = true; mailProofFileName = file.name || 'mail_proof.jpg'; $('mail-proof-select-btn').textContent = 'Processing...';
+        mailProofImageDataUrl = await compressImageFile(file);
+        $('mail-proof-preview-img').src = mailProofImageDataUrl; $('mail-proof-file-name').textContent = mailProofFileName; $('mail-proof-preview').classList.remove('hidden'); $('mail-proof-select-btn').textContent = 'Change Screenshot'; showToast('Screenshot ready','success');
+      }catch(err){ resetMailProofInput(); showToast('Process failed','error'); }finally{ mailProofProcessing = false; }
+    }
+    function submitMailOrder(){
+      if(submitting || !requireFirebase() || guardBannedUser()) return;
+      const numOrTrx = $('mail-pay-trx').value.trim();
+      if(!selMailBrand || selMailQty < 1 || !selMailPayMethod){ showToast('Fill all fields correctly','error'); return; }
+      if(!numOrTrx){ showToast('Enter transaction ID','error'); return; }
+      if(requireProofTrxId){
+        if(!mailProofImageDataUrl){ showToast('Upload payment proof screenshot','error'); return; }
+      }
+      submitting = true; const btn = $('submit-mail-order-btn'); btn.textContent = '⏳ Submitting...'; btn.disabled = true;
+      const orderRef = db.ref('orders').push(); const orderId = orderRef.key;
+      const orderData = {
+        id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'mail',
+        mail_brand:selMailBrand, mail_qty:selMailQty, payable:parseFloat((selMailQty*selMailUnitPrice).toFixed(2)), method:selMailPayMethod, number:numOrTrx, targetId:selMailPayNumberTarget,
+        proof_image_url:mailProofImageDataUrl, proof_file_name:mailProofFileName, proof_uploaded:!!mailProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+      };
+      orderRef.set(orderData).then(() => {
+        if(mailProofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, mailProofImageDataUrl, buildNewOrderMessage(orderData));
+        else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
+        sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
+        $('mail-checkout-modal').classList.remove('active'); showToast('✓ Mail Order Submitted!','success'); userSwitchTab('history-scr');
+      }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = 'CONFIRM MAIL ORDER →'; btn.disabled = false; });
+    }
+
     function userSwitchTab(screenId){
-      ['home-scr','vpn-scr','history-scr','tutorial-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
+      ['home-scr','vpn-scr','proxy-scr','mail-scr','history-scr','referral-scr','tutorial-scr','leaderboard-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
         const el = $(s); if(!el) return;
         const show = s === screenId;
         el.style.display = show ? 'block' : 'none';
@@ -1903,8 +2781,14 @@
       document.querySelectorAll('#user-nav .nav-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.screen === screenId));
       // Render payment settings page when switching to it
       if(screenId === 'payment-settings-scr') renderPaymentSettingsPage();
+      // Render leaderboard only when it's actually opened (lazy render = zero lag on other tabs)
+      if(screenId === 'leaderboard-scr') renderLeaderboard();
       // Refresh sell form cards when returning home (in case settings changed)
       if(screenId === 'home-scr') renderSellFormPaymentCards();
+      // Refresh referral card + proxy brand list on tab open
+      if(screenId === 'referral-scr') renderReferralCard();
+      if(screenId === 'proxy-scr') renderProxies(proxyConfigCache);
+      if(screenId === 'mail-scr') renderMails(mailConfigCache);
       try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
     }
     function openSafeLink(url){ const s = normalizeLink(url); if(!s){ showToast('Link not set.','error'); return; } window.open(s,'_blank','noopener,noreferrer'); }
@@ -1964,16 +2848,110 @@
         $('stat-pending').textContent = cnt.pending; $('cnt-pending').textContent = cnt.pending; $('cnt-completed').textContent = cnt.approved; $('cnt-rejected').textContent = cnt.rejected; if($('cnt-payment')) $('cnt-payment').textContent = cnt.payment;
         if(currentAdminTab !== 'settings') renderAdminOrders(); renderUserTrackingSystem();
       });
-      db.ref('users').on('value', snap => { userRegistryCache = snap.val() || {}; renderUserTrackingSystem(); });
+      db.ref('users').on('value', snap => { userRegistryCache = snap.val() || {}; renderUserTrackingSystem(); updateReferralOverviewStats(); });
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderAdminCoins(marketCache); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderAdminVpns(vpnConfigCache); });
+      db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderAdminProxies(proxyConfigCache); });
+      db.ref('mailConfig').on('value', snap => { mailConfigCache = snap.val() || {}; renderAdminMails(mailConfigCache); });
       db.ref('paymentMethods').on('value', snap => { paymentMethodsCache = snap.val() || {}; renderAdminCoinPayments(paymentMethodsCache); });
       db.ref('vpnPaymentMethods').on('value', snap => { vpnPaymentMethodsCache = snap.val() || {}; renderAdminVpnPayments(vpnPaymentMethodsCache); });
+      db.ref('proxyPaymentMethods').on('value', snap => { proxyPaymentMethodsCache = snap.val() || {}; renderAdminProxyPayments(proxyPaymentMethodsCache); });
       db.ref('tutorialVideos').on('value', snap => { tutorialCache = snap.val() || {}; renderAdminTutorials(tutorialCache); });
       db.ref('settings/branding').on('value', snap => { const b = snap.val() || {}; $('site-name').value = normalizeBrandName(b.siteName || APP_DEFAULT_NAME); });
       db.ref('settings/links').on('value', snap => { const l = snap.val() || {}; $('link-channel').value = l.channel || ''; $('link-help').value = l.help || ''; });
       db.ref('settings/disclaimer').on('value', snap => { disclaimerNoticeValue = normalizeDisclaimerNotice(typeof snap.val() === 'string' ? snap.val() : snap.val()?.noticeText); renderDisclaimerNotice(); });
       db.ref('settings/requireProofTrxId').on('value', snap => { const v = snap.val() !== false; requireProofTrxId = v; if($('require-proof-trx-toggle')) $('require-proof-trx-toggle').checked = v; applyProofRequirementUI(); });
+      db.ref('withdrawals').on('value', snap => {
+        withdrawalsCache = snap.val() || {};
+        const pendingCount = Object.values(withdrawalsCache).filter(w => w.status === 'pending').length;
+        if($('cnt-withdraw')) $('cnt-withdraw').textContent = pendingCount;
+        if(currentAdminTab === 'withdraw') renderAdminWithdrawals();
+        updateReferralOverviewStats();
+      });
+      db.ref('settings/referral').on('value', snap => {
+        const r = snap.val() || {};
+        referralSettingsCache = r;
+        if($('ref-amount-per-referral') && document.activeElement !== $('ref-amount-per-referral')) $('ref-amount-per-referral').value = r.amountPerReferral || '';
+        if($('ref-min-withdraw') && document.activeElement !== $('ref-min-withdraw')) $('ref-min-withdraw').value = r.minWithdraw || '';
+      });
+      db.ref('settings/forceJoinChannels').on('value', snap => { forceJoinChannelsCache = snap.val() || {}; renderAdminForceJoin(forceJoinChannelsCache); });
+    }
+
+    function updateReferralOverviewStats(){
+      const users = Object.values(userRegistryCache || {});
+      const totalReferrers = users.filter(u => Number(u.referralCount || 0) > 0).length;
+      const totalPaid = Object.values(withdrawalsCache || {}).filter(w => w.status === 'approved').reduce((s,w) => s + Number(w.amount||0), 0);
+      if($('ref-total-referrers')) $('ref-total-referrers').textContent = totalReferrers;
+      if($('ref-total-paid')) $('ref-total-paid').textContent = money(totalPaid);
+    }
+
+    function renderAdminWithdrawals(){
+      const q = $('withdraw-search') ? $('withdraw-search').value.trim().toLowerCase() : '';
+      const filter = $('withdraw-filter') ? $('withdraw-filter').value : 'pending';
+      let arr = Object.values(withdrawalsCache || {}).filter(w => {
+        if(filter !== 'all' && String(w.status||'pending') !== filter) return false;
+        if(q) return `${w.user||''} ${w.username||''} ${w.method||''} ${w.number||''}`.toLowerCase().includes(q);
+        return true;
+      }).sort((a,b) => Number(b.created_at||0) - Number(a.created_at||0));
+      if(!arr.length){ $('order-list').innerHTML = '<div class="empty-state">No withdrawal requests</div>'; return; }
+      $('order-list').innerHTML = arr.map((w,i) => {
+        const status = String(w.status || 'pending');
+        const displayName = w.username && w.username !== 'no_username' ? '@' + w.username : (w.user || '—');
+        let actionBtns = '';
+        if(status === 'pending'){
+          actionBtns = `<button class="btn-accept" type="button" onclick="approveWithdrawal('${escapeHtml(w.id)}')">✓ Approve</button><button class="btn-reject" type="button" onclick="rejectWithdrawal('${escapeHtml(w.id)}')">✗ Reject & Refund</button>`;
+        }
+        return `<div class="order-card ${status}" style="animation-delay:${i*.04}s;">
+          <div class="order-header"><div><div class="order-user">${escapeHtml(displayName)}</div><div class="order-id">#${escapeHtml(String(w.id).slice(-7))}</div></div><span class="order-badge badge-${status}">${status.toUpperCase()}</span></div>
+          <div class="info-grid">
+            <div class="info-cell"><small>AMOUNT</small><b style="color:var(--emerald);font-size:14px;">${money(w.amount)}</b></div>
+            <div class="info-cell"><small>METHOD</small><b>${escapeHtml(w.method)}</b></div>
+            <div class="info-cell" style="grid-column:1/-1;"><small>PAYMENT NUMBER</small><b style="cursor:pointer;color:var(--sky-dark);display:inline-flex;align-items:center;gap:4px;" onclick="copyTextValue('${escapeHtml(w.number)}','Payment Number')" title="Click to Copy">${escapeHtml(w.number)} <span>⧉</span></b></div>
+          </div>
+          <div class="order-actions">${actionBtns}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function approveWithdrawal(id){
+      const w = withdrawalsCache[id]; if(!w) return;
+      adminConfirm('Approve Withdrawal?', `Confirm you have sent ${money(w.amount)} to ${w.method} - ${w.number}.`, '✅', () => {
+        db.ref('withdrawals/'+id).update({status:'approved', processed_at:firebase.database.ServerValue.TIMESTAMP}).then(() => {
+          if(w.telegram_chat_id) sendTelegramMessage(w.telegram_chat_id, `✅ <b>উইথড্র অনুমোদিত হয়েছে</b>\n\n💰 <b>পরিমাণ:</b> ${Number(w.amount).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(w.method)}\n📱 <b>নম্বর:</b> ${tgEscape(w.number)}\n\nআপনার পেমেন্ট পাঠানো হয়েছে, চেক করুন।`);
+          showToast('Withdrawal Approved','success'); renderAdminWithdrawals();
+        });
+      });
+    }
+    function rejectWithdrawal(id){
+      const w = withdrawalsCache[id]; if(!w) return;
+      adminConfirm('Reject Withdrawal?', 'The amount will be refunded back to the user\'s referral balance.', '❌', () => {
+        db.ref('users/'+w.userKey+'/referralBalance').transaction(cur => (Number(cur)||0) + Number(w.amount||0)).then(() => {
+          db.ref('withdrawals/'+id).update({status:'rejected', processed_at:firebase.database.ServerValue.TIMESTAMP}).then(() => {
+            if(w.telegram_chat_id) sendTelegramMessage(w.telegram_chat_id, `❌ <b>উইথড্র বাতিল হয়েছে</b>\n\n💰 <b>পরিমাণ:</b> ${Number(w.amount).toFixed(2)}৳ আপনার রেফারেল ব্যালেন্সে ফেরত দেওয়া হয়েছে।\n\nবিস্তারিত জানতে সাপোর্টে যোগাযোগ করুন।`);
+            showToast('Rejected & Refunded','warning'); renderAdminWithdrawals();
+          });
+        });
+      });
+    }
+
+    function renderAdminForceJoin(data){
+      const entries = Object.entries(data || {});
+      if(!$('fj-list')) return;
+      $('fj-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">📢 ${escapeHtml(v.name||key)}<br><small style="font-weight:600;color:var(--subtext);">${escapeHtml(v.chatId||'')}</small></div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('settings/forceJoinChannels/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('settings/forceJoinChannels/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No channels added</div>';
+    }
+    function addForceJoinChannel(){
+      const n = $('new-fj-name').value.trim(), link = $('new-fj-link').value.trim(), rawChat = $('new-fj-chatid').value.trim();
+      if(!n || !rawChat){ showToast('Enter channel name and chat ID/username','error'); return; }
+      const chatId = normalizeChannelChatId(rawChat);
+      const key = safeDbKey(n);
+      db.ref('settings/forceJoinChannels/'+key).set({ name:n, link: normalizeLink(link || rawChat), chatId, status:true }).then(() => {
+        $('new-fj-name').value=''; $('new-fj-link').value=''; $('new-fj-chatid').value='';
+        showToast('Channel Added','success');
+      });
+    }
+    function saveReferralSettings(){
+      const amt = Number($('ref-amount-per-referral').value || 0), minW = Number($('ref-min-withdraw').value || 0);
+      db.ref('settings/referral').set({ amountPerReferral: amt, minWithdraw: minW }).then(() => showToast('Saved','success'));
     }
     
     function adminSwitchTab(tab){
@@ -1981,7 +2959,8 @@
       const isSet = tab === 'settings'; $('order-section').style.display = isSet ? 'none' : 'block'; $('settings-section').style.display = isSet ? 'block' : 'none';
       $('order-section').classList.add('no-replay-anim'); $('settings-section').classList.add('no-replay-anim');
       if($('payment-tools')) $('payment-tools').classList.toggle('hidden', tab !== 'payment');
-      if(isSet){ openSettingsMain(); }else{ renderAdminOrders(); }
+      if($('withdraw-tools')) $('withdraw-tools').classList.toggle('hidden', tab !== 'withdraw');
+      if(isSet){ openSettingsMain(); }else if(tab === 'withdraw'){ renderAdminWithdrawals(); }else{ renderAdminOrders(); }
     }
     function openSettingsMain(){ $('settings-main-page').classList.remove('hidden'); document.querySelectorAll('.settings-module-page').forEach(p => p.classList.add('hidden')); }
     function openSettingsModule(key){
@@ -2006,13 +2985,15 @@
       
       if(!arr.length){ $('order-list').innerHTML = `<div class="empty-state">No orders here</div>`; return; }
       $('order-list').innerHTML = arr.map((o,i) => {
-        const os = getOrderStatus(o), ps = getPaymentStatus(o), isVpn = o.order_type === 'vpn';
+        const os = getOrderStatus(o), ps = getPaymentStatus(o), isVpn = o.order_type === 'vpn', isProxy = o.order_type === 'proxy', isMail = o.order_type === 'mail';
         const displayName = o.username && o.username !== 'no_username' ? '@' + o.username : (o.user || '—');
         const cardClass = currentAdminTab === 'payment' ? (ps === 'paid' ? 'paid' : 'payment') : os;
         
         let actionBtns = '';
         if(os === 'pending'){
-           if(isVpn){ actionBtns = `<button class="btn-accept" type="button" onclick="openStockDeliveryModal('${escapeHtml(o.id)}', '${escapeHtml(o.vpn_brand)}')">📦 Deliver Account</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
+           if(isVpn){ actionBtns = `<button class="btn-accept" type="button" onclick="openStockDeliveryModal('${escapeHtml(o.id)}', '${escapeHtml(o.vpn_brand)}', 'vpn')">📦 Deliver Account</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
+           else if(isProxy){ actionBtns = `<button class="btn-accept" type="button" onclick="openStockDeliveryModal('${escapeHtml(o.id)}', '${escapeHtml(o.proxy_brand)}', 'proxy')">📦 Deliver Proxy</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
+           else if(isMail){ actionBtns = `<button class="btn-accept" type="button" onclick="deliverMailOrder('${escapeHtml(o.id)}')">📧 Deliver Mail (${Number(o.mail_qty||0)})</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
            else{ actionBtns = `<button class="btn-accept" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','approved')">✓ Approve</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
         }
         if(currentAdminTab === 'payment' && os === 'approved' && ps === 'pending'){
@@ -2025,6 +3006,16 @@
         let gridHtml = '';
         if(isVpn){
             gridHtml += `<div class="info-cell"><small>VPN / PLAN</small><b>${escapeHtml(o.vpn_brand)} - ${escapeHtml(o.vpn_plan)}</b></div>`;
+            gridHtml += `<div class="info-cell"><small>METHOD</small><b>${escapeHtml(o.method)}</b></div>`;
+            gridHtml += `<div class="info-cell"><small>PAYMENT NUMBER</small><b style="cursor:pointer; color:var(--sky-dark); display:inline-flex; align-items:center; gap:4px;" onclick="copyTextValue('${escapeHtml(o.number)}', 'Payment Number')" title="Click to Copy">${escapeHtml(o.number)} <span>⧉</span></b></div>`;
+            gridHtml += `<div class="info-cell"><small>TARGET ID</small><b>${escapeHtml(o.targetId || '—')}</b></div>`;
+        } else if(isProxy){
+            gridHtml += `<div class="info-cell"><small>PROXY / PLAN</small><b>${escapeHtml(o.proxy_brand)} - ${escapeHtml(o.proxy_plan)}</b></div>`;
+            gridHtml += `<div class="info-cell"><small>METHOD</small><b>${escapeHtml(o.method)}</b></div>`;
+            gridHtml += `<div class="info-cell"><small>PAYMENT NUMBER</small><b style="cursor:pointer; color:var(--sky-dark); display:inline-flex; align-items:center; gap:4px;" onclick="copyTextValue('${escapeHtml(o.number)}', 'Payment Number')" title="Click to Copy">${escapeHtml(o.number)} <span>⧉</span></b></div>`;
+            gridHtml += `<div class="info-cell"><small>TARGET ID</small><b>${escapeHtml(o.targetId || '—')}</b></div>`;
+        } else if(isMail){
+            gridHtml += `<div class="info-cell"><small>MAIL / QTY</small><b>${escapeHtml(o.mail_brand)} - ${Number(o.mail_qty||0)} pcs</b></div>`;
             gridHtml += `<div class="info-cell"><small>METHOD</small><b>${escapeHtml(o.method)}</b></div>`;
             gridHtml += `<div class="info-cell"><small>PAYMENT NUMBER</small><b style="cursor:pointer; color:var(--sky-dark); display:inline-flex; align-items:center; gap:4px;" onclick="copyTextValue('${escapeHtml(o.number)}', 'Payment Number')" title="Click to Copy">${escapeHtml(o.number)} <span>⧉</span></b></div>`;
             gridHtml += `<div class="info-cell"><small>TARGET ID</small><b>${escapeHtml(o.targetId || '—')}</b></div>`;
@@ -2062,27 +3053,35 @@
       }); 
     }
 
-    function openStockDeliveryModal(orderId, brandKey){
-       deliveryTargetOrderId = orderId; deliveryTargetVpnBrand = brandKey;
-       const stockObj = (vpnConfigCache[brandKey] || {}).stock || {};
+    function openStockDeliveryModal(orderId, brandKey, type){
+       deliveryTargetOrderId = orderId; deliveryTargetVpnBrand = brandKey; deliveryTargetType = type || 'vpn';
+       const cache = deliveryTargetType === 'proxy' ? proxyConfigCache : vpnConfigCache;
+       const stockObj = (cache[brandKey] || {}).stock || {};
        const stockKeys = Object.keys(stockObj);
-       const listHtml = stockKeys.length ? stockKeys.map(sk => `<div class="user-row"><div style="display:flex;flex-direction:column;"><b style="font-size:12px;">${escapeHtml(stockObj[sk].email)}</b><span style="font-size:10px;color:var(--subtext);">${escapeHtml(stockObj[sk].pass)}</span></div><button class="btn-action btn-emerald" style="width:auto;padding:8px 12px;font-size:11px;" onclick="approveAndDeliverVpn('${orderId}', '${brandKey}', '${sk}')">Deliver</button></div>`).join('') : '<div class="empty-state">No stock available. Please add stock in settings.</div>';
+       let listHtml;
+       if(deliveryTargetType === 'proxy'){
+          listHtml = stockKeys.length ? stockKeys.map(sk => `<div class="user-row"><div style="display:flex;flex-direction:column;"><b style="font-size:12px;">${escapeHtml(stockObj[sk].value)}</b></div><button class="btn-action btn-emerald" style="width:auto;padding:8px 12px;font-size:11px;" onclick="approveAndDeliverStock('${orderId}', '${brandKey}', '${sk}', 'proxy')">Deliver</button></div>`).join('') : '<div class="empty-state">No stock available. Please add stock in settings.</div>';
+       } else {
+          listHtml = stockKeys.length ? stockKeys.map(sk => `<div class="user-row"><div style="display:flex;flex-direction:column;"><b style="font-size:12px;">${escapeHtml(stockObj[sk].email)}</b><span style="font-size:10px;color:var(--subtext);">${escapeHtml(stockObj[sk].pass)}</span></div><button class="btn-action btn-emerald" style="width:auto;padding:8px 12px;font-size:11px;" onclick="approveAndDeliverStock('${orderId}', '${brandKey}', '${sk}', 'vpn')">Deliver</button></div>`).join('') : '<div class="empty-state">No stock available. Please add stock in settings.</div>';
+       }
        $('admin-stock-select-list').innerHTML = listHtml;
        $('admin-stock-modal').classList.add('active');
     }
-    function approveAndDeliverVpn(orderId, brandKey, stockKey){
-       const order = globalOrders[orderId], stockItem = ((vpnConfigCache[brandKey] || {}).stock || {})[stockKey];
+    function approveAndDeliverStock(orderId, brandKey, stockKey, type){
+       const t = type || 'vpn';
+       const cache = t === 'proxy' ? proxyConfigCache : vpnConfigCache;
+       const cfgPath = t === 'proxy' ? 'proxyConfig' : 'vpnConfig';
+       const order = globalOrders[orderId], stockItem = ((cache[brandKey] || {}).stock || {})[stockKey];
        if(!order || !stockItem) return;
-       const patch = {
-          order_status: 'approved', status: 'completed', payment_status: 'pending', approved_at: firebase.database.ServerValue.TIMESTAMP,
-          delivered_email: stockItem.email, delivered_pass: stockItem.pass
-       };
+       const patch = t === 'proxy'
+          ? { order_status: 'approved', status: 'completed', payment_status: 'pending', approved_at: firebase.database.ServerValue.TIMESTAMP, delivered_proxy: stockItem.value }
+          : { order_status: 'approved', status: 'completed', payment_status: 'pending', approved_at: firebase.database.ServerValue.TIMESTAMP, delivered_email: stockItem.email, delivered_pass: stockItem.pass };
        Object.assign(order, patch); // update local order object for telegram
        db.ref('orders/'+orderId).update(patch).then(() => {
-          db.ref(`vpnConfig/${brandKey}/stock/${stockKey}`).remove();
+          db.ref(`${cfgPath}/${brandKey}/stock/${stockKey}`).remove();
           $('admin-stock-modal').classList.remove('active');
           sendUserTelegramMessage(order, buildOrderStatusMessage(order, 'approved'));
-          renderAdminOrders(); showToast('VPN Delivered!','success'); adminSwitchTab('approved');
+          renderAdminOrders(); showToast(t === 'proxy' ? 'Proxy Delivered!' : 'VPN Delivered!','success'); adminSwitchTab('approved');
        });
     }
 
@@ -2227,6 +3226,88 @@
       db.ref(`vpnConfig/${brandKey}/stock`).push({email:em, pass:ps}).then(()=>{ showToast('Stock Added','success'); });
     }
 
+    function renderAdminProxies(data){
+      const entries = Object.entries(data || {});
+      $('adm-proxy-list').innerHTML = entries.map(([key,v]) => {
+         let plansHtml = (v.plans || []).map((p, idx) => `<div class="form-row2" style="margin-bottom:8px;"><input type="text" class="form-input" placeholder="Plan Name" value="${escapeHtml(p.name||'')}" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/plans/${idx}/name', this.value)"><input type="number" class="form-input" placeholder="Price" value="${p.price||''}" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/plans/${idx}/price', Number(this.value))"></div>`).join('');
+         if(!(v.plans && v.plans.length >= 2)){
+            const startIdx = v.plans ? v.plans.length : 0;
+            for(let idx=startIdx; idx<2; idx++) {
+               plansHtml += `<div class="form-row2" style="margin-bottom:8px;"><input type="text" class="form-input" placeholder="Plan Name" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/plans/${idx}/name', this.value)"><input type="number" class="form-input" placeholder="Price" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/plans/${idx}/price', Number(this.value))"></div>`;
+            }
+         }
+
+         const stockList = Object.keys(v.stock||{}).map(sk => `<div class="user-row" style="padding:6px 10px;"><div style="font-size:10px;"><b>${escapeHtml(v.stock[sk].value)}</b></div><button class="del-btn" onclick="db.ref('proxyConfig/${escapeHtml(key)}/stock/${escapeHtml(sk)}').remove()">DEL</button></div>`).join('');
+
+         return `<div class="coin-box ${v.status===false?'offline':''}"><div class="coin-box-header"><div class="coin-name-row">${v.logo ? `<img src="${escapeHtml(v.logo)}" class="coin-logo-sm">` : '<span>🛰️</span>'}<span class="coin-key">${escapeHtml(v.name||key)}</span></div><label class="switch"><input type="checkbox" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label></div><div style="font-size:10px;font-weight:900;color:var(--sky-dark);margin-bottom:6px;">PROXY PLANS</div>${plansHtml}<div class="add-form" style="margin-top:12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:900;color:var(--purple);margin-bottom:6px;">ADD STOCK</div><div style="display:flex;gap:6px;margin-bottom:8px;"><button type="button" class="btn-action btn-blue" style="padding:7px;font-size:9px;margin:0;" onclick="document.getElementById('px-single-${escapeHtml(key)}').classList.remove('hidden');document.getElementById('px-bulk-${escapeHtml(key)}').classList.add('hidden');">Single Field</button><button type="button" class="btn-action btn-cyan" style="padding:7px;font-size:9px;margin:0;" onclick="document.getElementById('px-single-${escapeHtml(key)}').classList.add('hidden');document.getElementById('px-bulk-${escapeHtml(key)}').classList.remove('hidden');">Bulk Box</button></div><div id="px-single-${escapeHtml(key)}"><input type="text" id="px-val-${escapeHtml(key)}" class="form-input" placeholder="Proxy (ip:port:user:pass)" style="margin-bottom:8px;"><button class="btn-action btn-cyan" style="padding:8px;font-size:10px;" onclick="addProxyStockItem('${escapeHtml(key)}')">+ Add One to Stock</button></div><div id="px-bulk-${escapeHtml(key)}" class="hidden"><textarea id="px-bulk-val-${escapeHtml(key)}" class="form-input admin-textarea" placeholder="Paste multiple proxies, one per line..." style="min-height:90px;margin-bottom:8px;"></textarea><button class="btn-action btn-cyan" style="padding:8px;font-size:10px;" onclick="addProxyStockBulk('${escapeHtml(key)}')">+ Add All Lines to Stock</button></div></div>${stockList}<button class="btn-action btn-danger" type="button" style="margin-top:8px;padding:9px;" onclick="db.ref('proxyConfig/${escapeHtml(key)}').remove()">Remove Brand</button></div>`;
+      }).join('') || '<div class="empty-state">No Proxy Brands added</div>';
+    }
+
+    function addProxyStockItem(brandKey){
+      const val = $(`px-val-${brandKey}`).value.trim();
+      if(!val){ showToast('Enter a proxy value','error'); return; }
+      db.ref(`proxyConfig/${brandKey}/stock`).push({value:val}).then(()=>{ $(`px-val-${brandKey}`).value=''; showToast('Stock Added','success'); });
+    }
+    function addProxyStockBulk(brandKey){
+      const raw = $(`px-bulk-val-${brandKey}`).value;
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      if(!lines.length){ showToast('Paste at least one line','error'); return; }
+      const updates = {};
+      lines.forEach(line => { const k = db.ref(`proxyConfig/${brandKey}/stock`).push().key; updates[k] = {value: line}; });
+      db.ref(`proxyConfig/${brandKey}/stock`).update(updates).then(()=>{ $(`px-bulk-val-${brandKey}`).value=''; showToast(`${lines.length} Stock Items Added`,'success'); });
+    }
+
+    function renderAdminMails(data){
+      const entries = Object.entries(data || {});
+      $('adm-mail-list').innerHTML = entries.map(([key,v]) => {
+         const stockCount = Object.keys(v.stock||{}).length;
+         const stockList = Object.keys(v.stock||{}).map(sk => `<div class="user-row" style="padding:6px 10px;"><div style="font-size:10px;"><b>${escapeHtml(v.stock[sk].value)}</b></div><button class="del-btn" onclick="db.ref('mailConfig/${escapeHtml(key)}/stock/${escapeHtml(sk)}').remove()">DEL</button></div>`).join('');
+
+         return `<div class="coin-box ${v.status===false?'offline':''}"><div class="coin-box-header"><div class="coin-name-row">${v.logo ? `<img src="${escapeHtml(v.logo)}" class="coin-logo-sm">` : '<span>📧</span>'}<span class="coin-key">${escapeHtml(v.name||key)}</span></div><label class="switch"><input type="checkbox" onchange="updateDbField('mailConfig/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label></div><div class="form-row2" style="margin-bottom:8px;"><input type="number" class="form-input" placeholder="Price Per Piece" value="${v.pricePerUnit||''}" step="0.01" onchange="updateDbField('mailConfig/${escapeHtml(key)}/pricePerUnit', Number(this.value))"><input type="number" class="form-input" placeholder="Min Qty" value="${v.minQty||1}" onchange="updateDbField('mailConfig/${escapeHtml(key)}/minQty', Number(this.value))"></div><div style="font-size:10px;font-weight:900;color:var(--sky-dark);margin-bottom:6px;">STOCK: ${stockCount} PIECE(S) AVAILABLE</div><div class="add-form" style="margin-top:12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:900;color:var(--purple);margin-bottom:6px;">ADD STOCK</div><div style="display:flex;gap:6px;margin-bottom:8px;"><button type="button" class="btn-action btn-blue" style="padding:7px;font-size:9px;margin:0;" onclick="document.getElementById('ml-single-${escapeHtml(key)}').classList.remove('hidden');document.getElementById('ml-bulk-${escapeHtml(key)}').classList.add('hidden');">Single Field</button><button type="button" class="btn-action btn-cyan" style="padding:7px;font-size:9px;margin:0;" onclick="document.getElementById('ml-single-${escapeHtml(key)}').classList.add('hidden');document.getElementById('ml-bulk-${escapeHtml(key)}').classList.remove('hidden');">Bulk Box</button></div><div id="ml-single-${escapeHtml(key)}"><input type="text" id="ml-val-${escapeHtml(key)}" class="form-input" placeholder="Mail (email:pass)" style="margin-bottom:8px;"><button class="btn-action btn-cyan" style="padding:8px;font-size:10px;" onclick="addMailStockItem('${escapeHtml(key)}')">+ Add One to Stock</button></div><div id="ml-bulk-${escapeHtml(key)}" class="hidden"><textarea id="ml-bulk-val-${escapeHtml(key)}" class="form-input admin-textarea" placeholder="Paste multiple mails, one per line..." style="min-height:90px;margin-bottom:8px;"></textarea><button class="btn-action btn-cyan" style="padding:8px;font-size:10px;" onclick="addMailStockBulk('${escapeHtml(key)}')">+ Add All Lines to Stock</button></div></div>${stockList}<button class="btn-action btn-danger" type="button" style="margin-top:8px;padding:9px;" onclick="db.ref('mailConfig/${escapeHtml(key)}').remove()">Remove Brand</button></div>`;
+      }).join('') || '<div class="empty-state">No Mail Brands added</div>';
+    }
+
+    function addMailStockItem(brandKey){
+      const val = $(`ml-val-${brandKey}`).value.trim();
+      if(!val){ showToast('Enter a mail value','error'); return; }
+      db.ref(`mailConfig/${brandKey}/stock`).push({value:val}).then(()=>{ $(`ml-val-${brandKey}`).value=''; showToast('Stock Added','success'); });
+    }
+    function addMailStockBulk(brandKey){
+      const raw = $(`ml-bulk-val-${brandKey}`).value;
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      if(!lines.length){ showToast('Paste at least one line','error'); return; }
+      const updates = {};
+      lines.forEach(line => { const k = db.ref(`mailConfig/${brandKey}/stock`).push().key; updates[k] = {value: line}; });
+      db.ref(`mailConfig/${brandKey}/stock`).update(updates).then(()=>{ $(`ml-bulk-val-${brandKey}`).value=''; showToast(`${lines.length} Stock Items Added`,'success'); });
+    }
+
+    function deliverMailOrder(orderId){
+      const order = globalOrders[orderId]; if(!order) return;
+      const brandKey = order.mail_brand, qty = Number(order.mail_qty || 0);
+      const ml = mailConfigCache[brandKey] || {};
+      const stockKeys = Object.keys(ml.stock || {});
+      if(stockKeys.length < qty){ showToast(`Not enough stock (have ${stockKeys.length}, need ${qty})`,'error'); return; }
+      adminConfirm('Deliver Mail?', `This will pull ${qty} piece(s) from stock and mark the order approved.`, '📧', () => {
+        const takeKeys = stockKeys.slice(0, qty);
+        const deliveredValues = takeKeys.map(k => ml.stock[k].value);
+        const patch = { order_status:'approved', status:'completed', payment_status:'pending', approved_at:firebase.database.ServerValue.TIMESTAMP, delivered_mail: deliveredValues.join('\n') };
+        Object.assign(order, patch);
+        db.ref('orders/'+orderId).update(patch).then(() => {
+          const removeUpdates = {}; takeKeys.forEach(k => { removeUpdates[k] = null; });
+          db.ref(`mailConfig/${brandKey}/stock`).update(removeUpdates);
+          sendUserTelegramMessage(order, buildOrderStatusMessage(order, 'approved'));
+          renderAdminOrders(); showToast('Mail Delivered!','success'); adminSwitchTab('approved');
+        });
+      });
+    }
+
+    function addMailBrand(){
+      const n = $('ml-name').value.trim(), key = safeDbKey(n).toUpperCase();
+      if(!n){ showToast('Enter Brand Name','error'); return; }
+      const price = Number($('ml-price').value || 0), minQty = Math.max(1, Number($('ml-minqty').value || 1));
+      db.ref('mailConfig/'+key).set({ name:n, logo:mailLogoDataUrl, status:true, pricePerUnit:price, minQty }).then(() => { $('ml-name').value=''; $('ml-price').value=''; $('ml-minqty').value=''; $('ml-logo-preview').classList.add('hidden'); mailLogoDataUrl=''; showToast('Mail Brand Added','success'); });
+    }
+
     function renderAdminCoinPayments(data){
       const entries = Object.entries(data || {});
       $('payment-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">${v.logo?`<img src="${escapeHtml(v.logo)}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">`:''} ${escapeHtml(key)}</div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('paymentMethods/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('paymentMethods/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No methods added</div>';
@@ -2235,6 +3316,11 @@
     function renderAdminVpnPayments(data){
       const entries = Object.entries(data || {});
       $('vpn-payment-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">${v.logo?`<img src="${escapeHtml(v.logo)}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">`:''} ${escapeHtml(key)}</div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('vpnPaymentMethods/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('vpnPaymentMethods/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No methods added</div>';
+    }
+
+    function renderAdminProxyPayments(data){
+      const entries = Object.entries(data || {});
+      $('proxy-payment-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">${v.logo?`<img src="${escapeHtml(v.logo)}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">`:''} ${escapeHtml(key)}</div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('proxyPaymentMethods/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('proxyPaymentMethods/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No methods added</div>';
     }
 
     function renderAdminTutorials(data){
@@ -2254,6 +3340,9 @@
         if(dataUrlVarName === 'vpnLogoDataUrl') vpnLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'payLogoDataUrl') payLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'vpnPayLogoDataUrl') vpnPayLogoDataUrl = dataUrl;
+        if(dataUrlVarName === 'proxyLogoDataUrl') proxyLogoDataUrl = dataUrl;
+        if(dataUrlVarName === 'proxyPayLogoDataUrl') proxyPayLogoDataUrl = dataUrl;
+        if(dataUrlVarName === 'mailLogoDataUrl') mailLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'cLogoDataUrl') cLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'editCLogoDataUrl') editCLogoDataUrl = dataUrl;
         return dataUrl;
@@ -2284,6 +3373,12 @@
       if(!n){ showToast('Enter Brand Name','error'); return; }
       db.ref('vpnConfig/'+key).set({ name:n, logo:vpnLogoDataUrl, status:true, plans: [{name:'',price:0},{name:'',price:0}] }).then(()=>{ $('v-name').value=''; $('v-logo-preview').classList.add('hidden'); vpnLogoDataUrl=''; showToast('VPN Added','success'); });
     }
+
+    function addProxyBrand(){
+      const n = $('px-name').value.trim(), key = safeDbKey(n).toUpperCase();
+      if(!n){ showToast('Enter Brand Name','error'); return; }
+      db.ref('proxyConfig/'+key).set({ name:n, logo:proxyLogoDataUrl, status:true, plans: [{name:'',price:0},{name:'',price:0}] }).then(()=>{ $('px-name').value=''; $('px-logo-preview').classList.add('hidden'); proxyLogoDataUrl=''; showToast('Proxy Brand Added','success'); });
+    }
     
     function addPaymentMethod(){
       const n = $('new-pay').value.trim(), num = $('new-pay-num').value.trim(), key = safeDbKey(n);
@@ -2295,6 +3390,12 @@
       const n = $('new-vpn-pay').value.trim(), num = $('new-vpn-pay-num').value.trim(), key = safeDbKey(n);
       if(!n){ showToast('Enter method name','error'); return; }
       db.ref('vpnPaymentMethods/'+key).set({ status:true, number:num, logo:vpnPayLogoDataUrl }).then(()=>{ $('new-vpn-pay').value=''; $('new-vpn-pay-num').value=''; $('vpn-p-logo-preview').classList.add('hidden'); vpnPayLogoDataUrl=''; showToast('Method Added','success'); });
+    }
+
+    function addProxyPaymentMethod(){
+      const n = $('new-proxy-pay').value.trim(), num = $('new-proxy-pay-num').value.trim(), key = safeDbKey(n);
+      if(!n){ showToast('Enter method name','error'); return; }
+      db.ref('proxyPaymentMethods/'+key).set({ status:true, number:num, logo:proxyPayLogoDataUrl }).then(()=>{ $('new-proxy-pay').value=''; $('new-proxy-pay-num').value=''; $('proxy-p-logo-preview').classList.add('hidden'); proxyPayLogoDataUrl=''; showToast('Method Added','success'); });
     }
 
     /* ===== DRAG-TO-REORDER FOR ADMIN COIN LIST ===== */
@@ -2380,8 +3481,9 @@
       $('help-btn').addEventListener('click', () => openSafeLink(helpLinkValue));
       $('channel-btn').addEventListener('click', () => openSafeLink(channelLinkValue));
       $('open-vpn-btn').addEventListener('click', () => userSwitchTab('vpn-scr'));
+      if($('open-proxy-btn')) $('open-proxy-btn').addEventListener('click', () => userSwitchTab('proxy-scr'));
+      if($('open-mail-btn')) $('open-mail-btn').addEventListener('click', () => userSwitchTab('mail-scr'));
       $('open-payment-settings-btn').addEventListener('click', () => userSwitchTab('payment-settings-scr'));
-      $('open-devinfo-btn').addEventListener('click', () => userSwitchTab('dev-info-scr'));
       $('admin-btn').addEventListener('click', showAdminPanel);
       $('return-user-btn').addEventListener('click', showUserPanel);
       $('admin-back-btn').addEventListener('click', showUserPanel);
@@ -2390,6 +3492,8 @@
       // Modals
       $('close-order-btn').addEventListener('click', closeOrderModal);
       $('close-vpn-checkout-btn').addEventListener('click', () => $('vpn-checkout-modal').classList.remove('active'));
+      if($('close-proxy-checkout-btn')) $('close-proxy-checkout-btn').addEventListener('click', () => $('proxy-checkout-modal').classList.remove('active'));
+      if($('close-mail-checkout-btn')) $('close-mail-checkout-btn').addEventListener('click', () => $('mail-checkout-modal').classList.remove('active'));
       $('confirm-back-btn').addEventListener('click', () => $('confirm-modal').classList.remove('active'));
       $('admin-confirm-cancel').addEventListener('click', () => $('admin-confirm').classList.remove('active'));
       $('admin-confirm-ok').addEventListener('click', () => { if(typeof adminConfirmCallback === 'function') adminConfirmCallback(); $('admin-confirm').classList.remove('active'); });
@@ -2400,11 +3504,15 @@
       // Binding file input trigger buttons
       if($('proof-select-btn')) $('proof-select-btn').addEventListener('click', () => $('proof-file').click());
       if($('vpn-proof-select-btn')) $('vpn-proof-select-btn').addEventListener('click', () => $('vpn-proof-file').click());
+      if($('proxy-proof-select-btn')) $('proxy-proof-select-btn').addEventListener('click', () => $('proxy-proof-file').click());
+      if($('mail-proof-select-btn')) $('mail-proof-select-btn').addEventListener('click', () => $('mail-proof-file').click());
       if($('broadcast-image-select-btn')) $('broadcast-image-select-btn').addEventListener('click', () => $('broadcast-image-file').click());
       
       // File Inputs
       $('proof-file').addEventListener('change', handleProofFileChange);
       $('vpn-proof-file').addEventListener('change', handleVpnProofFileChange);
+      if($('proxy-proof-file')) $('proxy-proof-file').addEventListener('change', handleProxyProofFileChange);
+      if($('mail-proof-file')) $('mail-proof-file').addEventListener('change', handleMailProofFileChange);
       $('payment-proof-file').addEventListener('change', handlePaymentProofFileChange);
       
       $('c-logo-file').addEventListener('change', () => handleLogoUpload('c-logo-file', 'c-logo-preview-img', 'cLogoDataUrl'));
@@ -2415,12 +3523,21 @@
 
       $('v-logo-file').addEventListener('change', () => handleLogoUpload('v-logo-file', 'v-logo-preview-img', 'vpnLogoDataUrl'));
       $('v-logo-remove-btn').addEventListener('click', () => { vpnLogoDataUrl=''; $('v-logo-preview').classList.add('hidden'); $('v-logo-file').value=''; });
+
+      if($('px-logo-file')) $('px-logo-file').addEventListener('change', () => handleLogoUpload('px-logo-file', 'px-logo-preview-img', 'proxyLogoDataUrl'));
+      if($('px-logo-remove-btn')) $('px-logo-remove-btn').addEventListener('click', () => { proxyLogoDataUrl=''; $('px-logo-preview').classList.add('hidden'); $('px-logo-file').value=''; });
+
+      if($('ml-logo-file')) $('ml-logo-file').addEventListener('change', () => handleLogoUpload('ml-logo-file', 'ml-logo-preview-img', 'mailLogoDataUrl'));
+      if($('ml-logo-remove-btn')) $('ml-logo-remove-btn').addEventListener('click', () => { mailLogoDataUrl=''; $('ml-logo-preview').classList.add('hidden'); $('ml-logo-file').value=''; });
       
       $('p-logo-file').addEventListener('change', () => handleLogoUpload('p-logo-file', 'p-logo-preview-img', 'payLogoDataUrl'));
       $('p-logo-remove-btn').addEventListener('click', () => { payLogoDataUrl=''; $('p-logo-preview').classList.add('hidden'); $('p-logo-file').value=''; });
 
       $('vpn-p-logo-file').addEventListener('change', () => handleLogoUpload('vpn-p-logo-file', 'vpn-p-logo-preview-img', 'vpnPayLogoDataUrl'));
       $('vpn-p-logo-remove-btn').addEventListener('click', () => { vpnPayLogoDataUrl=''; $('vpn-p-logo-preview').classList.add('hidden'); $('vpn-p-logo-file').value=''; });
+
+      if($('proxy-p-logo-file')) $('proxy-p-logo-file').addEventListener('change', () => handleLogoUpload('proxy-p-logo-file', 'proxy-p-logo-preview-img', 'proxyPayLogoDataUrl'));
+      if($('proxy-p-logo-remove-btn')) $('proxy-p-logo-remove-btn').addEventListener('click', () => { proxyPayLogoDataUrl=''; $('proxy-p-logo-preview').classList.add('hidden'); $('proxy-p-logo-file').value=''; });
       
       $('broadcast-image-file').addEventListener('change', async (e) => { const f=e.target.files[0]; if(f){ broadcastNoticeImageDataUrl = await compressImageFile(f); $('broadcast-image-preview-img').src=broadcastNoticeImageDataUrl; $('broadcast-image-preview').classList.remove('hidden'); renderBroadcastNoticePreview(); } });
       $('broadcast-image-remove-btn').addEventListener('click', resetBroadcastNoticeImage);
@@ -2429,6 +3546,14 @@
       $('c-qty').addEventListener('input', calc);
       $('confirm-order-btn').addEventListener('click', showConfirm);
       $('submit-vpn-order-btn').addEventListener('click', submitVpnOrder);
+      if($('submit-proxy-order-btn')) $('submit-proxy-order-btn').addEventListener('click', submitProxyOrder);
+      if($('mail-qty-plus-btn')) $('mail-qty-plus-btn').addEventListener('click', () => stepMailQty(1));
+      if($('mail-qty-minus-btn')) $('mail-qty-minus-btn').addEventListener('click', () => stepMailQty(-1));
+      if($('mail-qty-input')) $('mail-qty-input').addEventListener('input', updateMailQtyTotal);
+      if($('mail-qty-continue-btn')) $('mail-qty-continue-btn').addEventListener('click', proceedMailToPayment);
+      if($('submit-mail-order-btn')) $('submit-mail-order-btn').addEventListener('click', submitMailOrder);
+      if($('proxy-proof-remove-btn')) $('proxy-proof-remove-btn').addEventListener('click', resetProxyProofInput);
+      if($('mail-proof-remove-btn')) $('mail-proof-remove-btn').addEventListener('click', resetMailProofInput);
       $('submit-btn').addEventListener('click', submitOrder);
       $('payment-paid-btn').addEventListener('click', confirmMarkPaid);
       $('save-coin-edit-btn').addEventListener('click', saveCoinEdit);
@@ -2440,8 +3565,11 @@
       document.querySelectorAll('[data-settings-back]').forEach(btn => btn.addEventListener('click', openSettingsMain));
       $('add-coin-btn').addEventListener('click', addCoin);
       $('add-vpn-btn').addEventListener('click', addVpnBrand);
+      if($('add-proxy-btn')) $('add-proxy-btn').addEventListener('click', addProxyBrand);
+      if($('add-mail-btn')) $('add-mail-btn').addEventListener('click', addMailBrand);
       $('add-payment-btn').addEventListener('click', addPaymentMethod);
       $('add-vpn-payment-btn').addEventListener('click', addVpnPaymentMethod);
+      if($('add-proxy-payment-btn')) $('add-proxy-payment-btn').addEventListener('click', addProxyPaymentMethod);
       $('save-branding-btn').addEventListener('click', () => { db.ref('settings/branding/siteName').set(normalizeBrandName($('site-name').value)); db.ref('settings/links').set({channel:normalizeLink($('link-channel').value),help:normalizeLink($('link-help').value)}); showToast('Saved','success'); });
       $('save-disclaimer-btn').addEventListener('click', () => { db.ref('settings/disclaimer/noticeText').set($('disclaimer-text').value); showToast('Saved','success'); });
       $('disclaimer-text').addEventListener('input', () => { disclaimerNoticeValue = $('disclaimer-text').value; renderDisclaimerNotice(); });
@@ -2449,6 +3577,21 @@
       $('payment-search').addEventListener('input', renderAdminOrders);
       $('payment-filter').addEventListener('change', renderAdminOrders);
       $('add-tutorial-btn').addEventListener('click', () => { const id = db.ref('tutorialVideos').push().key; db.ref('tutorialVideos/'+id).set({video_title:$('tutorial-title').value||'Video', youtube_url:$('tutorial-url').value, created_at:firebase.database.ServerValue.TIMESTAMP}).then(()=>{ $('tutorial-title').value=''; $('tutorial-url').value=''; showToast('Added','success'); }); });
+
+      // Referral / Withdraw
+      $('ref-copy-btn').addEventListener('click', copyReferralLink);
+      $('ref-withdraw-btn').addEventListener('click', openWithdrawModal);
+      $('close-withdraw-btn').addEventListener('click', closeWithdrawModal);
+      $('wd-submit-btn').addEventListener('click', submitWithdrawRequest);
+
+      // Force Join
+      if($('force-join-verify-btn')) $('force-join-verify-btn').addEventListener('click', handleForceJoinVerify);
+      if($('add-fj-btn')) $('add-fj-btn').addEventListener('click', addForceJoinChannel);
+
+      // Admin: Referral & Withdraw tab
+      if($('save-referral-settings-btn')) $('save-referral-settings-btn').addEventListener('click', saveReferralSettings);
+      if($('withdraw-search')) $('withdraw-search').addEventListener('input', renderAdminWithdrawals);
+      if($('withdraw-filter')) $('withdraw-filter').addEventListener('change', renderAdminWithdrawals);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
