@@ -1445,8 +1445,8 @@
 
     /* ===== SESSION CACHE — 0-latency repeat opens ===== */
     const _SCP = 'nex_';
-    const _scGetT = (k, ttl) => { try { const r = sessionStorage.getItem(_SCP+k); if(!r) return null; const o = JSON.parse(r); if(Date.now()-o.t > ttl) return null; return o.v; } catch(e) { return null; } };
-    const _scSet  = (k, v)    => { try { sessionStorage.setItem(_SCP+k, JSON.stringify({v, t:Date.now()})); } catch(e) {} };
+    const _scGetT = (k, ttl) => { try { const r = localStorage.getItem(_SCP+k); if(!r) return null; const o = JSON.parse(r); if(Date.now()-o.t > ttl) return null; return o.v; } catch(e) { return null; } };
+    const _scSet  = (k, v)    => { try { localStorage.setItem(_SCP+k, JSON.stringify({v, t:Date.now()})); } catch(e) {} };
     const LEGACY_BRAND_REGEX = /META\s*BUYER\s*ZONE/gi;
     function normalizeBrandName(value){
       const raw = String(value || '').trim();
@@ -1860,10 +1860,6 @@ const firebaseConfig = {
       if(!firebaseReady) return;
       registerCurrentUser();
       // === FAST PATH — resolve both gates from session cache for instant re-opens ===
-      const _cachedMkt = _scGetT('mkt', 120000); // market cache: 2 min TTL
-      if(_cachedMkt && Object.keys(_cachedMkt).length > 0){
-        marketCache = _cachedMkt; renderMarket(marketCache); marketDataLoaded = true;
-      }
       if(_scGetT('fj_'+currentUserId, 300000)){ // force-join cache: 5 min TTL
         forceJoinGateResolved = true;
         const _fjo = $('force-join-scr'); if(_fjo) _fjo.style.display='none';
@@ -1881,7 +1877,7 @@ const firebaseConfig = {
       db.ref('settings/links').on('value', snap => { const l = snap.val() || {}; channelLinkValue = normalizeLink(l.channel); helpLinkValue = normalizeLink(l.help); });
       db.ref('settings/disclaimer').on('value', snap => { disclaimerNoticeValue = normalizeDisclaimerNotice(typeof snap.val() === 'string' ? snap.val() : snap.val()?.noticeText); renderDisclaimerNotice(); });
       db.ref('settings/requireProofTrxId').on('value', snap => { requireProofTrxId = snap.val() !== false; applyProofRequirementUI(); });
-      db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; _scSet('mkt', marketCache); renderMarket(marketCache); marketDataLoaded = true; maybeFinishLoading(); });
+      db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderMarket(marketCache); marketDataLoaded = true; maybeFinishLoading(); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderVpns(vpnConfigCache); });
       db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderProxies(proxyConfigCache); });
       db.ref('mailConfig').on('value', snap => { mailConfigCache = snap.val() || {}; renderMails(mailConfigCache); });
@@ -2257,7 +2253,11 @@ const firebaseConfig = {
     function renderUserCoinPayments(data){
       const entries = Object.entries(data || {}).filter(([,v]) => v && v.status !== false);
       // Populate hidden select (keeps existing submit logic working)
-      if($('m-select')) $('m-select').innerHTML = '<option value="">Select Method</option>' + entries.map(([key]) => `<option value="${escapeHtml(key)}">${escapeHtml(key)}</option>`).join('');
+      if($('m-select')){
+        $('m-select').innerHTML = '<option value="">Select Method</option>' + entries.map(([key]) => `<option value="${escapeHtml(key)}">${escapeHtml(key)}</option>`).join('');
+        if(currentSellPayMethod) $('m-select').value = currentSellPayMethod; // restore after rebuild
+      }
+      if($('m-num') && currentSellPayNumber) $('m-num').value = currentSellPayNumber; // restore number too
       // Also render the visual payment cards in the sell form
       renderSellFormPaymentCards();
     }
@@ -2477,7 +2477,9 @@ const firebaseConfig = {
       if(!requireFirebase()) return;
       const q = Number($('c-qty').value || 0); // full coin amount entered by user
       const qK = q / 1000;
-      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value;
+      const sender = $('c-sender').value.trim();
+      const method = currentSellPayMethod || $('m-select').value;
+      const number = currentSellPayNumber || $('m-num').value.trim();
       if(!selC || !q || q < selMinSubmitLimit || !sender || !method || !number){ showToast('Fill all fields correctly','error'); return; }
       if(requireProofTrxId){
         if(!proofImageDataUrl){ showToast('Upload proof screenshot','error'); return; }
@@ -2492,7 +2494,9 @@ const firebaseConfig = {
       if(submitting || !requireFirebase() || guardBannedUser()) return;
       const q = Number($('c-qty').value || 0); // full coin amount entered by user
       const qK = q / 1000;
-      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value;
+      const sender = $('c-sender').value.trim();
+      const method = currentSellPayMethod || $('m-select').value;
+      const number = currentSellPayNumber || $('m-num').value.trim();
       let activeRate = selR;
       for(const tier of selPricingTiers){ if(q >= Number(tier.from) && (Number(tier.to)===0||q<=Number(tier.to))){ activeRate=Number(tier.rate); break; } }
       const coinUnit = qK; // rate applied per 1,000 coins
@@ -2503,8 +2507,11 @@ const firebaseConfig = {
         coin:selC, amt:q, coinUnit:parseFloat(coinUnit.toFixed(4)), payable:parseFloat(finalP.toFixed(2)), sender, number, method, targetId:currentTID, appliedRate:activeRate,
         proof_image_url:proofImageDataUrl, proof_file_name:proofFileName, proof_uploaded:!!proofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
       };
+      // Strip the large base64 from the main order node; store in separate path
+      const _proofImg = orderData.proof_image_url;
+      delete orderData.proof_image_url;
       orderRef.set(orderData).then(() => {
-        if(proofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, proofImageDataUrl, buildNewOrderMessage(orderData));
+        if(_proofImg){ db.ref('order_proofs/'+orderId).set({image:_proofImg,uploaded_at:firebase.database.ServerValue.TIMESTAMP}); sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, _proofImg, buildNewOrderMessage(orderData)); }
         else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
         sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
         hideConfirm(); closeOrderModal(); showToast('✓ Order Submitted!','success'); userSwitchTab('history-scr');
@@ -2576,10 +2583,11 @@ const firebaseConfig = {
       const orderData = {
         id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'vpn',
         vpn_brand:selVpnBrand, vpn_plan:selVpnPlanName, payable:parseFloat(selVpnPlanPrice.toFixed(2)), method:selVpnPayMethod, number:numOrTrx, targetId:selVpnPayNumberTarget,
-        proof_image_url:vpnProofImageDataUrl, proof_file_name:vpnProofFileName, proof_uploaded:!!vpnProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+        proof_uploaded:!!vpnProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
       };
+      const _vpnProof = vpnProofImageDataUrl;
       orderRef.set(orderData).then(() => {
-        if(vpnProofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, vpnProofImageDataUrl, buildNewOrderMessage(orderData));
+        if(_vpnProof){ db.ref('order_proofs/'+orderId).set({image:_vpnProof,uploaded_at:firebase.database.ServerValue.TIMESTAMP}); sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, _vpnProof, buildNewOrderMessage(orderData)); }
         else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
         sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
         $('vpn-checkout-modal').classList.remove('active'); showToast('✓ VPN Order Submitted!','success'); userSwitchTab('history-scr');
@@ -2651,10 +2659,11 @@ const firebaseConfig = {
       const orderData = {
         id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'proxy',
         proxy_brand:selProxyBrand, proxy_plan:selProxyPlanName, payable:parseFloat(selProxyPlanPrice.toFixed(2)), method:selProxyPayMethod, number:numOrTrx, targetId:selProxyPayNumberTarget,
-        proof_image_url:proxyProofImageDataUrl, proof_file_name:proxyProofFileName, proof_uploaded:!!proxyProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+        proof_uploaded:!!proxyProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
       };
+      const _proxyProof = proxyProofImageDataUrl;
       orderRef.set(orderData).then(() => {
-        if(proxyProofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, proxyProofImageDataUrl, buildNewOrderMessage(orderData));
+        if(_proxyProof){ db.ref('order_proofs/'+orderId).set({image:_proxyProof,uploaded_at:firebase.database.ServerValue.TIMESTAMP}); sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, _proxyProof, buildNewOrderMessage(orderData)); }
         else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
         sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
         $('proxy-checkout-modal').classList.remove('active'); showToast('✓ Proxy Order Submitted!','success'); userSwitchTab('history-scr');
@@ -2747,10 +2756,11 @@ const firebaseConfig = {
       const orderData = {
         id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'mail',
         mail_brand:selMailBrand, mail_qty:selMailQty, payable:parseFloat((selMailQty*selMailUnitPrice).toFixed(2)), method:selMailPayMethod, number:numOrTrx, targetId:selMailPayNumberTarget,
-        proof_image_url:mailProofImageDataUrl, proof_file_name:mailProofFileName, proof_uploaded:!!mailProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+        proof_uploaded:!!mailProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
       };
+      const _mailProof = mailProofImageDataUrl;
       orderRef.set(orderData).then(() => {
-        if(mailProofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, mailProofImageDataUrl, buildNewOrderMessage(orderData));
+        if(_mailProof){ db.ref('order_proofs/'+orderId).set({image:_mailProof,uploaded_at:firebase.database.ServerValue.TIMESTAMP}); sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, _mailProof, buildNewOrderMessage(orderData)); }
         else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
         sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
         $('mail-checkout-modal').classList.remove('active'); showToast('✓ Mail Order Submitted!','success'); userSwitchTab('history-scr');
@@ -2820,19 +2830,51 @@ const firebaseConfig = {
       if(!adminStarted){ startAdminSystem(); adminStarted = true; }
     }
 
+    // Shared stats recalc — called optimistically before Firebase confirms
+    function _adminUpdateStats(){
+      const cnt = {pending:0,approved:0,rejected:0,payment:0,paid:0};
+      Object.values(globalOrders).forEach(o => {
+        if(o.hidden_for_admin) return;
+        const os = getOrderStatus(o), ps = getPaymentStatus(o);
+        if(cnt[os] !== undefined) cnt[os]++;
+        if(os==='approved' && ps==='pending') cnt.payment++;
+        if(os==='approved' && ps==='paid') cnt.paid++;
+      });
+      if($('stat-pending')) $('stat-pending').textContent = cnt.pending;
+      if($('cnt-pending')) $('cnt-pending').textContent = cnt.pending;
+      if($('cnt-completed')) $('cnt-completed').textContent = cnt.approved;
+      if($('cnt-rejected')) $('cnt-rejected').textContent = cnt.rejected;
+      if($('cnt-payment')) $('cnt-payment').textContent = cnt.payment;
+      if($('order-history-total-count')) $('order-history-total-count').textContent = Object.keys(globalOrders).length;
+    }
+
     function startAdminSystem(){
       if(!requireFirebase()) return;
-      db.ref('orders').on('value', snap => {
-        globalOrders = snap.val() || {}; const cnt = {pending:0,approved:0,rejected:0,payment:0,paid:0};
-        Object.values(globalOrders).forEach(o => { 
-          if (o.hidden_for_admin) return; // Ignore deleted records
-          const os = getOrderStatus(o), ps = getPaymentStatus(o); 
-          if(cnt[os] !== undefined) cnt[os]++; 
-          if(os === 'approved' && ps === 'pending') cnt.payment++; 
-          if(os === 'approved' && ps === 'paid') cnt.paid++; 
-        });
-        $('stat-pending').textContent = cnt.pending; $('cnt-pending').textContent = cnt.pending; $('cnt-completed').textContent = cnt.approved; $('cnt-rejected').textContent = cnt.rejected; if($('cnt-payment')) $('cnt-payment').textContent = cnt.payment; if($('order-history-total-count')) $('order-history-total-count').textContent = Object.keys(globalOrders).length;
-        if(currentAdminTab !== 'settings') renderAdminOrders(); renderUserTrackingSystem();
+
+      // ORDERS — child events so only changed order is downloaded per update (not whole collection)
+      // child_added fires for ALL existing orders on init, then for new orders
+      const _ordRef = db.ref('orders');
+      let _ordInitDone = false;
+
+      _ordRef.on('child_added', snap => {
+        const o = snap.val(); if(!o) return;
+        globalOrders[snap.key] = {...o, id: snap.key};
+        // Don't re-render on every individual child during initial batch
+        if(_ordInitDone){ _adminUpdateStats(); if(currentAdminTab!=='settings') renderAdminOrders(); }
+      });
+      _ordRef.on('child_changed', snap => {
+        const o = snap.val(); if(!o) return;
+        globalOrders[snap.key] = {...o, id: snap.key};
+        _adminUpdateStats(); if(currentAdminTab!=='settings') renderAdminOrders(); renderUserTrackingSystem();
+      });
+      _ordRef.on('child_removed', snap => {
+        delete globalOrders[snap.key];
+        _adminUpdateStats(); if(currentAdminTab!=='settings') renderAdminOrders();
+      });
+      // once('value') fires AFTER all child_added events → safe render point for initial batch
+      _ordRef.once('value', () => {
+        _ordInitDone = true;
+        _adminUpdateStats(); if(currentAdminTab!=='settings') renderAdminOrders(); renderUserTrackingSystem();
       });
       db.ref('users').on('value', snap => { userRegistryCache = snap.val() || {}; renderUserTrackingSystem(); updateReferralOverviewStats(); });
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderAdminCoins(marketCache); });
@@ -3024,18 +3066,26 @@ const firebaseConfig = {
 
     function updateOrderStatus(id, status){
       const order = globalOrders[id]; if(!order) return;
-      const patch = { order_status:status, status:status==='approved'?'completed':status, updated_at:firebase.database.ServerValue.TIMESTAMP };
-      if(status === 'approved'){ patch.payment_status = 'pending'; patch.approved_at = firebase.database.ServerValue.TIMESTAMP; }
-      Object.assign(order, patch); // local update for telegram message
-      db.ref('orders/' + id).update(patch).then(() => {
-        sendUserTelegramMessage(order, buildOrderStatusMessage(order, status));
-        renderAdminOrders(); showToast('Order updated','success'); if(status==='approved') adminSwitchTab('payment');
-      });
+      const now = Date.now();
+      const patch = { order_status:status, status:status==='approved'?'completed':status, updated_at:now };
+      if(status === 'approved'){ patch.payment_status = 'pending'; patch.approved_at = now; }
+      // OPTIMISTIC — instant UI, Firebase syncs in background
+      Object.assign(globalOrders[id], patch);
+      _adminUpdateStats(); if(currentAdminTab!=='settings') renderAdminOrders();
+      const fbPatch = {...patch, updated_at:firebase.database.ServerValue.TIMESTAMP};
+      if(status==='approved') fbPatch.approved_at = firebase.database.ServerValue.TIMESTAMP;
+      db.ref('orders/' + id).update(fbPatch).then(() => {
+        sendUserTelegramMessage(globalOrders[id], buildOrderStatusMessage(globalOrders[id], status));
+        showToast('Order updated ✓','success'); if(status==='approved') adminSwitchTab('payment');
+      }).catch(()=>showToast('Update failed','error'));
     }
     
     function deleteOrder(id){ 
-      adminConfirm('Hide Order?','This order will be removed from your panel, but users can still see their history.','🗑️', () => { 
-        db.ref('orders/'+id).update({hidden_for_admin: true}).then(()=>showToast('Removed from panel','warning')); 
+      adminConfirm('Hide Order?','This order will be removed from your panel, but users can still see their history.','🗑️', () => {
+        // Optimistic: remove from UI instantly
+        if(globalOrders[id]) globalOrders[id].hidden_for_admin = true;
+        _adminUpdateStats(); if(currentAdminTab!=='settings') renderAdminOrders();
+        db.ref('orders/'+id).update({hidden_for_admin: true}).then(()=>showToast('Removed from panel','warning')).catch(()=>showToast('Failed','error'));
       }); 
     }
 
@@ -3063,18 +3113,28 @@ const firebaseConfig = {
           ? { order_status: 'approved', status: 'completed', payment_status: 'pending', approved_at: firebase.database.ServerValue.TIMESTAMP, delivered_proxy: stockItem.value }
           : { order_status: 'approved', status: 'completed', payment_status: 'pending', approved_at: firebase.database.ServerValue.TIMESTAMP, delivered_email: stockItem.email, delivered_pass: stockItem.pass };
        Object.assign(order, patch); // update local order object for telegram
+       // Optimistic: close modal and update UI instantly
+       if(globalOrders[orderId]) Object.assign(globalOrders[orderId], patch, {updated_at:Date.now()});
+       $('admin-stock-modal').classList.remove('active');
+       _adminUpdateStats(); if(currentAdminTab!=='settings') renderAdminOrders();
        db.ref('orders/'+orderId).update(patch).then(() => {
           db.ref(`${cfgPath}/${brandKey}/stock/${stockKey}`).remove();
-          $('admin-stock-modal').classList.remove('active');
-          sendUserTelegramMessage(order, buildOrderStatusMessage(order, 'approved'));
-          renderAdminOrders(); showToast(t === 'proxy' ? 'Proxy Delivered!' : 'VPN Delivered!','success'); adminSwitchTab('approved');
-       });
+          sendUserTelegramMessage(globalOrders[orderId]||order, buildOrderStatusMessage(globalOrders[orderId]||order, 'approved'));
+          showToast(t === 'proxy' ? 'Proxy Delivered!' : 'VPN Delivered!','success'); adminSwitchTab('approved');
+       }).catch(()=>showToast('Delivery failed','error'));
     }
 
     function openProofModal(id){
-      const o = globalOrders[id], src = String(o?.proof_image_url || '').trim();
-      if(!src) return showToast('No screenshot','warning');
-      proofModalSrc = src; $('proof-modal-img').src = src; $('proof-modal-caption').textContent = `#${String(o.id).slice(-7)}`; $('proof-modal').classList.add('active');
+      const o = globalOrders[id]; if(!o) return;
+      $('proof-modal-caption').textContent = `#${String(o.id||id).slice(-7)}`;
+      $('proof-modal-img').src = ''; $('proof-modal').classList.add('active');
+      // New orders: proof in order_proofs/{id}; old orders: fallback to embedded base64
+      db.ref('order_proofs/'+id).once('value', snap => {
+        const proof = snap.val();
+        const src = (proof && proof.image) || String(o.proof_image_url || '').trim();
+        if(src){ proofModalSrc = src; $('proof-modal-img').src = src; }
+        else { showToast('No screenshot','warning'); $('proof-modal').classList.remove('active'); }
+      });
     }
     function closeProofModal(){ $('proof-modal').classList.remove('active'); proofModalSrc=''; }
     
@@ -3087,13 +3147,17 @@ const firebaseConfig = {
     function confirmMarkPaid(){
       const id = paymentTargetOrderId, refVal = $('payment-ref-input').value.trim(), o = globalOrders[id];
       if(!refVal) return showToast('Enter Reference ID','error');
-      const patch = { order_status:'approved', payment_status:'paid', paid_at:firebase.database.ServerValue.TIMESTAMP, payment_reference_id:refVal };
-      Object.assign(o, patch);
-      db.ref('orders/'+id).update(patch).then(()=>{ 
-        sendUserTelegramMessage(o, buildPaymentPaidMessage(o));
-        sendUserPaymentProofPhoto(o);
-        closePaymentModal(); renderAdminOrders(); showToast('Marked as Paid','success'); 
-      });
+      const now = Date.now();
+      const patch = { order_status:'approved', payment_status:'paid', paid_at:now, payment_reference_id:refVal };
+      // Optimistic: mark paid instantly
+      if(globalOrders[id]) Object.assign(globalOrders[id], patch);
+      closePaymentModal(); _adminUpdateStats(); if(currentAdminTab!=='settings') renderAdminOrders();
+      const fbPatch = {...patch, paid_at:firebase.database.ServerValue.TIMESTAMP};
+      db.ref('orders/'+id).update(fbPatch).then(()=>{ 
+        sendUserTelegramMessage(globalOrders[id]||o, buildPaymentPaidMessage(globalOrders[id]||o));
+        sendUserPaymentProofPhoto(globalOrders[id]||o);
+        showToast('Marked as Paid ✓','success'); 
+      }).catch(()=>showToast('Failed','error'));
     }
 
     async function handlePaymentProofFileChange(e){
